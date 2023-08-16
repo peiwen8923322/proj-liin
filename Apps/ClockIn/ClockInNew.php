@@ -54,7 +54,7 @@
         // 預設表單欄位
         $htmlTags['html_isnormality'] = ""; // 刷卡是否正常
         $htmlTags['submit_clkintime'] = ""; // 已送出刷卡時間
-        $htmlTags['html_clkinsttpk'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'clkinsttpk', 'attrName'=>'clkinsttpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("刷卡狀態"), "正常-上班刷卡"); // 刷卡狀態
+        $htmlTags['html_clkinsttpk'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'clkinsttpk', 'attrName'=>'clkinsttpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("刷卡狀態"), "外出-上班刷卡"); // 刷卡狀態
         $htmlTags['extodnymemo'] = ""; // 刷卡異常說明
     }
 
@@ -81,7 +81,7 @@ echo <<<_html
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>建立刷卡資料</title>
+    <title>建立刷卡資料(外出刷卡專用)</title>
     <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
@@ -168,7 +168,7 @@ echo <<<_html
     <main>
         <h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5>
         <div class="container-fluid">
-            <h4 class="text-secondary text-decoration-underline my-3"><b>建立刷卡資料</b></h4>
+            <h4 class="text-secondary text-decoration-underline my-3"><b>建立刷卡資料(外出刷卡專用)</b></h4>
             <div class="row">
                 <div class="col-10">
                     <div class="row">
@@ -191,16 +191,8 @@ echo <<<_html
                         <div class="col-6">$htmlTags[html_clkinsttpk]</div>
                     </div>
                     <div class="row justify-content-center my-3">
-                        <div class="col-2 text-end fw-bolder">刷卡說明：</div>
-                        <div class="col-6"><input type="text" class="form-control" id="extodnymemo" name="extodnymemo" value="$htmlTags[extodnymemo]" title="請輸入刷卡說明" placeholder="請輸入刷卡說明"></div>
-                    </div>
-                    <div class="row justify-content-center my-3 text-danger fw-bolder">
-                        <div class="col-2 text-end fw-bolder"></div>
-                        <div class="col-6">
-                            ※ 如有下列事項之一時，請填寫「刷卡說明」：<br/>
-                            1. 除了「正常-上班刷卡」或「正常-下班刷卡」之外的時間<br/>
-                            2. 加班刷卡或外出刷卡時
-                        </div>
+                        <div class="col-2 text-end fw-bolder">刷卡異常說明：</div>
+                        <div class="col-6"><input type="text" class="form-control" id="extodnymemo" name="extodnymemo" value="$htmlTags[extodnymemo]" title="請輸入刷卡異常說明：" placeholder="請輸入刷卡異常說明："></div>
                     </div>
                     
                     <div class="row justify-content-center my-3">

@@ -19,16 +19,14 @@ class cls_field_lists extends cls_models{
         //code...
     }
 
-    /*
-    取得欄位清單檔(field_lists)的formcode, listapl欄位清單(以清單類別)
-    $listcls: 傳入清單類別
-    $arrData: 傳回二維關聯陣列
-    */
+    // 取得欄位清單檔(field_lists)的formcode, listapl欄位清單(以清單類別)
+    // $listcls: 傳入清單類別
+    // $arrData: 傳回二維關聯陣列
     function getList($listcls){
         //變數初始化
         $this->init($this->self_table);
         $this->SQLSelect = "SELECT formcode, listapl ";
-        $this->SQLWhere .= " AND listcls='$listcls' ";
+        $this->SQLWhere .= " AND formstate = 15 AND listcls='$listcls' ";
         $this->SQLOrderBy .= " listcode ";
         $this->SQL = $this->SQLSelect.$this->SQLFrom.$this->SQLWhere.$this->SQLOrderBy;
         
@@ -42,11 +40,9 @@ class cls_field_lists extends cls_models{
         //End
     }
 
-    /*
-    取得唯一記錄(以唯一識別碼)
-    $formcode: 傳入唯一識別碼
-    傳回一維關聯陣列
-    */
+    // 取得唯一記錄(以唯一識別碼)
+    // $formcode: 傳入唯一識別碼
+    // 傳回一維關聯陣列
     function getRcrdByFormcode($formcode){
         //Begin
         $this->SQL = "SELECT * from $this->self_table WHERE 1 AND formcode = '$formcode'";
@@ -64,9 +60,14 @@ class cls_field_lists extends cls_models{
     }
 
 
+
+
+
+
+
+
+
+
+
 }
-
-
-
-
 ?>
