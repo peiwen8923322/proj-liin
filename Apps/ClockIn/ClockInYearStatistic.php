@@ -5,6 +5,7 @@
     require_once "../../models/cls_pms.php";
     require_once "../../models/cls_clockin.php";
     require_once "../../models/cls_employees.php";
+    require_once "../../models/cls_depts.php";
     
     //變數初始化
     $obj_form = new cls_form;
@@ -17,6 +18,7 @@
 
     $obj_clockin = new cls_clockin; //刷卡檔
     $obj_emp = new cls_employees; //員工檔
+    $obj_depts = new cls_depts; //機構檔
     
     $SQL = "";
     $arrData = array();
@@ -38,6 +40,8 @@
         
         $obj_clockin->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND year = $arrQryFld[year] " : ""; // 年度(西元年)
         $htmlTags['year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time())), $arrQryFld['year']); // 年度(西元年)
+        $obj_clockin->SQLWhere .= isset($arrQryFld['deptspk']) && mb_strlen($arrQryFld['deptspk']) > 0 ? " AND deptspk = '$arrQryFld[deptspk]' " : ""; // 機構
+        $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_depts->getList(), $arrQryFld['deptspk'], true); //機構
         $obj_clockin->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND empapl LIKE '%$arrQryFld[empapl]%' " : ""; // 員工姓名
         $obj_clockin->SQLWhere .= isset($arrQryFld['empcode']) && mb_strlen($arrQryFld['empcode']) > 0 ? " AND empcode LIKE '%$arrQryFld[empcode]%' " : ""; // 員工編號
         $obj_clockin->SQLOrderBy .= " year, cmpcode, empcode, seq DESC ";
@@ -84,6 +88,7 @@
         $obj_clockin->SQLGroupBy = $_SESSION['SQL']['GroupBy'];
         $obj_clockin->SQLOrderBy = $_SESSION['SQL']['OrderBy'];
         $htmlTags['year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year'], true); // 年度(西元年)
+        $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_depts->getList(), $arrQryFld['deptspk'], true); //機構
         // $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
         $obj_clockin->SQL = $obj_clockin->SQLSelect.$obj_clockin->SQLFrom.$obj_clockin->SQLWhere.$obj_clockin->SQLOrderBy;
         $arrData = $obj_clockin->getNewData($obj_clockin->SQL); // 取得刷卡統計並重組查詢結果
@@ -121,8 +126,7 @@
         $htmlPaging = $obj_form->viewPaging($obj_clockin->int_total_records, $obj_clockin->int_total_pages, $obj_clockin->int_current_page); //顯示查詢分頁HTML Tag
     } else { //第一次執行時的處理動作
         $htmlTags['year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time())), date("Y", time())); // 年度(西元年)
-        // $htmlTags['html_hldscls'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'hldformcode', 'attrName'=>'hldformcode', 'attrTitle'=>'請選擇假別', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_field_lists->getList('請假'), null, true); //假別
-        // $htmlTags['html_frmformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'frmformcode', 'attrName'=>'frmformcode', 'attrTitle'=>'請選擇審核狀態', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_field_lists->getListByLikeListcls('表單審核'), null, true); //審核狀態
+        $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode'), $obj_depts->getList(), null, true); //機構
 
         //$htmlTags['html_sort'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'sort', 'attrName'=>'sort', 'attrTitle'=>'請輸入排序方式', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), array(array('srtTitle'=>'品項代碼欄位-由小到大排序', 'srtValue'=>'mtrlcode ASC'), array('srtTitle'=>'品項代碼欄位-由大到小排序', 'srtValue'=>'mtrlcode DESC')), "品項代碼欄位-由小到大排序"); //排序方式
         // $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, 100); //每頁顯示筆數
@@ -138,6 +142,7 @@
     }
 
     //Close Connection
+    $obj_depts = null;
     $obj_emp = null;
     $obj_clockin = null;
     // $obj_pms = null;
@@ -223,16 +228,14 @@ echo <<<_html
                 <input type="hidden" id="selFormCode" name="selFormCode" value="">
                 <div class="row">
                     <div class="col-2">
-                        <label for="year" class="form-label">年度(西元年)：</label>
-                        $htmlTags[year]
+                        <label for="year" class="form-label">年度(西元年)：</label>$htmlTags[year]
+                    </div>
+                    <div class="col-2">
+                        <label for="depts" class="form-label">機構：</label>$htmlTags[deptspk]
                     </div>
                     <div class="col-2">
                         <label for="empapl" class="form-label">員工姓名：</label>
                         <input type="text" class="form-control" id="empapl" name="empapl" value="{$arrQryFld['empapl']}" placeholder="請輸入員工姓名" title="請輸入員工姓名">
-                    </div>
-                    <div class="col-2">
-                        <label for="empcode" class="form-label">員工編號：</label>
-                        <input type="text" class="form-control" id="empcode" name="empcode" value="{$arrQryFld['empcode']}" placeholder="請輸入員工編號" title="請輸入員工編號">
                     </div>
                 </div>
                 <div class="row  justify-content-center mt-2">
@@ -243,7 +246,7 @@ echo <<<_html
                     <caption><h4><b>統計刷卡資料清單</b></h4></caption>
                     <thead class="">
                         <tr>
-                            <th class="col-2">機構</th><th class="col-1 text-center">員工</th><th class="col-1 text-center">員工編號</th><th class="col-1 text-center">年度</th><th class="col-1 text-center">刷卡記錄總數</th><th class="col-1 text-center">刷卡狀態(正常)</th><th class="col-1 text-center">刷卡狀態(異常)</th>
+                            <th class="col-2">機構</th><th class="col-1 text-center">員工</th><th class="col-1 text-center">員工編號</th><th class="col-1 text-center">年度</th><th class="col-1 text-center">刷卡記錄總數</th>
                         </tr>
                     </thead>
                     

@@ -46,13 +46,11 @@
         $strNewSeq = $obj_clockin->Insert($arrNewFormVal, $tbl);
 
         // Render HTML
-        $htmlTags['html_isnormality'] = $arrNewFormVal['isnormality']; // 刷卡是否正常
         $htmlTags['submit_clkintime'] = $arrNewFormVal['clkintime']; // 已送出刷卡時間
         $htmlTags['html_clkinsttpk'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'clkinsttpk', 'attrName'=>'clkinsttpk', 'Label'=>'listapl', 'attrValue'=>'formcode', 'default'=>'formcode'), $obj_fl->getList("刷卡狀態"), $arrNewFormVal['clkinsttpk']); // 刷卡狀態
         $htmlTags['extodnymemo'] = $arrNewFormVal['extodnymemo']; // 刷卡異常說明
     } else { // 表單第一次執行的處理動作
         // 預設表單欄位
-        $htmlTags['html_isnormality'] = ""; // 刷卡是否正常
         $htmlTags['submit_clkintime'] = ""; // 已送出刷卡時間
         $htmlTags['html_clkinsttpk'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'clkinsttpk', 'attrName'=>'clkinsttpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("刷卡狀態"), "外出-上班刷卡"); // 刷卡狀態
         $htmlTags['extodnymemo'] = ""; // 刷卡異常說明
@@ -183,16 +181,16 @@ echo <<<_html
                         <div class="col-2 text-end fw-bolder">$htmlTags[submit_clkintime]</div>
                     </div>
                     <div class="row justify-content-center my-3">
-                        <div class="col-2 text-end fw-bolder"><label for="isnormality" class="form-label">刷卡是否正常：</label></div>
-                        <div class="col-6"><input type="text" class="form-control" id="isnormality" name="isnormality" value="$htmlTags[html_isnormality]" title="" placeholder="" required readonly></div>
-                    </div>
-                    <div class="row justify-content-center my-3">
                         <div class="col-2 text-end fw-bolder">刷卡狀態：</div>
                         <div class="col-6">$htmlTags[html_clkinsttpk]</div>
                     </div>
                     <div class="row justify-content-center my-3">
                         <div class="col-2 text-end fw-bolder">刷卡異常說明：</div>
                         <div class="col-6"><input type="text" class="form-control" id="extodnymemo" name="extodnymemo" value="$htmlTags[extodnymemo]" title="請輸入刷卡異常說明：" placeholder="請輸入刷卡異常說明："></div>
+                    </div>
+                    <div class="row justify-content-center my-3">
+                        <div class="col-2 text-end fw-bolder"></div>
+                        <div class="col-6 text-danger fw-bolder">適用單位：八八、北市居家、烏來、廚房人員、三芝</div>
                     </div>
                     
                     <div class="row justify-content-center my-3">

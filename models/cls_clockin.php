@@ -52,7 +52,6 @@ class cls_clockin extends cls_models
                             <td class="text-center">$field[empapl]</td>
                             <td class="text-center">$field[year]</td>
                             <td class="">$field[clkintime]</td>
-                            <td class="text-center">$field[isnormality]</td>
                             <td class="text-center">$field[clkinsttapl]</td>
                             <td class="">$field[extodnymemo]</td>
                         </tr>
@@ -63,7 +62,6 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                     <tr>
-                        <td class=""></td>
                         <td class=""></td>
                         <td class=""></td>
                         <td class=""></td>
@@ -246,8 +244,6 @@ _sql;
                         <td class="text-center">$field[empcode]</td>
                         <td class="text-center">$field[year]</td>
                         <td class="text-center">$field[ttl_rcds]</td>
-                        <td class="text-center">$field[normal_rcds]</td>
-                        <td class="text-center">$field[nonnormal_rcds]</td>
                     </tr>
 _TBODY;
             }
@@ -256,8 +252,6 @@ _TBODY;
             $tbody = <<<_TBODY
                 <tbody>
                     <tr>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

@@ -45,7 +45,6 @@
             $obj_clockin->SQLWhere .= " AND clkintime <= '$arrQryFld[enddate] 23:59:59' ";
         }
         $obj_clockin->SQLWhere .= isset($arrQryFld['isnormality']) && mb_strlen($arrQryFld['isnormality']) > 0 ? " AND isnormality = '$arrQryFld[isnormality]' " : "" ; // 刷卡是否正常
-        $htmlTags['isnormality'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'isnormality', 'attrName'=>'isnormality', 'attrTitle'=>'請輸入刷卡是否正常'), array('正常', '異常'), $arrQryFld['isnormality'], true); // 刷卡是否正常
         $obj_clockin->SQLOrderBy .= " seq DESC ";
         $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
 
@@ -87,7 +86,6 @@
         $obj_clockin->SQLWhere = $_SESSION['SQL']['Where'];
         $obj_clockin->SQLOrderBy = $_SESSION['SQL']['OrderBy'];
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time())), $arrQryFld['year'], false); // 年度(西元年)
-        $htmlTags['isnormality'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'isnormality', 'attrName'=>'isnormality', 'attrTitle'=>'請輸入刷卡是否正常'), array('正常', '異常'), $arrQryFld['isnormality'], true); // 刷卡是否正常
         $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
 
         // 統計分頁訊息
@@ -128,7 +126,6 @@
         $htmlQryResult = $obj_clockin->viewQry($obj_clockin->rtnQryResults($obj_clockin->SQL), $tbl);
     } else { //第一次執行時的處理動作
         $htmlTags['year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time())), date("Y", time()), false); // 年度(西元年)
-        $htmlTags['isnormality'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'isnormality', 'attrName'=>'isnormality', 'attrTitle'=>'請輸入刷卡是否正常'), array('正常', '異常'), null, true); // 刷卡是否正常
         //$htmlTags['html_sort'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'sort', 'attrName'=>'sort', 'attrTitle'=>'請輸入排序方式', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), array(array('srtTitle'=>'品項代碼欄位-由小到大排序', 'srtValue'=>'mtrlcode ASC'), array('srtTitle'=>'品項代碼欄位-由大到小排序', 'srtValue'=>'mtrlcode DESC')), "品項代碼欄位-由小到大排序"); //排序方式
         $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, 100); //每頁顯示筆數
         //$htmlTags['html_recdsperpage'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), array(array('srtTitle'=>'50', 'srtValue'=>'50'), array('srtTitle'=>'100', 'srtValue'=>'100'), array('srtTitle'=>'250', 'srtValue'=>'250'), array('srtTitle'=>'500', 'srtValue'=>'500')), 500); //每頁顯示筆數
@@ -242,10 +239,6 @@ echo <<<_html
                         <input type="date" class="form-control" id="enddate" name="enddate" value="{$arrQryFld['enddate']}" placeholder="請輸入刷卡時間截止日" title="請輸入刷卡時間截止日">
                     </div>
                     <div class="col-2">
-                        <label for="isnormality" class="form-label">刷卡是否正常：</label>
-                        $htmlTags[isnormality]
-                    </div>
-                    <div class="col-2">
                         <label for="supplier_telephone" class="form-label">每頁顯示筆數：</label>
                         $htmlTags[html_recdsperpage]
                     </div>
@@ -259,7 +252,7 @@ echo <<<_html
                     <caption><h4><b>刷卡資料清單</b></h4></caption>
                     <thead class="">
                         <tr>
-                            <th class="col-2">機構</th><th class="col-1 text-center">員工</th><th class="col-1 text-center">年度</th><th class="col-1 text-center">刷卡時間</th><th class="col-1 text-center">刷卡是否正常</th><th class="col-1 text-center">刷卡狀態</th><th class="col-2">刷卡說明</th>
+                            <th class="col-2">機構</th><th class="col-1 text-center">員工</th><th class="col-1 text-center">年度</th><th class="col-1 text-center">刷卡時間</th><th class="col-1 text-center">刷卡狀態</th><th class="col-2">刷卡說明</th>
                         </tr>
                     </thead>
                     
