@@ -36,7 +36,6 @@
         $arrNewFormVal['creator'] = $_SESSION['login_emp']['empapl']; // 建立者
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl']; // 修改者
         $clkintime = strtotime($arrNewFormVal['clkintime']); // 時間轉換 UNIX時間
-        $arrNewFormVal['isnormality'] = (date("H", $clkintime) >= 8 && date("H", $clkintime) < 9) || (date("H", $clkintime) >= 17 && date("H", $clkintime) < 18) ? "正常" : "異常"; // 刷卡是否正常
         $arrNewFormVal['year'] = date("Y", $clkintime); // 年度
         
         // 參考其他Table
@@ -52,7 +51,7 @@
     } else { // 表單第一次執行的處理動作
         // 預設表單欄位
         $htmlTags['submit_clkintime'] = ""; // 已送出刷卡時間
-        $htmlTags['html_clkinsttpk'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'clkinsttpk', 'attrName'=>'clkinsttpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("刷卡狀態"), "外出-上班刷卡"); // 刷卡狀態
+        $htmlTags['html_clkinsttpk'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'clkinsttpk', 'attrName'=>'clkinsttpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("刷卡狀態"), "上班"); // 刷卡狀態
         $htmlTags['extodnymemo'] = ""; // 刷卡異常說明
     }
 

@@ -95,7 +95,6 @@ _TBODY;
                 , empcode
                 , year
                 , clkintime
-                , isnormality
                 , clkinsttpk
                 , clkinsttcode
                 , clkinsttapl
@@ -112,7 +111,6 @@ _TBODY;
                 , '{$arrTbl['emp']['empcode']}'
                 , $arrFormVal[year]
                 , '$arrFormVal[clkintime]'
-                , '$arrFormVal[isnormality]'
                 , '{$arrTbl['clkinstt']['formcode']}'
                 , '{$arrTbl['clkinstt']['listcode']}'
                 , '{$arrTbl['clkinstt']['listapl']}'
