@@ -707,17 +707,14 @@ _TBODY;
                 
                 $tbody .= <<<_TBODY
                         <tr>
-                            <td class="text-center">$field[year]</td>
-                            <td class="text-center">$field[cmpapl]</td>
-                            <td class="text-center">$field[empapl]</td>
-                            <td class="text-center">$field[pryapl]</td>
-                            <td class="text-center">$field[hldclsapl]</td>
+                            <td class="">$field[cmpapl]</td>
+                            <td class="text-center">$field[empapl]<br/>$field[pryapl]</td>
+                            <td class="text-center">$field[frmlistapl]</td>
+                            <td class="text-center">$field[year]<br/>$field[hldclsapl]</td>
                             <td class="">$field[hldrsn]</td>
+                            <td class="text-center">$field[begindate]<br/>$field[enddate]</td>
+                            <td class="text-center">$field[hldsdays]<br/>$field[hldshrs]</td>
                             <td class="text-center">$field[applydate]</td>
-                            <td class="text-center">$field[begindate]</td>
-                            <td class="text-center">$field[enddate]</td>
-                            <td class="text-center">$field[hldsdays]</td>
-                            <td class="text-center">$field[hldshrs]</td>
                         </tr>
 _TBODY;
             }
@@ -726,9 +723,6 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

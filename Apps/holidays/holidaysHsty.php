@@ -52,6 +52,13 @@
         } elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 請假截止日
             $obj_holiday->SQLWhere .= " AND h.enddate <= '$arrQryFld[enddate]' ";
         }
+
+        if (isset($arrQryFld['isSigned']) && $arrQryFld['isSigned'] == '是') {
+            $obj_holiday->SQLWhere .= " AND h.frmformcode = '2023010017' ";
+        } elseif (isset($arrQryFld['isSigned']) && $arrQryFld['isSigned'] == '否') {
+            $obj_holiday->SQLWhere .= " AND h.frmformcode <> '2023010017' ";
+        }
+        $htmlTags['isSigned'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'isSigned', 'attrName'=>'isSigned', 'attrTitle'=>'是否已簽核'), array('是', '否'), $arrQryFld['isSigned'], true); // 是否已簽核
         $obj_holiday->SQLOrderBy .= " h.year DESC, h.begindate DESC, e.cmpcode, e.empcode ";
         $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
 
@@ -132,8 +139,7 @@
     } else { //第一次執行時的處理動作
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), date("Y", time()), null); // 年度(西元年)
         $htmlTags['depts'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode'), $obj_depts->getList(), null, true); //機構
-        $htmlTags['html_hldscls'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'hldformcode', 'attrName'=>'hldformcode', 'attrTitle'=>'請選擇假別', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_field_lists->getList('請假'), null, true); //假別
-        $htmlTags['html_frmformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'frmformcode', 'attrName'=>'frmformcode', 'attrTitle'=>'請選擇審核狀態', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_field_lists->getListByLikeListcls('表單審核'), null, true); //審核狀態
+        $htmlTags['isSigned'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'isSigned', 'attrName'=>'isSigned', 'attrTitle'=>'是否已簽核'), array('是', '否'), null, true); // 是否已簽核
         //$htmlTags['html_sort'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'sort', 'attrName'=>'sort', 'attrTitle'=>'請輸入排序方式', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), array(array('srtTitle'=>'品項代碼欄位-由小到大排序', 'srtValue'=>'mtrlcode ASC'), array('srtTitle'=>'品項代碼欄位-由大到小排序', 'srtValue'=>'mtrlcode DESC')), "品項代碼欄位-由小到大排序"); //排序方式
         $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, 100); //每頁顯示筆數
         //$htmlTags['html_recdsperpage'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), array(array('srtTitle'=>'50', 'srtValue'=>'50'), array('srtTitle'=>'100', 'srtValue'=>'100'), array('srtTitle'=>'250', 'srtValue'=>'250'), array('srtTitle'=>'500', 'srtValue'=>'500')), 500); //每頁顯示筆數
@@ -254,11 +260,13 @@ echo <<<_html
                         <input type="date" class="form-control" id="enddate" name="enddate" value="{$arrQryFld['enddate']}" placeholder="請輸入請假截止日" title="請輸入請假截止日">
                     </div>
                     <div class="col-2">
-                        <label for="supplier_telephone" class="form-label">每頁顯示筆數：</label>$htmlTags[html_recdsperpage]
+                        <label for="enddate" class="form-label">是否已簽核：</label>$htmlTags[isSigned]
                     </div>
                 </div>
                 <div class="row gy-2">
-                    
+                    <div class="col-2">
+                        <label for="supplier_telephone" class="form-label">每頁顯示筆數：</label>$htmlTags[html_recdsperpage]
+                    </div>
                 </div>
                 <div class="row  justify-content-center mt-2">
                     <input type="submit" class="col-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-1 btn btn-outline-primary">
@@ -268,7 +276,7 @@ echo <<<_html
                     <caption><h4><b>員工請假歷史清單</b></h4></caption>
                     <thead class="">
                         <tr>
-                            <th class="text-center">年度</th><th class="text-center">機構</th><th class="text-center">員工</th><th class="text-center">代理人</th><th class="text-center">假別</th><th class="col-3">請假事由</th><th class="text-center">假單送出時間</th><th class="text-center">請假啟始日</th><th class="text-center">請假截止日</th><th class="text-center">請假天數</th><th class="text-center">請假時數</th>
+                            <th class="col-2 text-center">機構</th><th class="col-1 text-center">員工<br/>代理人</th><th class="col-2 text-center">表單審核狀態</th><th class="col-1 text-center">年度<br/>假別</th><th class="col-2">請假事由</th><th class="col-2 text-center">請假啟始日<br/>請假截止日</th><th class="col-1 text-center">請假天數<br/>請假時數</th><th class="col-2 text-center">假單送出時間</th>
                         </tr>
                     </thead>
                     
