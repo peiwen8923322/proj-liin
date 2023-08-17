@@ -9,12 +9,12 @@
     
     //變數初始化
     $obj_form = new cls_form;
-    // $obj_pms = new cls_pms; //權限檔
-    // if (!$obj_pms->isOwnPmsByEmpformcode($_SESSION['login_emp']['formcode'], '請假管理', '請假歷史查詢')) { //檢查使用者是否有使用權限
-    //     $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有請假管理的查詢權限，如需該功能的使用權限，請與管理者聯絡");
-    //     $obj_form->js_goURL(INDEXPAGE); //返回首頁
-    //     exit();
-    // }
+    $obj_pms = new cls_pms; //權限檔
+    if (!$obj_pms->isOwnPmsByEmpformcode($_SESSION['login_emp']['formcode'], '刷卡管理', '歷史查詢')) { //檢查使用者是否有使用權限
+        $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有刷卡管理的歷史查詢權限，如需該功能的使用權限，請與管理者聯絡");
+        $obj_form->js_goURL(INDEXPAGE); //返回首頁
+        exit();
+    }
 
     $obj_clockin = new cls_clockin; //刷卡檔
     $obj_emp = new cls_employees; //員工檔
