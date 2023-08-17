@@ -184,8 +184,8 @@ echo <<<_html
                         <div class="col-6">$htmlTags[html_clkinsttpk]</div>
                     </div>
                     <div class="row justify-content-center my-3">
-                        <div class="col-2 text-end fw-bolder">刷卡異常說明：</div>
-                        <div class="col-6"><input type="text" class="form-control" id="extodnymemo" name="extodnymemo" value="$htmlTags[extodnymemo]" title="請輸入刷卡異常說明：" placeholder="請輸入刷卡異常說明："></div>
+                        <div class="col-2 text-end fw-bolder">刷卡說明：</div>
+                        <div class="col-6"><input type="text" class="form-control" id="extodnymemo" name="extodnymemo" value="$htmlTags[extodnymemo]" title="請輸入刷卡說明：" placeholder="請輸入刷卡說明："></div>
                     </div>
                     <div class="row justify-content-center my-3">
                         <div class="col-2 text-end fw-bolder"></div>
