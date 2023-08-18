@@ -89,13 +89,14 @@
 
     if (isset($_POST['submit'])) { //按下"送出 / 暫存"按鈕的處理動作
         $arrNewFormVal = $obj_form->inputChk($_POST); //淨化查詢條件
-        $arrNewFormVal['formcode'] = $obj_holiday->getNextFormCode(Date("Ym", time())); //表單編號
-        $arrNewFormVal['creator'] = $_SESSION['login_emp']['empapl'];//建立者
-        $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl'];//修改者
+        $arrNewFormVal['formcode'] = $obj_holiday->getNextFormCode(Date("Ym", time())); // 表單編號
+        $arrNewFormVal['creator'] = $_SESSION['login_emp']['empapl']; // 建立者
+        $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl']; // 修改者
         
         //參考其他Table
-        $tbl['hlds'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['hldformcode']); //假別
-        $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; //審核狀態 ("送出 / 暫存")
+        $tbl['aftrest'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['aftrest']); // 中午是否休息
+        $tbl['hlds'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['hldformcode']); // 假別
+        $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; // 審核狀態 ("送出 / 暫存")
         $tbl['proxy'] = $obj_employees->getRecdByFormcode($arrNewFormVal['pryformcode']); // 代理人
         
         //執行SQL
@@ -111,6 +112,7 @@
         $htmlTags['html_enddate'] = $arrNewFormVal['enddate']; //請假截止日
         $htmlTags['html_hldsdays'] = $arrNewFormVal['hldsdays']; //請假天數
         $htmlTags['html_hldshrs'] = $arrNewFormVal['hldshrs']; //請假時數
+        $htmlTags['aftrest'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'aftrest', 'attrName'=>'aftrest', 'Label'=>'listapl', 'attrValue'=>'formcode', 'default'=>'formcode'), $obj_field_lists->getList('中午是否休息'), $arrNewFormVal['aftrest']); // 中午是否休息
         $htmlTags['html_pryformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'pryformcode', 'attrName'=>'pryformcode', 'attrTitle'=>'代理人', 'optionTitle'=>'NewEmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_employees->getListAtWork(), $arrNewFormVal['pryformcode']); // 代理人('optionTitle'=>'NewEmpapl')
         $htmlTags['html_frmlistapl'] = $_POST['submit']; //審核狀態
     } else { //表單第一次執行的處理動作
@@ -124,6 +126,7 @@
         $htmlTags['html_enddate'] = date("Y-m-d H:i", time()); //請假截止日
         $htmlTags['html_hldsdays'] = 0; //請假天數
         $htmlTags['html_hldshrs'] = 0; //請假時數
+        $htmlTags['aftrest'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'aftrest', 'attrName'=>'aftrest', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_field_lists->getList('中午是否休息'), '否'); // 中午是否休息
         $htmlTags['html_pryformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'pryformcode', 'attrName'=>'pryformcode', 'attrTitle'=>'代理人', 'optionTitle'=>'NewEmpapl', 'optionValue'=>'formcode'), $obj_employees->getListAtWork(), "{$tbl['emp']['empcode']}-{$tbl['emp']['empapl']}"); // 代理人('optionTitle'=>'NewEmpapl')
         $htmlTags['html_frmlistapl'] = ""; //審核狀態
     }
@@ -246,6 +249,32 @@ echo <<<_html
                 });
             });
 
+            //用jQuery AJAX計算請假天數及請假時數
+            $("#aftrest0001").click(function(){ // 中午是否休息(是)
+                // alert($("#hldshrs").val());
+                
+                if($("#hldshrs").val() >= 1){
+                    $("#hldshrs").val($("#hldshrs").val() - 1); //請假小時
+                }
+
+                // $.post("./jqChgHldsFld.php", {begindate: $("#begindate").val(), enddate: $("#enddate").val()}, function(data,status){
+                //     // $("#hlds").val(data);
+
+                //     var interval = data; //請假小時
+                //     if(interval == 8) { //請假8小時
+                //         $("#hldsdays").val(1); //請假天數
+                //         $("#hldshrs").val(0); //請假小時 
+                //     }else if(interval < 8) { //請假 < 8小時
+                //         $("#hldsdays").val(0); //請假天數
+                //         $("#hldshrs").val(interval); //請假小時
+                //     }else if(interval > 8) { //請假 > 8小時
+                //         $("#hldsdays").val(Math.floor(interval/8)); //請假天數
+                //         $("#hldshrs").val(interval - Math.floor(interval/8)*8); //請假小時
+                //     }
+                //     // alert(interval);
+                // });
+            });
+
             // 檢查假別時數是否正確
             $(":radio").click(function(){
                 switch($(this).val()){
@@ -342,7 +371,11 @@ echo <<<_html
                         <div class="col-2 text-end fw-bolder"><label for="hldshrs" class="form-label">請假時數：<br/>(單位：小時)</label></div>
                         <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="hldshrs" name="hldshrs" value="$htmlTags[html_hldshrs]" title="請輸入請假時數" readonly></div>
                     </div>
-                    <div class="row">
+                    <div class="row my-3">
+                        <div class="col-2 text-end fw-bolder"><label for="aftrest" class="form-label">中午是否休息(1小時)：</label></div>
+                        <div class="col">$htmlTags[aftrest]</div>
+                    </div>
+                    <div class="row my-3">
                         <div class="col-2 text-end fw-bolder"><label for="hldclscode0002" class="form-label">假別：</label></div>
                         <div class="col">$htmlTags[html_hldscls] <b>[請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)]</b></div>
                     </div>

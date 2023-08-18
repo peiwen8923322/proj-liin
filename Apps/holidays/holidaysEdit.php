@@ -94,6 +94,7 @@
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl'];//修改者
 
         //參考其他Table
+        $tbl['aftrest'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['aftrest']); // 中午是否休息
         $tbl['hlds'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['hldformcode']); //假別
         $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; //審核狀態 ("送出 / 暫存")
         $tbl['proxy'] = $obj_emp->getRecdByFormcode($arrNewFormVal['pryformcode']); // 代理人
@@ -111,6 +112,7 @@
         $htmlTags['html_enddate'] = $arrNewFormVal['enddate']; //請假截止日
         $htmlTags['html_hldsdays'] = $arrNewFormVal['hldsdays']; //請假天數
         $htmlTags['html_hldshrs'] = $arrNewFormVal['hldshrs']; //請假時數
+        $htmlTags['aftrest'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'aftrest', 'attrName'=>'aftrest', 'Label'=>'listapl', 'attrValue'=>'formcode', 'default'=>'formcode'), $obj_field_lists->getList('中午是否休息'), $arrNewFormVal['aftrest']); // 中午是否休息
         $htmlTags['html_pryformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'pryformcode', 'attrName'=>'pryformcode', 'attrTitle'=>'代理人', 'optionTitle'=>'NewEmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_emp->getListAtWork(), $arrNewFormVal['pryformcode']); // 代理人('optionTitle'=>'NewEmpapl')
         $htmlTags['html_frmlistapl'] = $_POST['submit']; //審核狀態
     } elseif (isset($_POST['logout'])) { //登出
@@ -139,6 +141,7 @@
         // echo "相差幾天：".((strtotime($arrCurRecord['enddate']) - strtotime($arrCurRecord['begindate'])) / 86400)."<br/>";
         $htmlTags['html_hldsdays'] = $arrCurRecord['hldsdays']; //請假天數
         $htmlTags['html_hldshrs'] = $arrCurRecord['hldshrs']; //請假時數
+        $htmlTags['aftrest'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'aftrest', 'attrName'=>'aftrest', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_field_lists->getList('中午是否休息'), $arrCurRecord['aftrest']); // 中午是否休息
         $htmlTags['html_pryformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'pryformcode', 'attrName'=>'pryformcode', 'attrTitle'=>'代理人', 'optionTitle'=>'NewEmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_emp->getListAtWork(), $arrCurRecord['pryformcode']); // 代理人('optionTitle'=>'NewEmpapl')
         $htmlTags['html_frmlistapl'] = $arrCurRecord['frmlistapl']; //審核狀態
 
@@ -359,6 +362,10 @@ echo <<<_html
                         <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="hldsdays" name="hldsdays" value="$htmlTags[html_hldsdays]" title="請輸入請假天數" readonly></div>
                         <div class="col-2 text-end fw-bolder"><label for="hldshrs" class="form-label">請假時數：</label></div>
                         <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="hldshrs" name="hldshrs" value="$htmlTags[html_hldshrs]" title="請輸入請假時數" readonly></div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-2 text-end fw-bolder"><label for="aftrest" class="form-label">中午是否休息(1小時)：</label></div>
+                        <div class="col">$htmlTags[aftrest]</div>
                     </div>
                     <div class="row">
                         <div class="col-2 text-end fw-bolder"><label for="hldformcode0002" class="form-label">假別：</label></div>

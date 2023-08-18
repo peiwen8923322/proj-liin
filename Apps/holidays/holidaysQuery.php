@@ -46,7 +46,7 @@
         } elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 請假截止日
             $obj_holiday->SQLWhere .= " AND enddate <= '{$arrQryFld['enddate']}' ";
         }
-        $obj_holiday->SQLOrderBy .= " begindate DESC ";
+        $obj_holiday->SQLOrderBy .= " begindate DESC, applydate DESC ";
         $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
 
         // 統計分頁訊息

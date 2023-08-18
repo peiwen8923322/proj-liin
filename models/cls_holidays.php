@@ -124,6 +124,7 @@ _TBODY;
                 , enddate
                 , hldsdays
                 , hldshrs
+                , aftrest
                 , frmformcode
                 , frmlistapl
                 , pryformcode
@@ -158,6 +159,7 @@ _TBODY;
                 , '$arrFormVal[enddate]'
                 , $arrFormVal[hldsdays]
                 , $arrFormVal[hldshrs]
+                , '{$arrTbl['aftrest']['listapl']}'
                 , '{$arrTbl['frmvry']['formcode']}'
                 , '{$arrTbl['frmvry']['listapl']}'
                 , '{$arrTbl['proxy']['formcode']}'
@@ -208,6 +210,7 @@ _sql;
                 , enddate = '$arrFormVal[enddate]'
                 , hldsdays = $arrFormVal[hldsdays]
                 , hldshrs = $arrFormVal[hldshrs]
+                , aftrest = '{$arrTbl['aftrest']['listapl']}'
                 , applydate = current_timestamp()
                 , frmformcode = '{$arrTbl['frmvry']['formcode']}'
                 , frmlistapl = '{$arrTbl['frmvry']['listapl']}'
