@@ -2,6 +2,7 @@
     /*
      測試版common.php
      */
+    session_cache_expire(480);
     session_start();
     date_default_timezone_set('Asia/Taipei'); //設定時區
     // set to the user defined error handler
