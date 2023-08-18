@@ -189,7 +189,7 @@ echo <<<_html
                     </div>
                     <div class="row justify-content-center my-3">
                         <div class="col-2 text-end fw-bolder"></div>
-                        <div class="col-6 text-danger fw-bolder">適用單位：八八、北市居家、烏來、廚房人員、三芝</div>
+                        <div class="col-6 text-danger fw-bolder">適用單位：八八、北市居家、烏來、廚房人員、三芝、全體人員外出均需填寫</div>
                     </div>
                     
                     <div class="row justify-content-center my-3">
