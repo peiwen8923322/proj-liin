@@ -1,10 +1,12 @@
 <?php
 use Illuminate\Support\Arr;
+    
+    session_cache_expire(480);
     session_start();
     unset($_SESSION['login_time']); // 清除目前的登入日期時間
     unset($_SESSION['login_emp']); // 清除儲存登入者資訊
     date_default_timezone_set('Asia/Taipei'); //設定時區
-    define("INDEXPAGE", "../Apps/index/index.php");
+    define("INDEXPAGE", "../Apps/index/mindex.php");
 
     //Require_once
     require_once "../models/cls_form.php";
@@ -43,19 +45,13 @@ use Illuminate\Support\Arr;
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>立穎健康照護管理系統</title>
-    <!-- meta使用viewport以确保页面可自由缩放 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
-    <!-- 引入 jQuery Mobile 样式 -->
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-    
-    <!-- 引入 jQuery 库 -->
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-
-    <!-- 引入 jQuery Mobile 库 -->
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-
+    <!-- JQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
         var msg = ""; //訊息欄
         var btn = ""; //使用者按下按鈕
@@ -94,55 +90,50 @@ use Illuminate\Support\Arr;
     </script>
 </head>
 <body>
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    
+    <div class="container-fluid">
 
-    <div data-role="page" id="pageone">
-        <div data-role="header">
+        <!--  header區塊  -->
+        <header>
+            <div class="d-flex flex-row text-white" style="background-color: #3E7050;">
+                <h1 class="col text-center"><img src="../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
+            </div>        
+        </header>
+
+        <!-- main區塊 -->
+        <main>
             <h4 class="fw-bold text-center">立穎健康照護管理系統</h4>
-        </div>
-        
-        <div data-role="content">
-            
-        <h4 class="fw-bold text-center">立穎健康照護管理系統</h4>
-                <form method="post" action="" id="form1" name="form1">
-                    <div class="container-fluid">
-                        <div class="row justify-content-center my-3">
-                            <div class="col-3">
-                                <label for="account" class="form-label"><h5><b>帳號：</b></h5></label>
-                                <input type="text" class="form-control" id="account" name="account" placeholder="請輸入帳號" title="請輸入帳號" autofocus required>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center my-3">
-                            <div class="col-3">
-                                <label for="passwd" class="form-label"><h5><b>密碼：</b></h5></label>
-                                <input type="password" class="form-control" id="passwd" name="passwd" placeholder="請輸入密碼" title="請輸入密碼" required>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center my-3">
-                            <div class="col-3">
-                                <div><h5><b>圖形驗證碼：<img id="imgcode" src="imgcode.php" onclick="refresh_code()" /></b></h5>(按下圖片可以更新驗證碼)</div>
-                                <div><input type="text" class="form-control form-control-user reg_vcode" id="vcode" name="vcode" value="" placeholder="輸入上方圖形驗證碼" required></div>
-                            </div>
-                        </div>
-                        
-                        <div class="row justify-content-center my-3">
-                            <input type="submit" class="col-1 btn btn-primary me-3" id="submit" name="submit" value="登入">
-                            <input type="reset" class="col-1 btn btn-outline-primary" id="reset" value="清除">
+            <form method="post" action="" id="form1" name="form1">
+                
+                    <div class="row justify-content-center my-3">
+                        <div class="col-sm-3">
+                            <label for="account" class="form-label"><h5><b>帳號：</b></h5></label>
+                            <input type="text" class="form-control" id="account" name="account" placeholder="請輸入帳號" title="請輸入帳號" autofocus required>
                         </div>
                     </div>
-                </form>
+                    <div class="row justify-content-center my-3">
+                        <div class="col-sm-3">
+                            <label for="passwd" class="form-label"><h5><b>密碼：</b></h5></label>
+                            <input type="password" class="form-control" id="passwd" name="passwd" placeholder="請輸入密碼" title="請輸入密碼" required>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center my-3">
+                        <div class="col-sm-3">
+                            <div><h5><b>圖形驗證碼：<img id="imgcode" src="imgcode.php" onclick="refresh_code()" /></b></h5>(按下圖片可以更新驗證碼)</div>
+                            <div><input type="text" class="form-control form-control-user reg_vcode" id="vcode" name="vcode" value="" placeholder="輸入上方圖形驗證碼" required></div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center my-3 text-danger fw-bold">使用手機瀏覽時，請將手機轉90度橫向瀏覽。</div>
+                    <div class="row justify-content-center my-3">
+                        <input type="submit" class="col-sm-1 btn btn-primary" id="submit" name="submit" value="登入">&nbsp;&nbsp;<input type="reset" class="col-sm-1 btn btn-outline-primary" id="reset" value="清除">
+                    </div>
                 
-            <!-- main區塊 -->
-            <main>
-                
-            </main>
+            </form>
+        </main>
 
-
-        </div>
-        
-        <div data-role="footer">
-            <h1>頁面底部內容</h1>
-        </div>
+    
     </div>
-
 </body>
 </html>

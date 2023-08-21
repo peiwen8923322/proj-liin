@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Support\Arr;
+    
+    session_cache_expire(480);
     session_start();
     unset($_SESSION['login_time']); // 清除目前的登入日期時間
     unset($_SESSION['login_emp']); // 清除儲存登入者資訊
