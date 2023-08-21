@@ -73,7 +73,7 @@ echo <<<_html
                 if ($(this).val() == "登出") {
                     msg = "你已經登出系統";
                     btn = "登出";
-                    location.assign("../../Public/login.php");
+                    location.assign("../../Public/mlogin.php");
                     alert(msg);
                 }
             });
@@ -93,10 +93,10 @@ echo <<<_html
             <h1 class="col-sm-4"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
         </div>
         <div class="row justify-content-end text-white" style="background-color: #3E7050;">
+            <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
             <h6 class="col-sm-auto">使用者：{$_SESSION['login_emp']['empapl']}</h6>
             <h6 class="col-sm-auto">帳號：{$_SESSION['login_emp']['empcode']}</h6>
             <h6 class="col-sm-auto">登入日期：$_SESSION[login_time]</h6>
-            <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
         </div>
     </header>
 _html;

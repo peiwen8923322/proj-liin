@@ -4,7 +4,7 @@
         <ul class="nav nav-tabs">
             <div class="col-sm-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page" href="../../Apps/index/index.php">首頁</a>
+                    <a class="nav-link text-white" aria-current="page" href="../../Apps/index/mindex.php">首頁</a>
                 </li>
             </div>
             
