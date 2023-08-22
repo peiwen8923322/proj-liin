@@ -51,12 +51,6 @@
                         <li><div class="dropdown-divider"></div></li>
                         <li><a href="../receivingMaterial/receivingMaterialNew.php" class="dropdown-item" target="_self">建立領料資料</a></li>
                         <li><a href="../receivingMaterial/receivingMaterialQuery.php" class="dropdown-item" target="_self">維護領料資料</a></li>
-                        
-                        
-                        <!--
-                        <li><div class="dropdown-divider"></div></li>
-                        <li><a href="../suppliers/supplierQuery.php" class="dropdown-item" target="_self">供應商管理(未建置)</a></li>
-                        -->
                     </ul>
                 </li>
             </div>
