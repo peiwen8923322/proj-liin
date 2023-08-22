@@ -104,7 +104,7 @@ use Illuminate\Support\Arr;
 
         <!-- main區塊 -->
         <main>
-            <h4 class="fw-bold text-center">立穎健康照護管理系統</h4>
+            <h4 class="fw-bold text-center">立穎健康照護管理系統(手機版)</h4>
             <form method="post" action="" id="form1" name="form1">
                 
                     <div class="row justify-content-center my-3">
