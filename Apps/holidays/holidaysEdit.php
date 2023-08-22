@@ -12,7 +12,7 @@
     $obj_pms = new cls_pms; //權限檔
     if (!$obj_pms->isOwnPmsByEmpformcode($_SESSION['login_emp']['formcode'], '請假管理', '編輯')) { //檢查使用者是否有使用權限
         $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有請假管理的編輯權限，如需該功能的使用權限，請與管理者聯絡");
-        $obj_form->js_goURL(INDEXPAGE); //返回首頁
+        $obj_form->js_goURL(MOBILEINDEXPAGE); //返回首頁
         exit();
     }
     
@@ -223,7 +223,7 @@ echo <<<_html
                 }else if ($(this).val() == "登出") {
                     msg = "你已經登出系統";
                     btn = "登出";
-                    location.assign("../../Public/login.php");
+                    location.assign("../../Public/mlogin.php");
                     alert("你已經登出系統");
                 }
             });
@@ -309,86 +309,84 @@ echo <<<_html
     </script>
 </head>
 <body>
+    <div class="container-fluid">
+
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
     <form action="" method="post" id="form1" name="form1">
     <!--  header區塊  -->
-     <header>
-        <div class="d-flex flex-row text-white" style="background-color: #3E7050;">
-            <h1 class="col-4 me-auto"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
-            <h6 class="col-auto text-end">使用者：{$_SESSION['login_emp']['empapl']} / 帳號：{$_SESSION['login_emp']['empcode']} / 登入日期：$_SESSION[login_time] &nbsp;&nbsp;<input type="button" class="btn btn-outline-light" value="登出"></h6>
-        </div>        
-    </header>
+    <div class="row justify-content-end text-white" style="background-color: #3E7050;">
+        <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
+        <h6 class="col-sm-auto">使用者：{$_SESSION['login_emp']['empapl']}</h6>
+        <h6 class="col-sm-auto">帳號：{$_SESSION['login_emp']['empcode']}</h6>
+        <h6 class="col-sm-auto">登入日期：$_SESSION[login_time]</h6>
+    </div>
 _html;
 
-    include_once "../../Require/navigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
+    include_once "../../Require/mnavigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
 
     include_once "holidaysNav.php"; //nav區塊 操作選單(路徑大小寫有區分)
 
 echo <<<_html
     <!-- main區塊 -->
     <main>
-        <h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5>
-        <div class="container-fluid">
+        <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
             <h4 class="text-secondary text-decoration-underline my-3"><b>編輯員工請假資料</b></h4>
             <input type="hidden" id="hldformcode" name="hldformcode" value="$htmlTags[html_hldformcode]">
             <div class="row">
-                <div class="col-10">
+                <div class="col-sm-10">
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="empapl" class="form-label">請假員工：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="empapl" name="empapl" value="$htmlTags[html_empcode]" title="請假員工" readonly></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="empapl" class="form-label">請假員工：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="empapl" name="empapl" value="$htmlTags[html_empcode]" title="請假員工" readonly></div>
                     </div>
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="takeofcdate" class="form-label">到職日：</label></div>
-                        <div class="col"><input type="date" class="form-control" style="height: 1.6cm;" id="takeofcdate" name="takeofcdate" value="{$tbl['emp']['takeofcdate']}" title="到職日" readonly></div>
-                        <div class="col-2 text-end fw-bolder"><label for="amlhrs" class="form-label">過去未休假的累積時數：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="amlhrs" name="amlhrs" value="{$tbl['emp']['amlhrs']}" title="過去未休假的累積時數" readonly></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="takeofcdate" class="form-label">到職日：</label></div>
+                        <div class="col-sm"><input type="date" class="form-control" style="height: 1.6cm;" id="takeofcdate" name="takeofcdate" value="{$tbl['emp']['takeofcdate']}" title="到職日" readonly></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="amlhrs" class="form-label">過去未休假的累積時數：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="amlhrs" name="amlhrs" value="{$tbl['emp']['amlhrs']}" title="過去未休假的累積時數" readonly></div>
                     </div>
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="year" class="form-label">年度(西元年)：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="year" name="year" value="$htmlTags[html_year]" title="請輸入年度" required></div>
-                        <div class="col-2 text-end fw-bolder"><label for="curhrs" class="form-label">目前可特休天數：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="curhrs" name="curhrs" value="{$tbl['emp']['curhrs']}" title="目前可特休時數" readonly></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="year" class="form-label">年度(西元年)：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="year" name="year" value="$htmlTags[html_year]" title="請輸入年度" required></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="curhrs" class="form-label">目前可特休天數：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="curhrs" name="curhrs" value="{$tbl['emp']['curhrs']}" title="目前可特休時數" readonly></div>
                     </div>
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="begindate" class="form-label">請假啟始日<br/>(必填)：</label></div>
-                        <div class="col"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="begindate" name="begindate" value="$htmlTags[html_begindate]" title="請輸入請假啟始日" required></div>
-                        <div class="col-2 text-end fw-bolder"><label for="enddate" class="form-label">請假截止日<br/>(必填)：</label></div>
-                        <div class="col"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="enddate" name="enddate" value="$htmlTags[html_enddate]" title="請輸入請假截止日" required></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="begindate" class="form-label">請假啟始日<br/>(必填)：</label></div>
+                        <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="begindate" name="begindate" value="$htmlTags[html_begindate]" title="請輸入請假啟始日" required></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="enddate" class="form-label">請假截止日<br/>(必填)：</label></div>
+                        <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="enddate" name="enddate" value="$htmlTags[html_enddate]" title="請輸入請假截止日" required></div>
                     </div>
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="hldsdays" class="form-label">請假天數：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="hldsdays" name="hldsdays" value="$htmlTags[html_hldsdays]" title="請輸入請假天數" readonly></div>
-                        <div class="col-2 text-end fw-bolder"><label for="hldshrs" class="form-label">請假時數：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="hldshrs" name="hldshrs" value="$htmlTags[html_hldshrs]" title="請輸入請假時數" readonly></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="hldsdays" class="form-label">請假天數：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="hldsdays" name="hldsdays" value="$htmlTags[html_hldsdays]" title="請輸入請假天數" readonly></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="hldshrs" class="form-label">請假時數：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="hldshrs" name="hldshrs" value="$htmlTags[html_hldshrs]" title="請輸入請假時數" readonly></div>
                     </div>
                     <div class="row my-3">
-                        <div class="col-2 text-end fw-bolder"><label for="aftrest" class="form-label">中午是否休息(1小時)：</label></div>
-                        <div class="col">$htmlTags[aftrest]</div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="aftrest" class="form-label">中午是否休息(1小時)：</label></div>
+                        <div class="col-sm">$htmlTags[aftrest]</div>
                     </div>
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="hldformcode0002" class="form-label">假別：</label></div>
-                        <div class="col">$htmlTags[html_hldscls] <b>[請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)]</b></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="hldformcode0002" class="form-label">假別：</label></div>
+                        <div class="col-sm">$htmlTags[html_hldscls] <b>[請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)]</b></div>
                     </div>
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="hldrsn" class="form-label">請假事由(必填)：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="hldrsn" name="hldrsn" value="$htmlTags[html_hldrsn]" title="請輸入請假事由" placeholder="請輸入請假事由" required></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="hldrsn" class="form-label">請假事由(必填)：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="hldrsn" name="hldrsn" value="$htmlTags[html_hldrsn]" title="請輸入請假事由" placeholder="請輸入請假事由" required></div>
                     </div>
                     <div class="row">
-                        <div class="col-2 text-end fw-bolder"><label for="pryformcode" class="form-label">代理人：</label></div>
-                        <div class="col">$htmlTags[html_pryformcode]</div>
-                        <div class="col-2 text-end fw-bolder"><label for="frmlistapl" class="form-label">審核狀態：</label></div>
-                        <div class="col"><input type="text" class="form-control" style="height: 1.6cm;" id="frmlistapl" name="frmlistapl" value="$htmlTags[html_frmlistapl]" title="審核狀態" disabled></div>
-                    </div>
-                    <div class="row justify-content-center my-3">
-                        <input type="submit" class="col-1 btn btn-primary" name="submit" value="送出">&nbsp;&nbsp;<input type="submit" class="col-1 btn btn-outline-primary" name="submit" value="暫存">&nbsp;&nbsp;<input type="button" id="cancel" name="cancel" value="關閉" class="col-1 btn btn-outline-primary">
+                        <div class="col-sm-2 text-end fw-bolder"><label for="pryformcode" class="form-label">代理人：</label></div>
+                        <div class="col-sm">$htmlTags[html_pryformcode]</div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="frmlistapl" class="form-label">審核狀態：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="frmlistapl" name="frmlistapl" value="$htmlTags[html_frmlistapl]" title="審核狀態" disabled></div>
                     </div>
                 </div>
 
-                <div class="col-2">
+                <div class="col-sm-2">
                     <div class="row">
-                        <div class="col text-start fw-bolder">
+                        <div class="col-sm text-start fw-bolder">
                             假別統計 ($htmlTags[html_year]年)：
                             <div><span>病假：</span><span>$htmlTags[html_hld2022100089]</span></div>
                             <div><span>事假：</span><span>$htmlTags[html_hld2022100090]</span></div>
@@ -408,25 +406,16 @@ echo <<<_html
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="row justify-content-center my-3">
+                <input type="submit" class="col-sm-1 btn btn-primary" name="submit" value="送出">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" name="submit" value="暫存">&nbsp;&nbsp;<input type="button" class="col-sm-1 btn btn-outline-primary" id="cancel" name="cancel" value="關閉">
+            </div>
+            <div class="gy-5">&nbsp;</div>
+
     </main>    
     
-    <!-- footer區塊 -->
-    <!--
-    <footer>
-        <div class="container-fluid">
-            <div class="row justify-content-center my-3">
-                <div class="col-1">
-                    <a href="#" title="註冊">註冊</a>
-                </div>
-                <div class="col-1">
-                    <a href="#" title="變更密碼">變更密碼</a>
-                </div> 
-            </div>
-        </div>
-    </footer>
-    -->
     </form>
+    </div>
 </body>
 </html>
 _html;
