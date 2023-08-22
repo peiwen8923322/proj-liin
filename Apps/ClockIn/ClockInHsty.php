@@ -12,7 +12,7 @@
     $obj_pms = new cls_pms; //權限檔
     if (!$obj_pms->isOwnPmsByEmpformcode($_SESSION['login_emp']['formcode'], '刷卡管理', '歷史查詢')) { //檢查使用者是否有使用權限
         $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有刷卡管理的歷史查詢權限，如需該功能的使用權限，請與管理者聯絡");
-        $obj_form->js_goURL(INDEXPAGE); //返回首頁
+        $obj_form->js_goURL(MOBILEINDEXPAGE); //返回首頁
         exit();
     }
 

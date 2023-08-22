@@ -10,7 +10,10 @@
 
     //常數定義
     define("WWWROOT", "http://192.168.204.28/liin-testing/public/login.php");
+    // define("WWWROOT", "https://liin520.com/liin/Public/login.php"); // 虛擬主機(https://liin520.com)
     define("INDEXPAGE", "http://192.168.204.28/liin-testing/Apps/index/index.php");
+    // define("INDEXPAGE", "../index/index.php"); // 虛擬主機(https://liin520.com)
+    define("MOBILEINDEXPAGE", "../index/mindex.php"); // 虛擬主機(https://liin520.com)
 
     //變數定義
 
