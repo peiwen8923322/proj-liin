@@ -75,9 +75,6 @@ _TBODY;
                         <td class=""></td>
                         <td class=""></td>
                         <td class=""></td>
-                        <td class=""></td>
-                        <td class=""></td>
-                        <td class=""></td>
                     </tr>
                     </tbody>
 _TBODY;
