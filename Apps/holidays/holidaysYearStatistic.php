@@ -6,6 +6,7 @@
     require_once "../../models/cls_holidays.php";
     require_once "../../models/cls_field_lists.php";
     require_once "../../models/cls_employees.php";
+    require_once "../../models/cls_depts.php";
     
     //變數初始化
     $obj_form = new cls_form;
@@ -19,6 +20,7 @@
     $obj_holiday = new cls_holidays; //請假檔
     $obj_field_lists = new cls_field_lists; //欄位清單檔
     $obj_emp = new cls_employees; //員工檔
+    $obj_depts = new cls_depts; //機構檔
     
     $SQL = "";
     $arrData = array();
@@ -40,10 +42,11 @@
         $obj_holiday->SQLFrom = " FROM holidays h LEFT OUTER JOIN employees e ON (h.empformcode = e.formcode) ";
         $obj_holiday->SQLWhere .= " AND h.formstate = 15  AND h.frmformcode = '2023010017' "; // 主任已簽核
         
-        $obj_holiday->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND h.year = '{$arrQryFld['year']}' " : ""; //年度(西元年)
+        $obj_holiday->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND h.year = '{$arrQryFld['year']}' " : ""; // 年度(西元年)
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year']); // 年度(西元年)
-        $obj_holiday->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND h.empapl LIKE '%{$arrQryFld['empapl']}%' " : ""; //員工姓名
-        $obj_holiday->SQLWhere .= isset($arrQryFld['empcode']) && mb_strlen($arrQryFld['empcode']) > 0 ? " AND h.empcode LIKE '%{$arrQryFld['empcode']}%' " : ""; //員工編號
+        $obj_holiday->SQLWhere .= isset($arrQryFld['deptspk']) && mb_strlen($arrQryFld['deptspk']) > 0 ? " AND e.deptspk LIKE '%{$arrQryFld['deptspk']}%' " : ""; // 機構
+        $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_depts->getList(), $arrQryFld['deptspk'], true); // 機構
+        $obj_holiday->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND h.empapl LIKE '%{$arrQryFld['empapl']}%' " : ""; // 員工姓名
         $obj_holiday->SQLGroupBy .= " h.empformcode, h.hldformcode ";
         $obj_holiday->SQLOrderBy .= " h.year, e.cmpcode, h.formcode, h.hldformcode ";
         // $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
@@ -89,6 +92,7 @@
         $obj_holiday->SQLGroupBy = $_SESSION['SQL']['GroupBy'];
         $obj_holiday->SQLOrderBy = $_SESSION['SQL']['OrderBy'];
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year'], true); // 年度(西元年)
+        $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode'), $obj_depts->getList(), $arrQryFld['deptspk'], true); // 機構
         // $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
         $obj_holiday->SQL = $obj_holiday->SQLSelect.$obj_holiday->SQLFrom.$obj_holiday->SQLWhere.$obj_holiday->SQLGroupBy.$obj_holiday->SQLOrderBy;
         $arrData = $obj_holiday->getListByEmpformcodeAndYear($obj_holiday->SQL); // 取得請假統計並重組查詢結果
@@ -126,8 +130,7 @@
         $htmlPaging = $obj_form->viewPaging($obj_holiday->int_total_records, $obj_holiday->int_total_pages, $obj_holiday->int_current_page); //顯示查詢分頁HTML Tag
     } else { //第一次執行時的處理動作
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $nowYear); // 年度(西元年)
-        $htmlTags['html_hldscls'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'hldformcode', 'attrName'=>'hldformcode', 'attrTitle'=>'請選擇假別', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_field_lists->getList('請假'), null, true); //假別
-        $htmlTags['html_frmformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'frmformcode', 'attrName'=>'frmformcode', 'attrTitle'=>'請選擇審核狀態', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_field_lists->getListByLikeListcls('表單審核'), null, true); //審核狀態
+        $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode'), $obj_depts->getList(), null, true); //機構
         //$htmlTags['html_sort'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'sort', 'attrName'=>'sort', 'attrTitle'=>'請輸入排序方式', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), array(array('srtTitle'=>'品項代碼欄位-由小到大排序', 'srtValue'=>'mtrlcode ASC'), array('srtTitle'=>'品項代碼欄位-由大到小排序', 'srtValue'=>'mtrlcode DESC')), "品項代碼欄位-由小到大排序"); //排序方式
         // $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, 100); //每頁顯示筆數
         //$htmlTags['html_recdsperpage'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), array(array('srtTitle'=>'50', 'srtValue'=>'50'), array('srtTitle'=>'100', 'srtValue'=>'100'), array('srtTitle'=>'250', 'srtValue'=>'250'), array('srtTitle'=>'500', 'srtValue'=>'500')), 500); //每頁顯示筆數
@@ -142,6 +145,7 @@
     }
 
     //Close Connection
+    $obj_depts = null;
     $obj_emp = null;
     $obj_field_lists = null;
     $obj_holiday = null;
@@ -235,16 +239,14 @@ echo <<<_html
                 <input type="hidden" id="selFormCode" name="selFormCode" value="">
                 <div class="row">
                     <div class="col-sm-2">
-                        <label for="year" class="form-label">年度(西元年)：</label>
-                        $htmlTags[html_year]
+                        <label for="year" class="form-label">年度(西元年)：</label>$htmlTags[html_year]
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="empcode" class="form-label">機構：</label>$htmlTags[deptspk]
                     </div>
                     <div class="col-sm-2">
                         <label for="empapl" class="form-label">員工姓名：</label>
                         <input type="text" class="form-control" id="empapl" name="empapl" value="{$arrQryFld['empapl']}" placeholder="請輸入員工姓名" title="請輸入員工姓名">
-                    </div>
-                    <div class="col-sm-2">
-                        <label for="empcode" class="form-label">員工編號：</label>
-                        <input type="text" class="form-control" id="empcode" name="empcode" value="{$arrQryFld['empcode']}" placeholder="請輸入員工編號" title="請輸入員工編號">
                     </div>
                 </div>
                 
