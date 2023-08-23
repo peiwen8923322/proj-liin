@@ -171,7 +171,6 @@ echo <<<_html
     <!-- main區塊 -->
     <main>
         <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
-        
         <h4 class="text-secondary text-decoration-underline my-3"><b>建立刷卡資料(外出刷卡專用)</b></h4>
         <div class="row">
             <div class="col-sm-10">
@@ -218,21 +217,6 @@ echo <<<_html
         
     </main>    
     
-    <!-- footer區塊 -->
-    <!--
-    <footer>
-        <div class="container-fluid">
-            <div class="row justify-content-center my-3">
-                <div class="col-1">
-                    <a href="#" title="註冊">註冊</a>
-                </div>
-                <div class="col-1">
-                    <a href="#" title="變更密碼">變更密碼</a>
-                </div> 
-            </div>
-        </div>
-    </footer>
-    -->
     </form>
 
     </div>
