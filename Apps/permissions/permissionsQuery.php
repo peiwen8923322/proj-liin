@@ -11,7 +11,7 @@
     $obj_pms = new cls_pms; //權限檔
     if (!$obj_pms->isOwnPms($_SESSION['login_emp']['empapl'], '權限管理', '查詢')) { //檢查使用者是否有使用權限
         $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有權限管理的查詢權限，如需該功能的使用權限，請與管理者聯絡");
-        $obj_form->js_goURL(INDEXPAGE); //返回首頁
+        $obj_form->js_goURL(MOBILEINDEXPAGE); //返回首頁
         exit();
     }
     $obj_emp = new cls_employees; //員工檔
@@ -170,7 +170,7 @@ echo <<<_html
                 if ($(this).val() == "登出") {
                     msg = "你已經登出系統";
                     btn = "登出";
-                    location.assign("../../Public/login.php");
+                    location.assign("../../Public/mlogin.php");
                     alert(msg);
                 }
             });
@@ -179,191 +179,72 @@ echo <<<_html
     </script>
 </head>
 <body>
+    <div class="container-fluid">
+
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
     <form action="" method="post" id="form1" name="form1">
     <!--  header區塊  -->
     <header>
-        <div class="d-flex flex-row text-white" style="background-color: #3E7050;">
-            <h1 class="col-4 me-auto"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
-            <h6 class="col-auto text-end">使用者：{$_SESSION['login_emp']['empapl']} / 帳號：{$_SESSION['login_emp']['empcode']} / 登入日期：$_SESSION[login_time] &nbsp;&nbsp;<input type="button" class="btn btn-outline-light" value="登出"></h6>
-        </div>        
+        <div class="row text-white" style="background-color: #3E7050;">
+            <h1 class="col-sm-4"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
+        </div>
+        <div class="row justify-content-end text-white" style="background-color: #3E7050;">
+            <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
+            <h6 class="col-sm-auto">使用者：{$_SESSION['login_emp']['empapl']}</h6>
+            <h6 class="col-sm-auto">帳號：{$_SESSION['login_emp']['empcode']}</h6>
+            <h6 class="col-sm-auto">登入日期：$_SESSION[login_time]</h6>
+        </div>
     </header>
 _html;
 
-    include_once "../../Require/navigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
+    include_once "../../Require/mnavigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
 
     include_once "permissionsNav.php"; //nav區塊 操作選單
 
 echo <<<_html
     <!-- main區塊 -->
     <main>
-        <h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5>
-        <div class="container-fluid">
-            <h4 class="text-secondary text-decoration-underline my-3"><b>查詢員工權限</b></h4>
-            <div class="row justify-content-center mt-3">
-                <input type="hidden" id="selFormCode" name="selFormCode" value="">
-                <div class="row">
-                    <div class="col-3">
-                        <label for="empapl" class="form-label">員工姓名：</label>
-                        <input type="text" class="form-control" id="empapl" name="empapl" value="$arrQryFld[empapl]" placeholder="請輸入員工姓名" title="請輸入員工姓名">
-                    </div>
-                    <div class="col-3">
-                        <label for="prgcls" class="form-label">程式分類：</label>
-                        <input type="text" class="form-control" id="prgcls" name="prgcls" value="$arrQryFld[prgcls]" placeholder="請輸入程式分類" title="請輸入程式分類">
-                    </div>
+        <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
+        <h4 class="text-secondary text-decoration-underline my-3"><b>查詢員工權限</b></h4>
+        <div class="row justify-content-center mt-3">
+            <input type="hidden" id="selFormCode" name="selFormCode" value="">
+            <div class="row">
+                <div class="col-sm-3">
+                    <label for="empapl" class="form-label">員工姓名：</label>
+                    <input type="text" class="form-control" id="empapl" name="empapl" value="$arrQryFld[empapl]" placeholder="請輸入員工姓名" title="請輸入員工姓名">
                 </div>
-                <div class="row  justify-content-center mt-2">
-                    <input type="submit" class="col-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-1 btn btn-outline-primary">
+                <div class="col-sm-3">
+                    <label for="prgcls" class="form-label">程式分類：</label>
+                    <input type="text" class="form-control" id="prgcls" name="prgcls" value="$arrQryFld[prgcls]" placeholder="請輸入程式分類" title="請輸入程式分類">
                 </div>
-                
-                <table class="table caption-top table-striped table-hover my-5">
-                    <caption><h4><b>員工權限清單</b></h4></caption>
-                    <thead class="">
-                        <tr>
-                            <th class="">功能</th><th class="">部門</th><th class="text-center">員工姓名</th><th class="">程式分類</th><th class="">程式執行權限</th>
-                        </tr>
-                    </thead>
-                    {$htmlQryResult}
-                    <!--
-                    <tbody>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit01" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard01" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">宋雨彤</td>
-                            <td class="col-1">職稱A</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit02" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard02" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">莊芳薇</td>
-                            <td class="col-1">職稱B</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit01" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard01" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">宋雨彤</td>
-                            <td class="col-1">職稱A</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit02" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard02" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">莊芳薇</td>
-                            <td class="col-1">職稱B</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit01" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard01" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">宋雨彤</td>
-                            <td class="col-1">職稱A</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit02" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard02" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">莊芳薇</td>
-                            <td class="col-1">職稱B</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit01" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard01" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">宋雨彤</td>
-                            <td class="col-1">職稱A</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                        <tr>
-                            <td class="col-1">
-                                <input type="submit" class="btn btn-outline-primary" value="編輯" id="edit02" name="edit">
-                                <input type="submit" class="btn btn-outline-primary" value="註銷" id="discard02" name="discard">
-                            </td>
-                            <td class="col-2">壹山日照-管理部</td>
-                            <td class="col-1 text-center">莊芳薇</td>
-                            <td class="col-1">職稱B</td>
-                            <td class="col-1 text-center">2022/09/27</td>
-                            <td class="col-1 text-center">2022/09/30</td>
-                        </tr>
-                    </tbody>
-                    -->
-                </table>
-                
-                {$htmlPaging}
-                <!--
-                <nav aria-label="Page navigation">
-                    <ul class="pagination d-flex flex-row justify-content-center text-center">
-                        <li class="page-item col-3" aria-current="page">
-                            <div class="page-link sr-only">總頁數：20 / 目前頁數：3 / 總筆數：20</div>
-                        </li>
-                        <li class="page-item col-1">
-                            <a class="page-link" href="#">第一頁</a>
-                        </li>
-                        <li class="page-item col-1">
-                            <a class="page-link" href="#">下一頁</a>
-                        </li>
-                        <li class="page-item col-1">
-                            <a class="page-link" href="#">上一頁</a>
-                        </li>
-                        <li class="page-item col-1">
-                            <a class="page-link" href="#">最後頁</a>
-                        </li>
-                    </ul>
-                </nav>
-                -->
-                <div class="g-5"></div>
+            </div>
+
+            <div class="row justify-content-center mt-2">
+                <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">
             </div>
             
+            <table class="table caption-top table-striped table-hover my-5">
+                <caption><h4><b>員工權限清單</b></h4></caption>
+                <thead class="">
+                    <tr>
+                        <th class="">功能</th><th class="">機構</th><th class="text-center">員工姓名</th><th class="">程式分類</th><th class="">程式執行權限</th>
+                    </tr>
+                </thead>
+
+                {$htmlQryResult}
+            </table>
+            
+            {$htmlPaging}
+            <div class="g-5"></div>
         </div>
+            
+        
     </main>
 
-    <!-- footer區塊 -->
-    <!--
-    <footer>
-        <div class="container-fluid">
-            <div class="row justify-content-center my-3">
-                <div class="col-1">
-                    <a href="#" title="註冊">註冊</a>
-                </div>
-                <div class="col-1">
-                    <a href="#" title="變更密碼">變更密碼</a>
-                </div> 
-            </div>
-        </div>
-    </footer>
-    -->
     </form>
+    </div>
 </body>
 </html>
 _html;
