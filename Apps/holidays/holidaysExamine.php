@@ -162,10 +162,13 @@
         $htmlPaging = $obj_form->viewPaging($obj_holiday->int_total_records, $obj_holiday->int_total_pages, $obj_holiday->int_current_page); // 顯示查詢分頁HTML Tag
         
         // 查詢清單(HTML Tag)
-        if ($obj_holiday->int_current_page == 1 && $obj_holiday->int_total_records >= $obj_holiday->int_records_per_page) { // 計算第一頁的啟始筆數 + 結束筆數
+        if ($obj_holiday->int_current_page == 1 && $obj_holiday->int_total_records >= $obj_holiday->int_records_per_page) { // 計算第一頁的啟始筆數 + 結束筆數(超過一頁)
             $obj_holiday->intStartPos = 1;
             $obj_holiday->intEndPos = $obj_holiday->int_records_per_page;
-        } elseif ($obj_holiday->int_current_page == $obj_holiday->int_total_pages && $obj_holiday->int_total_records >= $obj_holiday->int_records_per_page) { // 計算最後頁的啟始筆數 + 結束筆數
+        } if ($obj_egress->int_current_page == 1 && $obj_egress->int_total_records < $obj_egress->int_records_per_page) { // 計算第一頁的啟始筆數 + 結束筆數(未滿一頁)
+            $obj_egress->intStartPos = 1;
+            $obj_egress->intEndPos = $obj_egress->int_total_records;
+        } elseif ($obj_holiday->int_current_page == $obj_holiday->int_total_pages) { // 計算最後頁的啟始筆數 + 結束筆數
             $obj_holiday->intStartPos = ($obj_holiday->int_current_page - 1) * $obj_holiday->int_records_per_page + 1;
             $obj_holiday->intEndPos = $obj_holiday->int_total_records;
         } else { // 計算中間頁的啟始筆數 + 結束筆數
