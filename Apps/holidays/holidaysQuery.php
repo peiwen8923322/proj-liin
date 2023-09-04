@@ -1,7 +1,7 @@
 <?php
 
     //Require_once
-    require_once "../../models//common.php"; //共用功能
+    require_once "../../models/common.php"; //共用功能
     require_once "../../models/cls_pms.php";
     require_once "../../models/cls_holidays.php";
     require_once "../../models/cls_field_lists.php";
@@ -66,11 +66,11 @@
         $_SESSION['SQL']['Where'] = $obj_holiday->SQLWhere;
         $_SESSION['SQL']['OrderBy'] = $obj_holiday->SQLOrderBy;
         $_SESSION['SQL']['CurPage'] = $obj_holiday->int_current_page; // 儲存目前頁數
-    }elseif (isset($_POST['edit'])) { //按下"編輯"按鈕的處理動作
+    } elseif (isset($_POST['edit'])) { //按下"編輯"按鈕的處理動作
         $_SESSION['selFormCode'] = $_POST['selFormCode']; //儲存目前編輯記錄
         header("location: holidaysEdit.php");
         exit();
-    }elseif (isset($_POST['paging']) || isset($_POST['discard']) || (isset($_GET['action']) && ($_GET['action'] == "update" || $_GET['action'] == "cancel"))) { //執行"分頁/編輯完成/取消編輯"功能後的處理動作
+    } elseif (isset($_POST['paging']) || isset($_POST['discard']) || (isset($_GET['action']) && ($_GET['action'] == "update" || $_GET['action'] == "cancel")) || isset($_POST['prt'])) { //執行"分頁/編輯完成/取消編輯"功能後的處理動作
         if (isset($_POST['discard'])) { //按下"註銷"按鈕的處理動作
             if (!$obj_pms->isOwnPmsByEmpformcode($_SESSION['login_emp']['formcode'], '請假管理', '註銷')) { //檢查使用者是否有使用權限
                 $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有請假管理的註銷權限，如需該功能的使用權限，請與管理者聯絡");
@@ -78,6 +78,9 @@
                 exit();
             }
             $obj_holiday->discard($_POST['selFormCode']); //註銷記錄
+        }
+        if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
+            $obj_form->js_openWindow('example_002.php');
         }
         
         //取得分頁條件
@@ -251,7 +254,7 @@ echo <<<_html
             </div>
 
             <div class="row justify-content-center mt-2">
-                <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">
+                <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" id="query" name="prt" value="列印">
             </div>
             
             <table class="table caption-top table-striped table-hover my-5">

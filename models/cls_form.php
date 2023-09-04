@@ -292,7 +292,7 @@ _html;
 
         // 以JavaScript開啟新視窗
         // $msg: 傳入狀態訊息
-        function js_openWindow($URL, $name='_blank', $attr='height=400, width==600, top=200, left=500, menubar=no, scrollbars=no, status=no, titlebar=no, toolbar=no'){
+        function js_openWindow($URL, $name='_blank', $attr='height=600, width==800, top=100, left=450, menubar=no, scrollbars=no, status=no, titlebar=no, toolbar=no'){
             //Begin
             echo "<script>window.open('$URL', '$name', '$attr');</script>";
             //End
