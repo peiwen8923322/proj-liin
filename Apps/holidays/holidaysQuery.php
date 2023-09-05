@@ -31,7 +31,7 @@
     //Begin
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者的員工記錄
     
-    if(isset($_POST['query'])){ //按下"查詢"按鈕的處理動作
+    if(isset($_POST['query']) || isset($_POST['prt'])){ // 按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); // 淨化查詢條件
         
         // $obj_holiday->SQLSelect .= ", year(CURRENT_DATE()) - year(takeofcdate) AS 'seniority' ";
@@ -66,6 +66,11 @@
         $_SESSION['SQL']['Where'] = $obj_holiday->SQLWhere;
         $_SESSION['SQL']['OrderBy'] = $obj_holiday->SQLOrderBy;
         $_SESSION['SQL']['CurPage'] = $obj_holiday->int_current_page; // 儲存目前頁數
+
+        if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
+            $obj_form->js_openWindow('hldsRpt.php');
+        }
+        
     } elseif (isset($_POST['edit'])) { //按下"編輯"按鈕的處理動作
         $_SESSION['selFormCode'] = $_POST['selFormCode']; //儲存目前編輯記錄
         header("location: holidaysEdit.php");
@@ -79,9 +84,7 @@
             }
             $obj_holiday->discard($_POST['selFormCode']); //註銷記錄
         }
-        if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
-            $obj_form->js_openWindow('example_002.php');
-        }
+        
         
         //取得分頁條件
         $arrQryFld = $_SESSION['arrQryFld'];

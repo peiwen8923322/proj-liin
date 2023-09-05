@@ -98,6 +98,80 @@ _TBODY;
         //End
     }
 
+    // 員工請假查詢列印PDF
+    // $arrData: Array物件
+    // $arrTbl: 其他參考檔(二維關聯陣列)
+    // return: 查詢結果HTML Tag
+    function PrtPDFByQry($arrData, $arrTbl){
+        //變數初始化
+        $count = 0; //該頁筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+        
+        //Begin
+        $thead =<<<_THEAD
+            <div><hr></div>
+            <thead>
+                <tr>
+                    <th style="width:10%;">審核狀態</th><th style="width:6%;">年度</th><th style="width:6%;">員工</th><th style="width:6%;">代理人</th><th style="width:6%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;">假單送出時間</th><th style="width:12%;">請假啟始日</th><th style="width:12%;">請假截止日</th><th style="width:8%;text-align:center;">請假天數</th><th style="width:8%;text-align:center;">請假時數</th>
+                </tr>
+            </thead>
+_THEAD;
+
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+            foreach ($arrData as $field) {
+                $count++;
+                
+                $tbody .= <<<_TBODY
+                        <tr>
+                            <td style="width:10%;">$field[frmlistapl]</td>
+                            <td style="width:6%;">$field[year]</td>
+                            <td style="width:6%;">$field[empapl]</td>
+                            <td style="width:6%;">$field[pryapl]</td>
+                            <td style="width:6%;">$field[hldclsapl]</td>
+                            <td style="width:15%;">$field[hldrsn]</td>
+                            <td style="width:12%;">$field[applydate]</td>
+                            <td style="width:12%;">$field[begindate]</td>
+                            <td style="width:12%;">$field[enddate]</td>
+                            <td style="width:8%;text-align:center;">$field[hldsdays]</td>
+                            <td style="width:8%;text-align:center;">$field[hldshrs]</td>
+                        </tr>
+_TBODY;
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+        
+        return $table;
+        //End
+    }
+
     // 請假者新增記錄
     // $arrFormVal: 傳入新表單欄位值陣列
     // $arrTbl: 傳入其他表格的參考陣列
