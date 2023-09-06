@@ -62,7 +62,7 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->setFont('msungstdlight', '', 20);
 		// Title
-		$this->Cell(0, 0, '員工請假清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 0, '員工請假審核清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln();
 
         $this->setFont('msungstdlight', '', 10);
@@ -93,8 +93,8 @@ $pdf = new MYPDF("L", PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 // set document information
 $pdf->setCreator(PDF_CREATOR);
 $pdf->setAuthor('徐培文');
-$pdf->setTitle('員工請假清單');
-$pdf->setSubject('員工請假清單');
+$pdf->setTitle('員工請假審核清單');
+$pdf->setSubject('員工請假審核清單');
 $pdf->setKeywords('員工, PDF, 請假');
 
 // remove default header/footer
@@ -128,12 +128,10 @@ $pdf->setFont('msungstdlight', '', 9);
 // add a page
 $pdf->AddPage();
 
-$obj_holiday->SQLSelect = $_SESSION['SQL']['Select'];
-$obj_holiday->SQLFrom = $_SESSION['SQL']['From'];
-$obj_holiday->SQLWhere = $_SESSION['SQL']['Where'];
-$obj_holiday->SQLOrderBy = $_SESSION['SQL']['OrderBy'];
-$obj_holiday->SQL = $obj_holiday->SQLSelect.$obj_holiday->SQLFrom.$obj_holiday->SQLWhere.$obj_holiday->SQLOrderBy;
-$pdf->writeHTML($obj_holiday->PrtPDFByQry($obj_holiday->rtnQryResults($obj_holiday->SQL), $tbl), true, false, true, false, '');
+$arrData = $_SESSION['SQL']['arrData'];
+$obj_holiday->intStartPos = 1;
+$obj_holiday->intEndPos = count($arrData);
+$pdf->writeHTML($obj_holiday->PrtPDFByVrfQry($arrData, $tbl), true, false, true, false, '');
 
 // ---------------------------------------------------------
 

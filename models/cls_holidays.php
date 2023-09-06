@@ -98,7 +98,7 @@ _TBODY;
         //End
     }
 
-    // 員工請假查詢列印PDF
+    // 列印員工請假資料(PDF檔)
     // $arrData: Array物件
     // $arrTbl: 其他參考檔(二維關聯陣列)
     // return: 查詢結果HTML Tag
@@ -308,10 +308,8 @@ _sql;
         //End
     }
 
-    /*
-    註銷記錄
-    $selFormCode: 傳入目前記錄的FormCode值
-    */
+    // 註銷記錄
+    // $selFormCode: 傳入目前記錄的FormCode值
     function discard($selFormCode){
         //Begin
         $this->SQL = "UPDATE $this->self_table SET formstate = 14 WHERE formcode='$selFormCode'";
@@ -471,6 +469,120 @@ _TBODY;
         }
 
         return $tbody;
+        //End
+    }
+
+    // 列印員工請假審核資料(PDF檔)
+    // $arrData: 已過濾後的資料來源(二維關聯陣列)
+    // $arrEmp: 其他參考檔(二維關聯陣列)
+    // 傳回 HTML Tag
+    function PrtPDFByVrfQry($arrData, $arrTbl){
+        //變數初始化
+        $count = 0; //統計筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+
+        //Begin
+        $thead =<<<_THEAD
+            <div><hr></div>
+            <thead>
+                <tr>
+                    <th style="width:10%;">審核狀態</th><th style="width:4%;">年度</th><th style="width:10%;">機構</th><th style="width:6%;">員工</th><th style="width:6%;">代理人</th><th style="width:6%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;text-align:center;">假單送出時間</th><th style="width:12%;text-align:center;">請假啟始日</th><th style="width:12%;text-align:center;">請假截止日</th><th style="width:8%;text-align:center;">請假天數<br/>請假時數</th>
+                </tr>
+            </thead>
+_THEAD;
+
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+
+            for ($i = $this->intStartPos; $i <= $this->intEndPos; $i++) {
+                if ($arrTbl['emp']['formcode'] == $arrData[$i]['pryformcode'] && $arrData[$i]['frmformcode'] == '2023010004') { // 代理人 + 送出
+                    $count++;
+                    
+                    $tbody .= <<<_TBODY
+                        <tr>
+                            <td style="width:10%;">{$arrData[$i]['frmlistapl']}</td>
+                            <td style="width:4%;">{$arrData[$i]['year']}</td>
+                            <td style="width:10%;">{$arrData[$i]['cmpapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['empapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['pryapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['hldclsapl']}</td>
+                            <td style="width:15%;">{$arrData[$i]['hldrsn']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['applydate']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['begindate']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['enddate']}</td>
+                            <td style="width:8%;text-align:center;">{$arrData[$i]['hldsdays']}<br/>{$arrData[$i]['hldshrs']}</td>
+                        </tr>
+_TBODY;
+                } elseif ($arrTbl['emp']['formcode'] == $arrData[$i]['mngrformcode'] && $arrData[$i]['emprolepk'] == '2023010012' && $arrData[$i]['frmformcode'] == '2023010006') { // 單位主管 + 申請者(員工身份) + 代理人已簽核
+                    $count++;
+                    
+                    $tbody .= <<<_TBODY
+                        <tr>
+                            <td style="width:10%;">{$arrData[$i]['frmlistapl']}</td>
+                            <td style="width:4%;">{$arrData[$i]['year']}</td>
+                            <td style="width:10%;">{$arrData[$i]['cmpapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['empapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['pryapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['hldclsapl']}</td>
+                            <td style="width:15%;">{$arrData[$i]['hldrsn']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['applydate']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['begindate']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['enddate']}</td>
+                            <td style="width:8%;text-align:center;">{$arrData[$i]['hldsdays']}<br/>{$arrData[$i]['hldshrs']}</td>
+                        </tr>
+_TBODY;
+                } elseif ($arrTbl['emp']['formcode'] == $arrData[$i]['cifformcode'] && (($arrData[$i]['emprolepk'] == '2023010012' && $arrData[$i]['frmformcode'] == '2023010009') || ($arrData[$i]['emprolepk'] == '2023010013' && $arrData[$i]['frmformcode'] == '2023010006'))) { // 主任 + (申請者(員工身份)+單位主管已簽核 OR 申請者(單位主管身份)+代理人已簽核)
+                    $count++;
+                    
+                    $tbody .= <<<_TBODY
+                        <tr>
+                            <td style="width:10%;">{$arrData[$i]['frmlistapl']}</td>
+                            <td style="width:4%;">{$arrData[$i]['year']}</td>
+                            <td style="width:10%;">{$arrData[$i]['cmpapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['empapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['pryapl']}</td>
+                            <td style="width:6%;">{$arrData[$i]['hldclsapl']}</td>
+                            <td style="width:15%;">{$arrData[$i]['hldrsn']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['applydate']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['begindate']}</td>
+                            <td style="width:12%;text-align:center;">{$arrData[$i]['enddate']}</td>
+                            <td style="width:8%;text-align:center;">{$arrData[$i]['hldsdays']}<br/>{$arrData[$i]['hldshrs']}</td>
+                        </tr>
+_TBODY;
+                }
+                
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+
+        return $table;
         //End
     }
 

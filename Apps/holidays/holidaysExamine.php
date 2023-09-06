@@ -34,7 +34,7 @@
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者的員工記錄
     // $tbl['paging']['strPage'] = $tbl['paging']['endPage'] = 0; // 啟始頁數 + 結束頁數
 
-    if(isset($_POST['query'])){ //按下"查詢"按鈕的處理動作
+    if(isset($_POST['query']) || isset($_POST['prt'])){ //按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); // 淨化查詢條件
         
         $obj_holiday->SQLSelect = "SELECT h.*, e.formcode AS e_formcode, e.cmpapl "; // 加上"e.formcode AS e_formcode, e.cmpapl"
@@ -70,7 +70,6 @@
             $obj_holiday->intEndPos = $obj_holiday->int_total_records;
         }
         $htmlQryResult = $obj_holiday->viewVrfQry($arrData, $tbl);
-        // echo "SQL: $obj_holiday->SQL";
 
         // Save Session
         $_SESSION['arrQryFld'] = $arrQryFld;
@@ -78,7 +77,13 @@
         $_SESSION['SQL']['From'] = $obj_holiday->SQLFrom;
         $_SESSION['SQL']['Where'] = $obj_holiday->SQLWhere;
         $_SESSION['SQL']['OrderBy'] = $obj_holiday->SQLOrderBy;
-        $_SESSION['SQL']['CurPage'] = $obj_holiday->int_current_page; //儲存目前頁數
+        $_SESSION['SQL']['CurPage'] = $obj_holiday->int_current_page; // 儲存目前頁數
+        $_SESSION['SQL']['arrData'] = $arrData; // 過濾後的資料來源
+
+        if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
+            $obj_form->js_openWindow('hldsExamineRpt.php');
+        }
+
     }elseif (isset($_POST['paging']) || isset($_POST['pass']) || isset($_POST['reject'])) { //執行"分頁 / 核准 / 退回"功能後的處理動作
         $arrNewFormVal = $obj_form->inputChk($_POST); //淨化查詢條件
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl'];//修改者
@@ -313,7 +318,7 @@ echo <<<_html
             </div>
 
             <div class="row justify-content-center mt-2">
-                <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">
+                <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" id="query" name="prt" value="列印">
             </div>
             
             <table class="table caption-top table-striped table-hover my-5">
