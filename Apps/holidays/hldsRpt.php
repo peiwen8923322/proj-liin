@@ -66,11 +66,8 @@ class MYPDF extends TCPDF {
         $this->Ln();
 
         $this->setFont('msungstdlight', '', 10);
-        $this->Cell(0, 0, "機構：{$this->arrEmp['cmpapl']}", 0, false, 'L', 0, '', 0, false, 'M', 'M');
-        $this->Cell(0, 0, "列印人：{$this->arrEmp['empapl']}", 0, true, 'R', 0, '', 0, false, 'M', 'M');
-        $this->Ln();
-        $this->Cell(0, 0, "員工：{$this->arrEmp['empapl']}", 0, false, 'L', 0, '', 0, false, 'M', 'M');
-        $this->Cell(0, 0, '列印日期：'.date("Y-m-d H:i", time()), 'B', true, 'R', 0, '', 0, false, 'M', 'M');
+        $this->Cell(0, 10, "機構：{$this->arrEmp['cmpapl']} / 員工：{$this->arrEmp['empapl']}", 0, false, 'L', 0, '', 0, false, 'M', 'M');
+        $this->Cell(0, 10, "列印人：{$this->arrEmp['empapl']} / 列印日期：".date("Y-m-d H:i", time()), 0, true, 'R', 0, '', 0, false, 'M', 'M');
 	}
 
 	// Page footer

@@ -62,9 +62,8 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->setFont('msungstdlight', '', 20);
 		// Title
-		$this->Cell(0, 0, '員工請假審核清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 0, '員工請假歷史清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln();
-
         $this->setFont('msungstdlight', '', 10);
         $this->Cell(0, 10, "機構：{$this->arrEmp['cmpapl']} / 員工：{$this->arrEmp['empapl']}", 0, false, 'L', 0, '', 0, false, 'M', 'M');
         $this->Cell(0, 10, "列印人：{$this->arrEmp['empapl']} / 列印日期：".date("Y-m-d H:i", time()), 0, true, 'R', 0, '', 0, false, 'M', 'M');
@@ -85,13 +84,13 @@ class MYPDF extends TCPDF {
 }
 
 // create new PDF document
-$pdf = new MYPDF("L", PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf = new MYPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set document information
 $pdf->setCreator(PDF_CREATOR);
 $pdf->setAuthor('徐培文');
-$pdf->setTitle('員工請假審核清單');
-$pdf->setSubject('員工請假審核清單');
+$pdf->setTitle('員工請假歷史清單');
+$pdf->setSubject('員工請假歷史清單');
 $pdf->setKeywords('員工, PDF, 請假');
 
 // remove default header/footer
@@ -104,6 +103,8 @@ $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 // set margins
 $pdf->setMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->setHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->setFooterMargin(PDF_MARGIN_FOOTER);
 
 // set auto page breaks
 $pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -125,15 +126,17 @@ $pdf->setFont('msungstdlight', '', 9);
 // add a page
 $pdf->AddPage();
 
-$arrData = $_SESSION['SQL']['arrData'];
-$obj_holiday->intStartPos = 1;
-$obj_holiday->intEndPos = count($arrData);
-$pdf->writeHTML($obj_holiday->PrtPDFByVrfQry($arrData, $tbl), true, false, true, false, '');
+$obj_holiday->SQLSelect = $_SESSION['SQL']['Select'];
+$obj_holiday->SQLFrom = $_SESSION['SQL']['From'];
+$obj_holiday->SQLWhere = $_SESSION['SQL']['Where'];
+$obj_holiday->SQLOrderBy = $_SESSION['SQL']['OrderBy'];
+$obj_holiday->SQL = $obj_holiday->SQLSelect.$obj_holiday->SQLFrom.$obj_holiday->SQLWhere.$obj_holiday->SQLOrderBy;
+$pdf->writeHTML($obj_holiday->PrtPDFByHstyQry($obj_holiday->rtnQryResults($obj_holiday->SQL), $tbl), true, false, true, false, '');
 
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output('hldsRpt.pdf', 'I');
+$pdf->Output('hldsHstyRpt.pdf', 'I');
 
 $obj_emp = null;
 $obj_holiday = null;

@@ -33,7 +33,7 @@
     //Begin
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); //登入者的員工記錄
     
-    if(isset($_POST['query'])){ //按下"查詢"按鈕的處理動作
+    if(isset($_POST['query']) || isset($_POST['prt'])){ //按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); //淨化查詢條件
         
         $obj_holiday->SQLSelect = "SELECT h.*, e.formcode AS e_formcode, e.cmpapl "; // 加上"e.formcode AS e_formcode, e.cmpapl"
@@ -78,6 +78,11 @@
         $_SESSION['SQL']['Where'] = $obj_holiday->SQLWhere;
         $_SESSION['SQL']['OrderBy'] = $obj_holiday->SQLOrderBy;
         $_SESSION['SQL']['CurPage'] = $obj_holiday->int_current_page; //儲存目前頁數
+
+        if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
+            $obj_form->js_openWindow('hldsHstyRpt.php');
+        }
+
     }elseif (isset($_POST['edit'])) { //按下"編輯"按鈕的處理動作
         $_SESSION['selFormCode'] = $_POST['selFormCode']; //儲存目前編輯記錄
         header("location: holidaysEdit.php");
@@ -275,14 +280,14 @@ echo <<<_html
                     </div>
                 </div>
                 <div class="row  justify-content-center mt-2">
-                    <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" class="col-sm-1 btn btn-outline-primary" value="清除">
+                    <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" class="col-sm-1 btn btn-outline-primary" value="清除">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" id="query" name="prt" value="列印">
                 </div>
                 
                 <table class="table caption-top table-striped table-hover my-5">
                     <caption><h4><b>員工請假歷史清單</b></h4></caption>
                     <thead class="">
                         <tr>
-                            <th class="col-sm-2 text-center">機構</th><th class="col-1 text-center">員工<br/>代理人</th><th class="col-sm-2 text-center">表單審核狀態</th><th class="col-sm-1 text-center">年度<br/>假別</th><th class="col-sm-2">請假事由</th><th class="col-sm-2 text-center">請假啟始日<br/>請假截止日</th><th class="col-sm-1 text-center">請假天數<br/>請假時數</th><th class="col-sm-2 text-center">假單送出時間</th>
+                            <th class="col-sm-2 text-center">機構</th><th class="col-1 text-center">員工<br/>代理人</th><th class="col-sm-2 text-center">表單審核狀態</th><th class="col-sm-1 text-center">年度<br/>假別</th><th class="col-sm-2">請假事由</th><th class="col-sm-2 text-center">請假起始日<br/>請假截止日</th><th class="col-sm-1 text-center">請假天數<br/>請假時數</th><th class="col-sm-2 text-center">假單送出時間</th>
                         </tr>
                     </thead>
                     

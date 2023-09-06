@@ -111,7 +111,6 @@ _TBODY;
         
         //Begin
         $thead =<<<_THEAD
-            <div><hr></div>
             <thead>
                 <tr>
                     <th style="width:10%;">審核狀態</th><th style="width:6%;">年度</th><th style="width:6%;">員工</th><th style="width:6%;">代理人</th><th style="width:6%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;">假單送出時間</th><th style="width:12%;">請假啟始日</th><th style="width:12%;">請假截止日</th><th style="width:8%;text-align:center;">請假天數</th><th style="width:8%;text-align:center;">請假時數</th>
@@ -485,7 +484,6 @@ _TBODY;
 
         //Begin
         $thead =<<<_THEAD
-            <div><hr></div>
             <thead>
                 <tr>
                     <th style="width:10%;">審核狀態</th><th style="width:4%;">年度</th><th style="width:10%;">機構</th><th style="width:6%;">員工</th><th style="width:6%;">代理人</th><th style="width:6%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;text-align:center;">假單送出時間</th><th style="width:12%;text-align:center;">請假啟始日</th><th style="width:12%;text-align:center;">請假截止日</th><th style="width:8%;text-align:center;">請假天數<br/>請假時數</th>
@@ -927,6 +925,78 @@ _TBODY;
 
         $this->calTotalPages($count); // 計算總頁數 + 目前頁數
         return $tbody;
+        //End
+    }
+
+    // 列印員工請假歷史清單(PDF)
+    // $arrData: Array物件
+    // $arrTbl: 其他參考檔(二維關聯陣列)
+    // return: 查詢結果HTML Tag
+    function PrtPDFByHstyQry($arrData, $arrTbl){
+        //變數初始化
+        $count = 0; //該頁筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+        
+        //Begin
+        $thead =<<<_THEAD
+            <thead>
+                <tr>
+                    <th style="width:10%;">機構</th><th style="width:6%;">員工<br/>代理人</th><th style="width:10%;">表單審核狀態</th><th style="width:6%;">年度</th><th style="width:10%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;text-align:center;">請假起始日</th><th style="width:12%;text-align:center;">請假截止日</th><th style="width:8%;text-align:center;">請假天數<br/>請假時數</th><th style="width:12%;text-align:center;">假單送出時間</th>
+                </tr>
+            </thead>
+_THEAD;
+
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+            foreach ($arrData as $field) {
+                $count++;
+                
+                $tbody .= <<<_TBODY
+                        <tr>
+                            <td style="width:10%;">$field[cmpapl]</td>
+                            <td style="width:6%;">$field[empapl]<br/>$field[pryapl]</td>
+                            <td style="width:10%;">$field[frmlistapl]</td>
+                            <td style="width:6%;">$field[year]</td>
+                            <td style="width:10%;">$field[hldclsapl]</td>
+                            <td style="width:15%;">$field[hldrsn]</td>
+                            <td style="width:12%;text-align:center;">$field[begindate]</td>
+                            <td style="width:12%;text-align:center;">$field[enddate]</td>
+                            <td style="width:8%;text-align:center;">$field[hldsdays]<br/>$field[hldshrs]</td>
+                            <td style="width:12%;text-align:center;">$field[applydate]</td>
+                        </tr>
+_TBODY;
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+        // $this->calTotalPages($count); // 計算總頁數 + 目前頁數
+
+        return $table;
         //End
     }
 
