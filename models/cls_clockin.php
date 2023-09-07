@@ -77,6 +77,75 @@ _TBODY;
         //End
     }
 
+
+    // 列印查詢報表(PDF)
+    // $arrData: 資料來源(二維關聯陣列)
+    // $arrTbl: 參考其他檔(二維關聯陣列)
+    // return: 傳回查詢結果HTML Tag
+    function PrtPDFByHstyQry($arrData, $arrTbl){
+        //變數初始化
+        // $btnEditId = ""; //設定[編輯]按鈕Id屬性
+        // $btnDiscardId = ""; //設定[註銷]按鈕Id屬性
+        $count = 0; //該頁筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+
+        //Begin
+        $thead =<<<_THEAD
+            <thead>
+                <tr>
+                    <th style="width:20%;">機構</th><th style="width:10%;text-align:center;">員工</th><th style="width:10%;text-align:center;">年度</th><th style="width:20%;text-align:center;">刷卡時間</th><th style="width:10%;text-align:center;">刷卡狀態</th><th style="width:20%;">刷卡說明</th>
+                </tr>
+            </thead>
+_THEAD;
+
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+            foreach ($arrData as $field) {
+                $count++;
+                // $btnEditId = sprintf("edit%06d", $count);
+                // $btnDiscardId = sprintf("discard%06d", $count);
+
+                $tbody .= <<<_TBODY
+                    <tr>
+                        <td style="width:20%;">$field[cmpapl]</td>
+                        <td style="width:10%;text-align:center;">$field[empapl]</td>
+                        <td style="width:10%;text-align:center;">$field[year]</td>
+                        <td style="width:20%;text-align:center;">$field[clkintime]</td>
+                        <td style="width:10%;text-align:center;">$field[clkinsttapl]</td>
+                        <td style="width:20%;">$field[extodnymemo]</td>
+                    </tr>
+_TBODY;
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+
+        return $table;
+        //End
+    }
+
+
     // 新增記錄
     // $arrFormVal: 傳入新表單欄位值陣列
     // $arrTbl: 傳入其他表格的參考陣列
