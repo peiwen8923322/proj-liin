@@ -78,7 +78,7 @@
         $_SESSION['SQL']['Where'] = $obj_holiday->SQLWhere;
         $_SESSION['SQL']['OrderBy'] = $obj_holiday->SQLOrderBy;
         $_SESSION['SQL']['CurPage'] = $obj_holiday->int_current_page; // 儲存目前頁數
-        $_SESSION['SQL']['arrData'] = $arrData; // 過濾後的資料來源
+        $_SESSION['SQL']['arrData'] = $arrData;
 
         if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
             $obj_form->js_openWindow('hldsExamineRpt.php');

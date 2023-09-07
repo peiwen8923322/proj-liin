@@ -471,7 +471,7 @@ _TBODY;
         //End
     }
 
-    // 列印員工請假審核資料(PDF檔)
+    // 列印員工請假審核報表(PDF檔)
     // $arrData: 已過濾後的資料來源(二維關聯陣列)
     // $arrEmp: 其他參考檔(二維關聯陣列)
     // 傳回 HTML Tag
@@ -676,6 +676,71 @@ _TBODY;
         return $tbody;
         //End
     }
+
+
+    // 列印員工請假年度統計報表(PDF)
+    // $arrData: Array物件
+    // $arrTbl: 其他參考檔(二維關聯陣列)
+    // return: 傳回查詢結果HTML Tag
+    function PrtPDFSttQry($arrData, $arrTbl) : string{
+        //變數初始化
+        $count = 0; //該頁筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+        
+        //Begin
+        $thead =<<<_THEAD
+            <thead>
+                <tr>
+                    <th style="width:10%;">年度<br/>員工<br/>員工編號</th><th style="width:15%;">病假(天數/時數/總時數)<br/>事假(天數/時數/總時數)<br/>特休假(天數/時數/總時數)</th><th style="width:15%;">公假(天數/時數/總時數)<br/>婚假(天數/時數/總時數)<br/>喪假(天數/時數/總時數)</th><th style="width:15%;">家庭照顧假(天數/時數/總時數)<br/>生理假(天數/時數/總時數)<br>陪產假(天數/時數/總時數)</th><th style="width:15%;">產檢假(天數/時數/總時數)<br/>產假(天數/時數/總時數)<br/>其他(天數/時數/總時數)</th><th style="width:15%;">換休(天數/時數/總時數)<br/>公傷病假(天數/時數/總時數)</th>
+                </tr>
+            </thead>
+_THEAD;
+
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+            foreach ($arrData as $field) {
+                $count++;
+                
+                $tbody .= <<<_TBODY
+                    <tr>
+                        <td class="text-center">$field[year]<br/>$field[empapl]<br/>$field[empcode]</td>
+                        <td class="text-center">$field[day2022100089]/$field[hrs2022100089]/$field[ttlhrs2022100089]<br/>$field[day2022100090]/$field[hrs2022100090]/$field[ttlhrs2022100090]<br/>$field[day2022100092]/$field[hrs2022100092]/$field[ttlhrs2022100092]</td>
+                        <td class="text-center">$field[day2022100091]/$field[hrs2022100091]/$field[ttlhrs2022100091]<br/>$field[day2022100093]/$field[hrs2022100093]/$field[ttlhrs2022100093]<br/>$field[day2022100094]/$field[hrs2022100094]/$field[ttlhrs2022100094]</td>
+                        <td class="text-center">$field[day2022100095]/$field[hrs2022100095]/$field[ttlhrs2022100095]<br/>$field[day2022100096]/$field[hrs2022100096]/$field[ttlhrs2022100096]<br/>$field[day2022100097]/$field[hrs2022100097]/$field[ttlhrs2022100097]</td>
+                        <td class="text-center">$field[day2022100098]/$field[hrs2022100098]/$field[ttlhrs2022100098]<br/>$field[day2022100099]/$field[hrs2022100099]/$field[ttlhrs2022100099]<br/>$field[day2022100100]/$field[hrs2022100100]/$field[ttlhrs2022100100]</td>
+                        <td class="text-center"><br/>$field[day2022100101]/$field[hrs2022100101]/$field[ttlhrs2022100101]<br/>$field[day2023010024]/$field[hrs2023010024]/$field[ttlhrs2023010024]</td>
+                    </tr>
+_TBODY;
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+
+        return $table;
+        //End
+    }
+
 
     // 取得請假統計並重組查詢結果(二維關聯陣列)
     // $SQL: SQL字串

@@ -35,7 +35,7 @@
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); //員工檔
     $nowYear = date("Y", time()); // 目前年度
 
-    if(isset($_POST['query'])){ //按下"查詢"按鈕的處理動作
+    if(isset($_POST['query']) || isset($_POST['prt'])){ //按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); //淨化查詢條件
         
         $obj_holiday->SQLSelect = "SELECT h.year, e.deptspk, e.cmpcode, e.cmpapl, h.empformcode, h.empcode, h.empapl, h.hldformcode, h.hldclsapl, COUNT(*) AS cnt_hlds, FORMAT(SUM(h.hldsdays), 2) AS sum_hldsdays, FORMAT(SUM(h.hldshrs), 2) AS sum_hldshrs, FORMAT(SUM(h.hldsdays), 2) * 8 + FORMAT(SUM(h.hldshrs), 2) AS sum_total_hrs ";
@@ -70,6 +70,12 @@
         $_SESSION['SQL']['GroupBy'] = $obj_holiday->SQLGroupBy;
         $_SESSION['SQL']['OrderBy'] = $obj_holiday->SQLOrderBy;
         $_SESSION['SQL']['CurPage'] = $obj_holiday->int_current_page; //儲存目前頁數
+        $_SESSION['SQL']['arrData'] = $arrData;
+
+        if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
+            $obj_form->js_openWindow('hldsYearStatisticRpt.php');
+        }
+
     }elseif (isset($_POST['edit'])) { //按下"編輯"按鈕的處理動作
         $_SESSION['selFormCode'] = $_POST['selFormCode']; //儲存目前編輯記錄
         header("location: holidaysEdit.php");
@@ -251,7 +257,7 @@ echo <<<_html
                 </div>
                 
                 <div class="row justify-content-center mt-2">
-                    <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">
+                    <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" id="query" name="prt" value="列印">
                 </div>
                 
                 <table class="table caption-top table-striped table-hover my-5">
