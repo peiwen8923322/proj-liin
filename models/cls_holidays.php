@@ -896,6 +896,7 @@ _TBODY;
                         <tr>
                             <td class="">$field[cmpapl]</td>
                             <td class="text-center">$field[empapl]<br/>$field[pryapl]</td>
+                            <td class="text-center">$field[amlhrs]<br/>$field[curhrs]</td>
                             <td class="text-center">$field[frmlistapl]</td>
                             <td class="text-center">$field[year]<br/>$field[hldclsapl]</td>
                             <td class="">$field[hldrsn]</td>
@@ -910,6 +911,7 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -943,7 +945,7 @@ _TBODY;
         $thead =<<<_THEAD
             <thead>
                 <tr>
-                    <th style="width:10%;">機構</th><th style="width:6%;">員工<br/>代理人</th><th style="width:10%;">表單審核狀態</th><th style="width:6%;">年度</th><th style="width:10%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;text-align:center;">請假起始日</th><th style="width:12%;text-align:center;">請假截止日</th><th style="width:8%;text-align:center;">請假天數<br/>請假時數</th><th style="width:12%;text-align:center;">假單送出時間</th>
+                    <th style="width:10%;">機構</th><th style="width:6%;">員工<br/>代理人</th><th style="width:6%;">過去未休假的累積時數<br/>目前可特休時數</th><th style="width:10%;">表單審核狀態</th><th style="width:6%;">年度</th><th style="width:10%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;text-align:center;">請假起始日<br/>請假截止日</th><th style="width:8%;text-align:center;">請假天數<br/>請假時數</th><th style="width:12%;text-align:center;">假單送出時間</th>
                 </tr>
             </thead>
 _THEAD;
@@ -957,12 +959,12 @@ _THEAD;
                         <tr>
                             <td style="width:10%;">$field[cmpapl]</td>
                             <td style="width:6%;">$field[empapl]<br/>$field[pryapl]</td>
+                            <td style="width:6%;text-align:center;">$field[amlhrs]<br/>$field[curhrs]</td>
                             <td style="width:10%;">$field[frmlistapl]</td>
                             <td style="width:6%;">$field[year]</td>
                             <td style="width:10%;">$field[hldclsapl]</td>
                             <td style="width:15%;">$field[hldrsn]</td>
-                            <td style="width:12%;text-align:center;">$field[begindate]</td>
-                            <td style="width:12%;text-align:center;">$field[enddate]</td>
+                            <td style="width:12%;text-align:center;">$field[begindate]<br/>$field[enddate]</td>
                             <td style="width:8%;text-align:center;">$field[hldsdays]<br/>$field[hldshrs]</td>
                             <td style="width:12%;text-align:center;">$field[applydate]</td>
                         </tr>
