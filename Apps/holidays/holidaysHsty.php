@@ -287,7 +287,7 @@ echo <<<_html
                     <caption><h4><b>員工請假歷史清單</b></h4></caption>
                     <thead class="">
                         <tr>
-                            <th class="col-sm-2 text-center">機構</th><th class="col-1 text-center">員工<br/>代理人</th><th class="col-1 text-center">過去未休假的累積時數<br/>目前可特休時數</th><th class="col-sm-2 text-center">表單審核狀態</th><th class="col-sm-1 text-center">年度<br/>假別</th><th class="col-sm-2">請假事由</th><th class="col-sm-2 text-center">請假起始日<br/>請假截止日</th><th class="col-sm-1 text-center">請假天數<br/>請假時數</th><th class="col-sm-2 text-center">假單送出時間</th>
+                            <th class="col-sm-2 text-center">機構</th><th class="col-1 text-center">員工<br/>代理人</th><th class="col-1 text-center">過去未休假的累積時天數<br/>目前可特休天數</th><th class="col-sm-1 text-center">表單審核狀態</th><th class="col-sm-1 text-center">年度<br/>假別</th><th class="col-sm-2">請假事由</th><th class="col-sm-2 text-center">請假起始日<br/>請假截止日</th><th class="col-sm-1 text-center">請假天數<br/>請假時數</th><th class="col-sm-2 text-center">假單送出時間</th>
                         </tr>
                     </thead>
                     
