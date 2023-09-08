@@ -693,7 +693,7 @@ _TBODY;
         $thead =<<<_THEAD
             <thead>
                 <tr>
-                    <th style="width:10%;">年度<br/>員工<br/>員工編號</th><th style="width:15%;">病假(天數/時數/總時數)<br/>事假(天數/時數/總時數)<br/>特休假(天數/時數/總時數)</th><th style="width:15%;">公假(天數/時數/總時數)<br/>婚假(天數/時數/總時數)<br/>喪假(天數/時數/總時數)</th><th style="width:15%;">家庭照顧假(天數/時數/總時數)<br/>生理假(天數/時數/總時數)<br>陪產假(天數/時數/總時數)</th><th style="width:15%;">產檢假(天數/時數/總時數)<br/>產假(天數/時數/總時數)<br/>其他(天數/時數/總時數)</th><th style="width:15%;">換休(天數/時數/總時數)<br/>公傷病假(天數/時數/總時數)</th>
+                    <th style="width:10%;text-align:center;">年度<br/>員工<br/>員工編號</th><th style="width:18%;text-align:center;">病假(天數/時數/總時數)<br/>事假(天數/時數/總時數)<br/>特休假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">公假(天數/時數/總時數)<br/>婚假(天數/時數/總時數)<br/>喪假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">家庭照顧假(天數/時數/總時數)<br/>生理假(天數/時數/總時數)<br>陪產假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">產檢假(天數/時數/總時數)<br/>產假(天數/時數/總時數)<br/>其他(天數/時數/總時數)</th><th style="width:18%;text-align:center;">換休(天數/時數/總時數)<br/>公傷病假(天數/時數/總時數)</th>
                 </tr>
             </thead>
 _THEAD;
@@ -705,12 +705,12 @@ _THEAD;
                 
                 $tbody .= <<<_TBODY
                     <tr>
-                        <td class="text-center">$field[year]<br/>$field[empapl]<br/>$field[empcode]</td>
-                        <td class="text-center">$field[day2022100089]/$field[hrs2022100089]/$field[ttlhrs2022100089]<br/>$field[day2022100090]/$field[hrs2022100090]/$field[ttlhrs2022100090]<br/>$field[day2022100092]/$field[hrs2022100092]/$field[ttlhrs2022100092]</td>
-                        <td class="text-center">$field[day2022100091]/$field[hrs2022100091]/$field[ttlhrs2022100091]<br/>$field[day2022100093]/$field[hrs2022100093]/$field[ttlhrs2022100093]<br/>$field[day2022100094]/$field[hrs2022100094]/$field[ttlhrs2022100094]</td>
-                        <td class="text-center">$field[day2022100095]/$field[hrs2022100095]/$field[ttlhrs2022100095]<br/>$field[day2022100096]/$field[hrs2022100096]/$field[ttlhrs2022100096]<br/>$field[day2022100097]/$field[hrs2022100097]/$field[ttlhrs2022100097]</td>
-                        <td class="text-center">$field[day2022100098]/$field[hrs2022100098]/$field[ttlhrs2022100098]<br/>$field[day2022100099]/$field[hrs2022100099]/$field[ttlhrs2022100099]<br/>$field[day2022100100]/$field[hrs2022100100]/$field[ttlhrs2022100100]</td>
-                        <td class="text-center"><br/>$field[day2022100101]/$field[hrs2022100101]/$field[ttlhrs2022100101]<br/>$field[day2023010024]/$field[hrs2023010024]/$field[ttlhrs2023010024]</td>
+                        <td style="width:10%;text-align:center;">$field[year]<br/>$field[empapl]<br/>$field[empcode]</td>
+                        <td style="width:18%;text-align:center;">$field[day2022100089]/$field[hrs2022100089]/$field[ttlhrs2022100089]<br/>$field[day2022100090]/$field[hrs2022100090]/$field[ttlhrs2022100090]<br/>$field[day2022100092]/$field[hrs2022100092]/$field[ttlhrs2022100092]</td>
+                        <td style="width:18%;text-align:center;">$field[day2022100091]/$field[hrs2022100091]/$field[ttlhrs2022100091]<br/>$field[day2022100093]/$field[hrs2022100093]/$field[ttlhrs2022100093]<br/>$field[day2022100094]/$field[hrs2022100094]/$field[ttlhrs2022100094]</td>
+                        <td style="width:18%;text-align:center;">$field[day2022100095]/$field[hrs2022100095]/$field[ttlhrs2022100095]<br/>$field[day2022100096]/$field[hrs2022100096]/$field[ttlhrs2022100096]<br/>$field[day2022100097]/$field[hrs2022100097]/$field[ttlhrs2022100097]</td>
+                        <td style="width:18%;text-align:center;">$field[day2022100098]/$field[hrs2022100098]/$field[ttlhrs2022100098]<br/>$field[day2022100099]/$field[hrs2022100099]/$field[ttlhrs2022100099]<br/>$field[day2022100100]/$field[hrs2022100100]/$field[ttlhrs2022100100]</td>
+                        <td style="width:18%;text-align:center;"><br/>$field[day2022100101]/$field[hrs2022100101]/$field[ttlhrs2022100101]<br/>$field[day2023010024]/$field[hrs2023010024]/$field[ttlhrs2023010024]</td>
                     </tr>
 _TBODY;
             }
@@ -745,84 +745,88 @@ _TABLE;
     // 取得請假統計並重組查詢結果(二維關聯陣列)
     // $SQL: SQL字串
     function getListByEmpformcodeAndYear($SQL) : array {
-        $arrStt = array(); // 重組後的查詢結果
+        $arrStt = array('00000000000000000000000'=>array()); // 重組後的查詢結果
         $arrData = array(); // 資料來源
-        $tmp = array('year'=>'', 'cmpcode'=>'', 'empformcode'=>''); // 暫存記錄
 
         //Begin
         $arrData = $this->rtnQryResults($SQL);
         if (count($arrData) > 0) {
             foreach ($arrData as $value) {
-                if ($value['year'] == $tmp['year'] && $value['cmpcode'] == $tmp['cmpcode'] && $value['empformcode'] == $tmp['empformcode']) { // 加入同一位員工的其他假別統計
-                    if ($value['hldformcode'] == '2022100089') { // 病假(2022100089)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100089'] = $value['sum_hldsdays']; // 病假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100089'] = $value['sum_hldshrs']; // 病假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100089'] = $value['sum_total_hrs']; // 病假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100090') { // 事假(2022100090)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100090'] = $value['sum_hldsdays']; // 事假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100090'] = $value['sum_hldshrs']; // 事假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100090'] = $value['sum_total_hrs']; // 事假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100091') { // 公假(2022100091)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100091'] = $value['sum_hldsdays']; // 公假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100091'] = $value['sum_hldshrs']; // 公假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100091'] = $value['sum_total_hrs']; // 公假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100092') { // 特休假(2022100092)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100092'] = $value['sum_hldsdays']; // 特休假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100092'] = $value['sum_hldshrs']; // 特休假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100092'] = $value['sum_total_hrs']; // 特休假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100093') { // 婚假(2022100093)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100093'] = $value['sum_hldsdays']; // 婚假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100093'] = $value['sum_hldshrs']; // 婚假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100093'] = $value['sum_total_hrs']; // 婚假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100094') { // 喪假(2022100094)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100094'] = $value['sum_hldsdays']; // 喪假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100094'] = $value['sum_hldshrs']; // 喪假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100094'] = $value['sum_total_hrs']; // 喪假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100095') { // 家庭照顧假(2022100095)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100095'] = $value['sum_hldsdays']; // 家庭照顧假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100095'] = $value['sum_hldshrs']; // 家庭照顧假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100095'] = $value['sum_total_hrs']; // 家庭照顧假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100096') { // 生理假(2022100096)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100096'] = $value['sum_hldsdays']; // 生理假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100096'] = $value['sum_hldshrs']; // 生理假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100096'] = $value['sum_total_hrs']; // 生理假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100097') { // 陪產假(2022100097)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100097'] = $value['sum_hldsdays']; // 陪產假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100097'] = $value['sum_hldshrs']; // 陪產假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100097'] = $value['sum_total_hrs']; // 陪產假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100098') { // 產檢假(2022100098)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100098'] = $value['sum_hldsdays']; // 產檢假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100098'] = $value['sum_hldshrs']; // 產檢假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100098'] = $value['sum_total_hrs']; // 產檢假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100099') { // 產假(2022100099)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100099'] = $value['sum_hldsdays']; // 產假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100099'] = $value['sum_hldshrs']; // 產假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100099'] = $value['sum_total_hrs']; // 產假假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100101') { // 換休(2022100101)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100101'] = $value['sum_hldsdays']; // 換休天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100101'] = $value['sum_hldshrs']; // 換休時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100101'] = $value['sum_total_hrs']; // 換休假總時數
-                    }
-                    if ($value['hldformcode'] == '2023010024') { // 公傷病假(2023010024)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2023010024'] = $value['sum_hldsdays']; // 公傷病假天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2023010024'] = $value['sum_hldshrs']; // 公傷病假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2023010024'] = $value['sum_total_hrs']; // 公傷病假假總時數
-                    }
-                    if ($value['hldformcode'] == '2022100100') { // 其他(2022100100)
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100100'] = $value['sum_hldsdays']; // 其他天數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100100'] = $value['sum_hldshrs']; // 其他假時數
-                        $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100100'] = $value['sum_total_hrs']; // 其他假總時數
+                if (array_key_exists("$value[year]$value[deptspk]$value[empformcode]", $arrStt)) { // 加入同一位員工的其他假別統計
+                    switch ($value['hldformcode']) {
+                        case '2022100089': // 病假(2022100089)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100089'] = $value['sum_hldsdays']; // 病假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100089'] = $value['sum_hldshrs']; // 病假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100089'] = $value['sum_total_hrs']; // 病假總時數
+                            break;
+                        case '2022100090': // 事假(2022100090)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100090'] = $value['sum_hldsdays']; // 事假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100090'] = $value['sum_hldshrs']; // 事假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100090'] = $value['sum_total_hrs']; // 事假總時數
+                            break;
+                        case '2022100091': // 公假(2022100091)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100091'] = $value['sum_hldsdays']; // 公假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100091'] = $value['sum_hldshrs']; // 公假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100091'] = $value['sum_total_hrs']; // 公假總時數
+                            break;
+                        case '2022100092': // 特休假(2022100092)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100092'] = $value['sum_hldsdays']; // 特休假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100092'] = $value['sum_hldshrs']; // 特休假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100092'] = $value['sum_total_hrs']; // 特休假總時數
+                            break;
+                        case '2022100093': // 婚假(2022100093)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100093'] = $value['sum_hldsdays']; // 婚假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100093'] = $value['sum_hldshrs']; // 婚假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100093'] = $value['sum_total_hrs']; // 婚假總時數
+                            break;
+                        case '2022100094': // 喪假(2022100094)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100094'] = $value['sum_hldsdays']; // 喪假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100094'] = $value['sum_hldshrs']; // 喪假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100094'] = $value['sum_total_hrs']; // 喪假總時數
+                            break;
+                        case '2022100095': // 家庭照顧假(2022100095)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100095'] = $value['sum_hldsdays']; // 家庭照顧假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100095'] = $value['sum_hldshrs']; // 家庭照顧假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100095'] = $value['sum_total_hrs']; // 家庭照顧假總時數
+                            break;
+                        case '2022100096': // 生理假(2022100096)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100096'] = $value['sum_hldsdays']; // 生理假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100096'] = $value['sum_hldshrs']; // 生理假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100096'] = $value['sum_total_hrs']; // 生理假總時數
+                            break;
+                        case '2022100097': // 陪產假(2022100097)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100097'] = $value['sum_hldsdays']; // 陪產假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100097'] = $value['sum_hldshrs']; // 陪產假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100097'] = $value['sum_total_hrs']; // 陪產假總時數
+                            break;
+                        case '2022100098': // 產檢假(2022100098)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100098'] = $value['sum_hldsdays']; // 產檢假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100098'] = $value['sum_hldshrs']; // 產檢假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100098'] = $value['sum_total_hrs']; // 產檢假總時數
+                            break;
+                        case '2022100099': // 產假(2022100099)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100099'] = $value['sum_hldsdays']; // 產假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100099'] = $value['sum_hldshrs']; // 產假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100099'] = $value['sum_total_hrs']; // 產假假總時數
+                            break;
+                        case '2022100101': // 換休(2022100101)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100101'] = $value['sum_hldsdays']; // 換休天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100101'] = $value['sum_hldshrs']; // 換休時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100101'] = $value['sum_total_hrs']; // 換休假總時數
+                            break;
+                        case '2023010024': // 公傷病假(2023010024)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2023010024'] = $value['sum_hldsdays']; // 公傷病假天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2023010024'] = $value['sum_hldshrs']; // 公傷病假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2023010024'] = $value['sum_total_hrs']; // 公傷病假假總時數
+                            break;
+                        case '2022100100': // 其他(2022100100)
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['day2022100100'] = $value['sum_hldsdays']; // 其他天數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['hrs2022100100'] = $value['sum_hldshrs']; // 其他假時數
+                            $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['ttlhrs2022100100'] = $value['sum_total_hrs']; // 其他假總時數
+                            break;
+                        default:
+                            # code...
+                            break;
                     }
                 } else { // 加入新記錄(新員工) + 暫存目前記錄
                     $arrStt["$value[year]$value[deptspk]$value[empformcode]"] = array(
@@ -842,10 +846,6 @@ _TABLE;
                         , 'code2023010024'=>'2023010024', 'apl2023010024'=>'公傷病假', 'day2023010024'=>'', 'hrs2023010024'=>'', 'ttlhrs2023010024'=>''
                         , 'code2022100100'=>'2022100100', 'apl2022100100'=>'其他', 'day2022100100'=>'', 'hrs2022100100'=>'', 'ttlhrs2022100100'=>''
                     );
-
-                    $tmp['year'] = $value['year']; // 年度
-                    $tmp['cmpcode'] = $value['cmpcode']; // 單位唯一識別碼
-                    $tmp['empformcode'] = $value['empformcode']; // 員工唯一識別碼
 
                     switch ($value['hldformcode']) {
                         case '2022100089': // 病假(2022100089)
@@ -926,6 +926,7 @@ _TABLE;
 
             }
         }
+        unset($arrStt['00000000000000000000000']);
 
         return $arrStt;
         //End

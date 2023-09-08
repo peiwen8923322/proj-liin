@@ -55,10 +55,12 @@
         $obj_holiday->SQL = $obj_holiday->SQLSelect.$obj_holiday->SQLFrom.$obj_holiday->SQLWhere.$obj_holiday->SQLGroupBy.$obj_holiday->SQLOrderBy;
         $arrData = $obj_holiday->getListByEmpformcodeAndYear($obj_holiday->SQL); // 取得請假統計並重組查詢結果
 
+
         //傳回查詢結果
         // $obj_holiday->int_records_per_page = $arrQryFld['recdsperpage']; //設定每頁筆數
         $htmlQryResult = $obj_holiday->viewSttQry($arrData, $tbl);
 
+        
         //統計分頁訊息
         $htmlPaging = $obj_form->viewPaging($obj_holiday->int_total_records, $obj_holiday->int_total_pages, $obj_holiday->int_current_page); //顯示查詢分頁HTML Tag
 
