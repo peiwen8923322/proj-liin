@@ -101,12 +101,13 @@
         $tbl['proxy'] = $obj_employees->getRecdByFormcode($arrNewFormVal['pryformcode']); // 代理人
         
         //執行SQL
-        $strNewSeq = $obj_holiday->Insert($arrNewFormVal, $tbl);
-        // if (!($obj_holiday->isExistByApply($arrNewFormVal))) {
-        //     $strNewSeq = $obj_holiday->Insert($arrNewFormVal, $tbl); // 記錄不存在
-        // } else {
-        //     // 記錄已經存在
-        // }
+        // $strNewSeq = $obj_holiday->Insert($arrNewFormVal, $tbl);
+        if (!($obj_holiday->isExistByApply($arrNewFormVal))) {
+            $strNewSeq = $obj_holiday->Insert($arrNewFormVal, $tbl); // 記錄不存在
+        } else {
+            $_SESSION['error']['errMsg'] = "請假記錄已經存在，請勿重覆輸入";
+            // trigger_error("請假記錄已經存在，請勿重覆輸入", E_USER_WARNING); // 記錄已經存在
+        }
         
         
 
@@ -141,6 +142,7 @@
 
     if (isset($_SESSION['error'])) { //檢查是否有錯誤訊息
         $strStsMsg = $_SESSION['error']['errMsg'];
+        $obj_form->js_alert($strStsMsg);
         unset($_SESSION['error']);
     }elseif (isset($strNewSeq)) { //顯示完成訊息
         $strStsMsg = "您的請假資料已經建立完成，請勿重覆輸入。 [$strNewSeq]";

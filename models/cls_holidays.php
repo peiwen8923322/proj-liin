@@ -1167,7 +1167,7 @@ _TABLE;
         $bool_isExist = false;
 
         //Begin
-        $bool_isExist = $this->rtnQryField("SELECT COUNT(*) AS 'cnt_recds' FROM holidays WHERE 1 AND formstate = 15 AND empformcode = '$arrFormVal[empformcode]' AND begindate LIKE '$arrFormVal[begindate]'") > 0 ? true : false ;
+        $bool_isExist = $this->rtnQryField("SELECT COUNT(*) AS 'cnt_recds' FROM holidays WHERE 1 AND formstate = 15 AND year = 2023 AND empformcode = '$arrFormVal[empformcode]' AND CAST(begindate AS DATETIME) BETWEEN CAST('$arrFormVal[begindate]' AS DATETIME) AND CAST('$arrFormVal[enddate]' AS DATETIME)") > 0 ? true : false ;
         return $bool_isExist;
         //End
     }
