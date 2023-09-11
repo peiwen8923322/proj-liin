@@ -92,6 +92,7 @@
         $arrNewFormVal['formcode'] = $obj_holiday->getNextFormCode(Date("Ym", time())); // 表單編號
         $arrNewFormVal['creator'] = $_SESSION['login_emp']['empapl']; // 建立者
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl']; // 修改者
+        $arrNewFormVal['empformcode'] = $_SESSION['login_emp']['formcode']; // 員工唯一識別碼
         
         //參考其他Table
         $tbl['aftrest'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['aftrest']); // 中午是否休息
@@ -101,6 +102,13 @@
         
         //執行SQL
         $strNewSeq = $obj_holiday->Insert($arrNewFormVal, $tbl);
+        // if (!($obj_holiday->isExistByApply($arrNewFormVal))) {
+        //     $strNewSeq = $obj_holiday->Insert($arrNewFormVal, $tbl); // 記錄不存在
+        // } else {
+        //     // 記錄已經存在
+        // }
+        
+        
 
         //Render HTML
         $htmlTags['html_empcode'] = $_SESSION['login_emp']['empapl']; //請假員工
@@ -135,7 +143,7 @@
         $strStsMsg = $_SESSION['error']['errMsg'];
         unset($_SESSION['error']);
     }elseif (isset($strNewSeq)) { //顯示完成訊息
-        $strStsMsg = "資料建立完成 [$strNewSeq]";
+        $strStsMsg = "您的請假資料已經建立完成，請勿重覆輸入。 [$strNewSeq]";
         $obj_form->js_alert($strStsMsg);
     }
 

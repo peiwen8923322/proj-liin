@@ -1161,6 +1161,22 @@ _TABLE;
         // End
     }
 
+    // 請假記錄是否已存在(重覆申請)
+    function isExistByApply($arrFormVal) : bool {
+        // 變數初始化
+        $bool_isExist = false;
+
+        //Begin
+        $bool_isExist = $this->rtnQryField("SELECT COUNT(*) AS 'cnt_recds' FROM holidays WHERE 1 AND formstate = 15 AND empformcode = '$arrFormVal[empformcode]' AND begindate LIKE '$arrFormVal[begindate]'") > 0 ? true : false ;
+        return $bool_isExist;
+        //End
+    }
+
+
+
+
+
+
 
 
 
