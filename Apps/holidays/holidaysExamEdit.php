@@ -89,9 +89,6 @@
     }
 
     // 取得目前的編輯記錄
-    $arrQryFld = $_SESSION['arrQryFld'];
-    $obj_holiday->SQLSelect = "SELECT * ";
-    $obj_holiday->SQLFrom = $_SESSION['SQL']['From'];
     $obj_holiday->SQLWhere = " WHERE 1 AND formcode = '$_SESSION[selFormCode]'";
     $obj_holiday->SQL = $obj_holiday->SQLSelect.$obj_holiday->SQLFrom.$obj_holiday->SQLWhere;
     $arrCurRecord = $obj_holiday->rtnQryRecord($obj_holiday->SQL); // 取得目前的編輯記錄
@@ -100,15 +97,16 @@
         $arrNewFormVal = $obj_form->inputChk($_POST); //淨化查詢條件
         $arrNewFormVal['formcode'] = $_SESSION['selFormCode']; //該筆記錄的表單編號
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl'];//修改者
-        $arrNewFormVal['atmname'] = $arrCurRecord['atmname']; // 附件檔案名稱
-        $arrNewFormVal['atmtype'] = $arrCurRecord['atmtype']; // 附件檔案型態
-        $arrNewFormVal['atmsize'] = $arrCurRecord['atmsize']; // 附件檔案大小
+        $arrNewFormVal['atmname'] = ''; // 附件檔案名稱
+        $arrNewFormVal['atmtype'] = ''; // 附件檔案型態
+        $arrNewFormVal['atmsize'] = 0; // 附件檔案大小
 
         //參考其他Table
         $tbl['aftrest'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['aftrest']); // 中午是否休息
         $tbl['hlds'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['hldformcode']); //假別
         $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; //審核狀態 ("送出 / 暫存")
         $tbl['proxy'] = $obj_emp->getRecdByFormcode($arrNewFormVal['pryformcode']); // 代理人
+        
 
         if (isset($_FILES["file"]["name"]) && strlen($_FILES["file"]["name"]) > 0) { // 上傳附件
         
@@ -118,8 +116,8 @@
             } else if (!(($_FILES["file"]["type"] == "image/gif") || ($_FILES["file"]["type"] == "image/jpeg") || ($_FILES["file"]["type"] == "image/png"))) { // 檔案格式錯誤
                 $_SESSION['error']['errMsg'] = "檔案格式錯誤，請重新輸入圖檔格式(GIF/JPEG/PNG)";
                 $htmlTags['atm_img'] = ""; // 附件影像
-            } else if ($_FILES["file"]["size"] >= 3000000) { // 檔案太大(檔案大小限制在 3M以下)
-                $_SESSION['error']['errMsg'] = "檔案太大(檔案大小限制在 3M以下)，請重新輸入附件";
+            } else if ($_FILES["file"]["size"] >= 2000000) { // 檔案太大(檔案大小限制在2M以下)
+                $_SESSION['error']['errMsg'] = "檔案太大(檔案大小限制在2M以下)，請重新輸入附件";
                 $htmlTags['atm_img'] = ""; // 附件影像
             } else { // 複製檔案
         
@@ -156,7 +154,7 @@
                 //     $arrNewFormVal['atmsize'] = ($_FILES["file"]["size"] / 1024); // 附件檔案大小
                 // }
 
-                if (strlen($arrCurRecord["atmname"]) > 0 && file_exists("upload/".$_FILES["file"]["name"])) { // 刪除目前的請假表單的附件
+                if (strlen($arrCurRecord["atmname"]) > 0) { // 刪除目前的請假表單的附件
                     unlink("upload/$arrCurRecord[atmname]");
                 }
                 move_uploaded_file($_FILES["file"]["tmp_name"], "upload/" . $_FILES["file"]["name"]);
@@ -167,7 +165,7 @@
                 $htmlTags['atm_img'] = "<img class='ratio ratio-4x3' src='upload/{$_FILES["file"]["name"]}' />"; // 附件影像
             }
         
-        } else { // 無附件上傳
+        } else { // 無附件上傳            
             if (strlen($arrCurRecord['atmname']) > 0 && file_exists("upload/" . $arrCurRecord['atmname'])) {
                 $htmlTags['atm_img'] = "<img class='ratio ratio-4x3' src='upload/$arrCurRecord[atmname]' />"; // 附件影像
             } else {
@@ -211,7 +209,7 @@
         $htmlTags['aftrest'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'aftrest', 'attrName'=>'aftrest', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_field_lists->getList('中午是否休息'), $arrCurRecord['aftrest']); // 中午是否休息
         $htmlTags['html_pryformcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'pryformcode', 'attrName'=>'pryformcode', 'attrTitle'=>'代理人', 'optionTitle'=>'NewEmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_emp->getListAtWork(), $arrCurRecord['pryformcode']); // 代理人('optionTitle'=>'NewEmpapl')
         $htmlTags['html_frmlistapl'] = $arrCurRecord['frmlistapl']; //審核狀態
-        $htmlTags['atm_img'] = strlen($arrCurRecord["atmname"]) > 0 && file_exists("upload/".$arrCurRecord["atmname"]) ? "<img class='ratio ratio-4x3' src='upload/{$arrCurRecord['atmname']}' />" : "";
+        $htmlTags['atm_img'] = strlen($arrCurRecord['atmname']) > 0 ? "<img class='ratio ratio-4x3' src='upload/{$arrCurRecord['atmname']}' />" : "";
 
         $strStsMsg = "資料編輯中"; //顯示訊息
     }
@@ -239,7 +237,7 @@ echo <<<_html
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>編輯員工請假資料</title>
+    <title>檢視員工請假資料</title>
     <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
@@ -287,7 +285,7 @@ echo <<<_html
             //設定form表單的button type欄位 Click事件
             $(":button").click(function() {
                 if ($(this).val() == "關閉") {
-                    location.assign("./holidaysQuery.php?action=cancel");
+                    location.assign("./holidaysExamine.php?action=cancel");
                 }else if ($(this).val() == "登出") {
                     msg = "你已經登出系統";
                     btn = "登出";
@@ -405,7 +403,7 @@ echo <<<_html
     <!-- main區塊 -->
     <main>
         <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
-            <h4 class="text-secondary text-decoration-underline my-3"><b>編輯員工請假資料</b></h4>
+            <h4 class="text-secondary text-decoration-underline my-3"><b>檢視員工請假資料</b></h4>
             <input type="hidden" id="hldformcode" name="hldformcode" value="$htmlTags[html_hldformcode]">
             <div class="row">
                 <div class="col-sm-10">
@@ -452,12 +450,8 @@ echo <<<_html
                     <div class="row">
                         <div class="col-sm-2 fw-bolder"><label for="pryformcode" class="form-label">代理人：</label></div>
                         <div class="col-sm">$htmlTags[html_pryformcode]</div>
-                        <div class="col-sm-2 fw-bolder"><label for="frmlistapl" class="form-label">審核狀態：</label></div>
+                        <div class="col-sm-2 text-end fw-bolder"><label for="frmlistapl" class="form-label">審核狀態：</label></div>
                         <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="frmlistapl" name="frmlistapl" value="$htmlTags[html_frmlistapl]" title="審核狀態" disabled></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2 fw-bolder text-danger"><label for="pryformcode" class="form-label">上傳附件：<br/>(上傳檔案格式：GIF/JPEG/PNG，檔案大小限制在 3MB以下)</label></div>
-                        <div class="col-sm fw-bolder text-danger"><input type="file" name="file" id="file" /></div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2 fw-bolder"><label for="frmformcode" class="form-label">附件：</label></div>
@@ -489,7 +483,8 @@ echo <<<_html
             </div>
 
             <div class="row justify-content-center my-3">
-                <input type="submit" class="col-sm-1 btn btn-primary" name="submit" value="送出">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" name="submit" value="暫存">&nbsp;&nbsp;<input type="button" class="col-sm-1 btn btn-outline-primary" id="cancel" name="cancel" value="關閉">
+                <input type="button" class="col-sm-1 btn btn-primary" id="cancel" name="cancel" value="關閉">
+                <!--<input type="submit" class="col-sm-1 btn btn-primary" name="submit" value="送出">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" name="submit" value="暫存">&nbsp;&nbsp;<input type="button" class="col-sm-1 btn btn-outline-primary" id="cancel" name="cancel" value="關閉">-->
             </div>
             <div class="gy-5">&nbsp;</div>
 

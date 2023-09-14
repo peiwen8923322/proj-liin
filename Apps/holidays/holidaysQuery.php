@@ -264,7 +264,7 @@ echo <<<_html
                 <caption><h4><b>員工請假清單</b></h4></caption>
                 <thead class="">
                     <tr>
-                        <th class="col-sm-1 text-center">功能</th><th class="">審核狀態</th><th class="text-center">年度</th><th class="text-center">員工</th><th class="text-center">代理人</th><th class="text-center">假別</th><th class="col-sm-3">請假事由</th><th class="text-center">假單送出時間</th><th class="text-center">請假起始日</th><th class="text-center">請假截止日</th><th class="text-center">請假天數</th><th class="text-center">請假時數</th>
+                        <th class="col-sm-1 text-center">功能</th><th class="col-sm-1 text-center">審核狀態</th><th class="col-sm text-center">年度</th><th class="col-sm text-center">員工</th><th class="col-sm-1 text-center">代理人</th><th class="col-sm-1 text-center">假別</th><th class="col-sm-2">請假事由</th><th class="col-sm-2 text-center">請假起始日<br/>請假截止日</th><th class="col-sm text-center">請假天數<br/>請假時數</th><th class="col-sm-1 text-center">假單送出時間</th>
                     </tr>
                 </thead>
                 

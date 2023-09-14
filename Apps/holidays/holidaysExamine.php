@@ -84,7 +84,11 @@
             $obj_form->js_openWindow('hldsExamineRpt.php');
         }
 
-    }elseif (isset($_POST['paging']) || isset($_POST['pass']) || isset($_POST['reject'])) { //執行"分頁 / 核准 / 退回"功能後的處理動作
+    } elseif (isset($_POST['view'])) { //按下"檢視"按鈕的處理動作
+        $_SESSION['selFormCode'] = $_POST['selFormCode']; //儲存目前編輯記錄
+        header("location: holidaysExamEdit.php");
+        exit();
+    } elseif (isset($_POST['paging']) || (isset($_GET['action']) && ($_GET['action'] == "update" || $_GET['action'] == "cancel")) || isset($_POST['pass']) || isset($_POST['reject'])) { //執行"分頁 / 核准 / 退回"功能後的處理動作
         $arrNewFormVal = $obj_form->inputChk($_POST); //淨化查詢條件
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl'];//修改者
 
@@ -170,9 +174,9 @@
         if ($obj_holiday->int_current_page == 1 && $obj_holiday->int_total_records >= $obj_holiday->int_records_per_page) { // 計算第一頁的啟始筆數 + 結束筆數(超過一頁)
             $obj_holiday->intStartPos = 1;
             $obj_holiday->intEndPos = $obj_holiday->int_records_per_page;
-        } if ($obj_egress->int_current_page == 1 && $obj_egress->int_total_records < $obj_egress->int_records_per_page) { // 計算第一頁的啟始筆數 + 結束筆數(未滿一頁)
-            $obj_egress->intStartPos = 1;
-            $obj_egress->intEndPos = $obj_egress->int_total_records;
+        } if ($obj_holiday->int_current_page == 1 && $obj_holiday->int_total_records < $obj_holiday->int_records_per_page) { // 計算第一頁的啟始筆數 + 結束筆數(未滿一頁)
+            $obj_holiday->intStartPos = 1;
+            $obj_holiday->intEndPos = $obj_holiday->int_total_records;
         } elseif ($obj_holiday->int_current_page == $obj_holiday->int_total_pages) { // 計算最後頁的啟始筆數 + 結束筆數
             $obj_holiday->intStartPos = ($obj_holiday->int_current_page - 1) * $obj_holiday->int_records_per_page + 1;
             $obj_holiday->intEndPos = $obj_holiday->int_total_records;
@@ -242,6 +246,11 @@ echo <<<_html
                     // btn = "編輯";
                     $('#selFormCode').val($(this).attr('attrformcode')); //設定被選取記錄的formcode欄位
                 }else if($(this).val() == "退回"){ //按下"退回"按鈕
+                    // msg = "該筆資料己經註銷";
+                    // btn = "註銷";
+                    $('#selFormCode').val($(this).attr('attrformcode')); //設定被選取記錄的formcode欄位
+                    // return confirm("你是否確定註銷該筆記錄？"); //確認使用者是否註銷該筆記錄？
+                }else if($(this).val() == "檢視"){ //按下"檢視"按鈕
                     // msg = "該筆資料己經註銷";
                     // btn = "註銷";
                     $('#selFormCode').val($(this).attr('attrformcode')); //設定被選取記錄的formcode欄位

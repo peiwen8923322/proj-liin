@@ -55,20 +55,18 @@ class cls_holidays extends cls_models
                 
                 $tbody .= <<<_TBODY
                         <tr>
-                            <td class="">
+                            <td class="col-sm-1 text-center">
                                 $html_buttons
                             </td>
-                            <td class="">$field[frmlistapl]</td>
-                            <td class="text-center">$field[year]</td>
-                            <td class="text-center">$field[empapl]</td>
-                            <td class="text-center">$field[pryapl]</td>
-                            <td class="text-center">$field[hldclsapl]</td>
-                            <td class="">$field[hldrsn]</td>
-                            <td class="text-center">$field[applydate]</td>
-                            <td class="text-center">$field[begindate]</td>
-                            <td class="text-center">$field[enddate]</td>
-                            <td class="text-center">$field[hldsdays]</td>
-                            <td class="text-center">$field[hldshrs]</td>
+                            <td class="col-sm-1 text-center">$field[frmlistapl]</td>
+                            <td class="col-sm text-center">$field[year]</td>
+                            <td class="col-sm text-center">$field[empapl]</td>
+                            <td class="col-sm-1 text-center">$field[pryapl]</td>
+                            <td class="col-sm-1 text-center">$field[hldclsapl]</td>
+                            <td class="col-sm-2">$field[hldrsn]</td>
+                            <td class="col-sm-2 text-center">$field[begindate]<br/>$field[enddate]</td>
+                            <td class="col-sm text-center">$field[hldsdays]<br/>$field[hldshrs]</td>
+                            <td class="col-sm-1 text-center">$field[applydate]</td>
                         </tr>
 _TBODY;
             }
@@ -77,8 +75,6 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                     <tr>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -176,82 +172,164 @@ _TABLE;
     // $arrTbl: 傳入其他表格的參考陣列
     function Insert($arrFormVal, $arrTbl){
         //Begin
-        $this->SQL = <<<_sql
-            INSERT INTO holidays (
-                formcode
-                , creator
-                , modifier
-                , empformcode
-                , empapl
-                , empcode
-                , takeofcdate
-                , amlhrs
-                , curhrs
-                , emprolepk
-                , emproleapl
-                , year
-                , hldformcode
-                , hldclsapl
-                , hldrsn
-                , begindate
-                , enddate
-                , hldsdays
-                , hldshrs
-                , aftrest
-                , frmformcode
-                , frmlistapl
-                , pryformcode
-                , pryapl
-                , prycode
-                , mngrformcode
-                , mngrapl
-                , mngrcode
-                , hrformcode
-                , hrapl
-                , hrcode
-                , cifformcode
-                , cifapl
-                , cifcode
-            ) VALUES (
-                '$arrFormVal[formcode]'
-                , '$arrFormVal[creator]'
-                , '$arrFormVal[modifier]'
-                , '{$arrTbl['emp']['formcode']}'
-                , '{$arrTbl['emp']['empapl']}'
-                , '{$arrTbl['emp']['empcode']}'
-                , '{$arrTbl['emp']['takeofcdate']}'
-                , '{$arrTbl['emp']['amlhrs']}'
-                , '{$arrTbl['emp']['curhrs']}'
-                , '{$arrTbl['emp']['emprolepk']}'
-                , '{$arrTbl['emp']['emproleapl']}'
-                , '$arrFormVal[year]'
-                , '{$arrTbl['hlds']['formcode']}'
-                , '{$arrTbl['hlds']['listapl']}'
-                , '$arrFormVal[hldrsn]'
-                , '$arrFormVal[begindate]'
-                , '$arrFormVal[enddate]'
-                , $arrFormVal[hldsdays]
-                , $arrFormVal[hldshrs]
-                , '{$arrTbl['aftrest']['listapl']}'
-                , '{$arrTbl['frmvry']['formcode']}'
-                , '{$arrTbl['frmvry']['listapl']}'
-                , '{$arrTbl['proxy']['formcode']}'
-                , '{$arrTbl['proxy']['empapl']}'
-                , '{$arrTbl['proxy']['empcode']}'
-                , '{$arrTbl['emp']['mngrformcode']}'
-                , '{$arrTbl['emp']['mngrapl']}'
-                , '{$arrTbl['emp']['mngrcode']}'
-                , '{$arrTbl['emp']['hrformcode']}'
-                , '{$arrTbl['emp']['hrapl']}'
-                , '{$arrTbl['emp']['hrcode']}'
-                , '{$arrTbl['emp']['cifformcode']}'
-                , '{$arrTbl['emp']['cifapl']}'
-                , '{$arrTbl['emp']['cifcode']}'
-            )
+        if (strlen($arrFormVal['atmname']) > 0) { // 上傳附件
+            $this->SQL = <<<_sql
+                INSERT INTO $this->self_table (
+                    formcode
+                    , creator
+                    , modifier
+                    , empformcode
+                    , empapl
+                    , empcode
+                    , takeofcdate
+                    , amlhrs
+                    , curhrs
+                    , emprolepk
+                    , emproleapl
+                    , year
+                    , hldformcode
+                    , hldclsapl
+                    , hldrsn
+                    , begindate
+                    , enddate
+                    , hldsdays
+                    , hldshrs
+                    , aftrest
+                    , atmname
+                    , atmtype
+                    , atmsize
+                    , frmformcode
+                    , frmlistapl
+                    , pryformcode
+                    , pryapl
+                    , prycode
+                    , mngrformcode
+                    , mngrapl
+                    , mngrcode
+                    , hrformcode
+                    , hrapl
+                    , hrcode
+                    , cifformcode
+                    , cifapl
+                    , cifcode
+                ) VALUES (
+                    '$arrFormVal[formcode]'
+                    , '$arrFormVal[creator]'
+                    , '$arrFormVal[modifier]'
+                    , '{$arrTbl['emp']['formcode']}'
+                    , '{$arrTbl['emp']['empapl']}'
+                    , '{$arrTbl['emp']['empcode']}'
+                    , '{$arrTbl['emp']['takeofcdate']}'
+                    , '{$arrTbl['emp']['amlhrs']}'
+                    , '{$arrTbl['emp']['curhrs']}'
+                    , '{$arrTbl['emp']['emprolepk']}'
+                    , '{$arrTbl['emp']['emproleapl']}'
+                    , '$arrFormVal[year]'
+                    , '{$arrTbl['hlds']['formcode']}'
+                    , '{$arrTbl['hlds']['listapl']}'
+                    , '$arrFormVal[hldrsn]'
+                    , '$arrFormVal[begindate]'
+                    , '$arrFormVal[enddate]'
+                    , $arrFormVal[hldsdays]
+                    , $arrFormVal[hldshrs]
+                    , '{$arrTbl['aftrest']['listapl']}'
+                    , '$arrFormVal[atmname]'
+                    , '$arrFormVal[atmtype]'
+                    , $arrFormVal[atmsize]
+                    , '{$arrTbl['frmvry']['formcode']}'
+                    , '{$arrTbl['frmvry']['listapl']}'
+                    , '{$arrTbl['proxy']['formcode']}'
+                    , '{$arrTbl['proxy']['empapl']}'
+                    , '{$arrTbl['proxy']['empcode']}'
+                    , '{$arrTbl['emp']['mngrformcode']}'
+                    , '{$arrTbl['emp']['mngrapl']}'
+                    , '{$arrTbl['emp']['mngrcode']}'
+                    , '{$arrTbl['emp']['hrformcode']}'
+                    , '{$arrTbl['emp']['hrapl']}'
+                    , '{$arrTbl['emp']['hrcode']}'
+                    , '{$arrTbl['emp']['cifformcode']}'
+                    , '{$arrTbl['emp']['cifapl']}'
+                    , '{$arrTbl['emp']['cifcode']}'
+                )
 _sql;
+        } else {
+            $this->SQL = <<<_sql
+                INSERT INTO $this->self_table (
+                    formcode
+                    , creator
+                    , modifier
+                    , empformcode
+                    , empapl
+                    , empcode
+                    , takeofcdate
+                    , amlhrs
+                    , curhrs
+                    , emprolepk
+                    , emproleapl
+                    , year
+                    , hldformcode
+                    , hldclsapl
+                    , hldrsn
+                    , begindate
+                    , enddate
+                    , hldsdays
+                    , hldshrs
+                    , aftrest
+                    , frmformcode
+                    , frmlistapl
+                    , pryformcode
+                    , pryapl
+                    , prycode
+                    , mngrformcode
+                    , mngrapl
+                    , mngrcode
+                    , hrformcode
+                    , hrapl
+                    , hrcode
+                    , cifformcode
+                    , cifapl
+                    , cifcode
+                ) VALUES (
+                    '$arrFormVal[formcode]'
+                    , '$arrFormVal[creator]'
+                    , '$arrFormVal[modifier]'
+                    , '{$arrTbl['emp']['formcode']}'
+                    , '{$arrTbl['emp']['empapl']}'
+                    , '{$arrTbl['emp']['empcode']}'
+                    , '{$arrTbl['emp']['takeofcdate']}'
+                    , '{$arrTbl['emp']['amlhrs']}'
+                    , '{$arrTbl['emp']['curhrs']}'
+                    , '{$arrTbl['emp']['emprolepk']}'
+                    , '{$arrTbl['emp']['emproleapl']}'
+                    , '$arrFormVal[year]'
+                    , '{$arrTbl['hlds']['formcode']}'
+                    , '{$arrTbl['hlds']['listapl']}'
+                    , '$arrFormVal[hldrsn]'
+                    , '$arrFormVal[begindate]'
+                    , '$arrFormVal[enddate]'
+                    , $arrFormVal[hldsdays]
+                    , $arrFormVal[hldshrs]
+                    , '{$arrTbl['aftrest']['listapl']}'
+                    , '{$arrTbl['frmvry']['formcode']}'
+                    , '{$arrTbl['frmvry']['listapl']}'
+                    , '{$arrTbl['proxy']['formcode']}'
+                    , '{$arrTbl['proxy']['empapl']}'
+                    , '{$arrTbl['proxy']['empcode']}'
+                    , '{$arrTbl['emp']['mngrformcode']}'
+                    , '{$arrTbl['emp']['mngrapl']}'
+                    , '{$arrTbl['emp']['mngrcode']}'
+                    , '{$arrTbl['emp']['hrformcode']}'
+                    , '{$arrTbl['emp']['hrapl']}'
+                    , '{$arrTbl['emp']['hrcode']}'
+                    , '{$arrTbl['emp']['cifformcode']}'
+                    , '{$arrTbl['emp']['cifapl']}'
+                    , '{$arrTbl['emp']['cifcode']}'
+                )
+_sql;
+        }
 
+        // echo $this->SQL;
         $this->PDO->exec($this->SQL);
-        //echo $this->SQL;
         return $this->PDO->lastInsertId();
         //End
     }
@@ -285,6 +363,9 @@ _sql;
                 , hldshrs = $arrFormVal[hldshrs]
                 , aftrest = '{$arrTbl['aftrest']['listapl']}'
                 , applydate = current_timestamp()
+                , atmname = '$arrFormVal[atmname]'
+                , atmtype = '$arrFormVal[atmtype]'
+                , atmsize = $arrFormVal[atmsize]
                 , frmformcode = '{$arrTbl['frmvry']['formcode']}'
                 , frmlistapl = '{$arrTbl['frmvry']['listapl']}'
                 , pryformcode = '{$arrTbl['proxy']['formcode']}'
@@ -371,9 +452,11 @@ _sql;
                     $count++;
                     $btnEditId = sprintf("edit%06d", $count);
                     $btnDiscardId = sprintf("discard%06d", $count);
+                    $btnViewId = sprintf("edit%06d", $count);
 
                     $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnEditId' name='pass' value='核准' attrformcode='{$arrData[$i]['formcode']}'>";
                     $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnDiscardId' name='reject' value='退回' attrformcode='{$arrData[$i]['formcode']}'>";
+                    $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnViewId' name='view' value='檢視' attrformcode='{$arrData[$i]['formcode']}'>";
                     $tbody .= <<<_TBODY
                         <tr>
                             <td class="">
@@ -396,9 +479,11 @@ _TBODY;
                     $count++;
                     $btnEditId = sprintf("edit%06d", $count);
                     $btnDiscardId = sprintf("discard%06d", $count);
+                    $btnViewId = sprintf("edit%06d", $count);
 
                     $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnEditId' name='pass' value='核准' attrformcode='{$arrData[$i]['formcode']}'>";
                     $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnDiscardId' name='reject' value='退回' attrformcode='{$arrData[$i]['formcode']}'>";
+                    $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnViewId' name='view' value='檢視' attrformcode='{$arrData[$i]['formcode']}'>";
                     $tbody .= <<<_TBODY
                         <tr>
                             <td class="">
@@ -421,9 +506,11 @@ _TBODY;
                     $count++;
                     $btnEditId = sprintf("edit%06d", $count);
                     $btnDiscardId = sprintf("discard%06d", $count);
+                    $btnViewId = sprintf("edit%06d", $count);
 
                     $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnEditId' name='pass' value='核准' attrformcode='{$arrData[$i]['formcode']}'>";
                     $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnDiscardId' name='reject' value='退回' attrformcode='{$arrData[$i]['formcode']}'>";
+                    $html_buttons .= "<input type='submit' class='btn btn-outline-primary' id='$btnViewId' name='view' value='檢視' attrformcode='{$arrData[$i]['formcode']}'>";
                     $tbody .= <<<_TBODY
                         <tr>
                             <td class="">
