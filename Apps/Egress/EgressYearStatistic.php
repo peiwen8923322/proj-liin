@@ -35,7 +35,7 @@
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者
     $nowYear = date("Y", time()); // 目前年度
 
-    if(isset($_POST['query'])){ //按下"查詢"按鈕的處理動作
+    if(isset($_POST['query']) || isset($_POST['prt'])){ //按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); //淨化查詢條件
         
         $obj_egress->SQLSelect = "SELECT year, deptspk, cmpapl, empformcode, empapl, COUNT(*) AS 'cnt_recds' ";
@@ -68,6 +68,11 @@
         $_SESSION['SQL']['GroupBy'] = $obj_egress->SQLGroupBy;
         $_SESSION['SQL']['OrderBy'] = $obj_egress->SQLOrderBy;
         $_SESSION['SQL']['CurPage'] = $obj_egress->int_current_page; //儲存目前頁數
+
+        if (isset($_POST['prt'])) { //按下"列印"按鈕的處理動作
+            $obj_form->js_openWindow('EgressYearStatisticRpt.php');
+        }
+
     }elseif (isset($_POST['edit'])) { //按下"編輯"按鈕的處理動作
         // $_SESSION['selFormCode'] = $_POST['selFormCode']; //儲存目前編輯記錄
         // header("location: holidaysEdit.php");
@@ -258,7 +263,7 @@ echo <<<_html
                 </div>
                 
                 <div class="row justify-content-center mt-2">
-                    <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">
+                    <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" class="col-sm-1 btn btn-outline-primary" value="清除">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" id="query" name="prt" value="列印">
                 </div>
                 
                 <table class="table caption-top table-striped table-hover my-5">
