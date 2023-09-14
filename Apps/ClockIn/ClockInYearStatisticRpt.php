@@ -62,7 +62,7 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->setFont('msungstdlight', '', 20);
 		// Title
-		$this->Cell(0, 0, '員工外出統計清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 0, '員工刷卡統計清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln();
 
         $this->setFont('msungstdlight', '', 10);
@@ -90,9 +90,9 @@ $pdf = new MYPDF("L", PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 // set document information
 $pdf->setCreator(PDF_CREATOR);
 $pdf->setAuthor('徐培文');
-$pdf->setTitle('員工外出統計清單');
-$pdf->setSubject('員工外出統計清單');
-$pdf->setKeywords('員工, PDF, 外出');
+$pdf->setTitle('員工刷卡統計清單');
+$pdf->setSubject('員工刷卡統計清單');
+$pdf->setKeywords('員工, PDF, 刷卡');
 
 // remove default header/footer
 $pdf->setPrintHeader(true);
