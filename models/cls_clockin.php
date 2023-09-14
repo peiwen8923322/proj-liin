@@ -330,7 +330,66 @@ _TBODY;
         //End
     }
 
+    // 列印員工刷卡年度統計報表(PDF)
+    // $arrData: Array物件
+    // $arrTbl: 其他參考檔(二維關聯陣列)
+    // return: 傳回查詢結果HTML Tag
+    function PrtPDFSttQry($arrData, $arrTbl) : string{
+        //變數初始化
+        $count = 0; //該頁筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+        
+        //Begin
+        $thead =<<<_THEAD
+            <thead>
+                <tr>
+                    <th style="width:20%;">機構</th><th style="width:20%;text-align:center;">員工</th><th style="width:20%;text-align:center;">員工編號</th><th style="width:20%;text-align:center;">年度</th><th style="width:20%;text-align:center;">刷卡記錄總數</th>
+                </tr>
+            </thead>
+_THEAD;
 
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+            foreach ($arrData as $field) {
+                $count++;
+                
+                $tbody .= <<<_TBODY
+                    <tr>
+                        <td style="width:20%;">$field[cmpapl]</td>
+                        <td style="width:20%;text-align:center;">$field[empapl]</td>
+                        <td style="width:20%;text-align:center;">$field[empcode]</td>
+                        <td style="width:20%;text-align:center;">$field[year]</td>
+                        <td style="width:20%;text-align:center;">$field[ttl_rcds]</td>
+                    </tr>
+_TBODY;
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+
+        return $table;
+        //End
+    }
 
 
 
