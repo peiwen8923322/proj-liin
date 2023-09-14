@@ -84,8 +84,6 @@ _TBODY;
     // return: 傳回查詢結果HTML Tag
     function PrtPDFByHstyQry($arrData, $arrTbl){
         //變數初始化
-        // $btnEditId = ""; //設定[編輯]按鈕Id屬性
-        // $btnDiscardId = ""; //設定[註銷]按鈕Id屬性
         $count = 0; //該頁筆數
         $thead = '';
         $tbody = '';
@@ -104,8 +102,6 @@ _THEAD;
             $tbody = "<tbody>";
             foreach ($arrData as $field) {
                 $count++;
-                // $btnEditId = sprintf("edit%06d", $count);
-                // $btnDiscardId = sprintf("discard%06d", $count);
 
                 $tbody .= <<<_TBODY
                     <tr>

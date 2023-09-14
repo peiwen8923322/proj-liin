@@ -455,7 +455,72 @@ _TBODY;
         //End
     }
 
+    // 列印查詢報表(PDF)
+    // $arrData: Array物件
+    // $arrTbl: 其他參考檔(二維關聯陣列)
+    // return: 回傳查詢結果HTML Tag
+    function PrtPDFByHstyQry($arrData, $arrTbl){
+        //變數初始化
+        $count = 0; //該頁筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+        
+        //Begin
+        $thead =<<<_THEAD
+            <thead>
+                <tr>
+                    <th style="width:10%;text-align:center;">審核狀態</th><th style="width:20%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">外出事由</th><th style="width:15%;text-align:center;">外出起始日</th><th style="width:15%;text-align:center;">外出截止日</th><th style="width:15%;text-align:center;">外出者簽核時間</th>
+                </tr>
+            </thead>
+_THEAD;
 
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+            foreach ($arrData as $field) {
+                $count++;
+                
+                $tbody .= <<<_TBODY
+                        <tr>
+                            <td style="width:10%;text-align:center;">$field[frmlistapl]</td>
+                            <td style="width:20%;">$field[cmpapl]</td>
+                            <td style="width:6%;text-align:center;">$field[empapl]</td>
+                            <td style="width:6%;text-align:center;">$field[year]</td>
+                            <td style="width:15%;">$field[egrersn]</td>
+                            <td style="width:15%;text-align:center;">$field[begindate]</td>
+                            <td style="width:15%;text-align:center;">$field[enddate]</td>
+                            <td style="width:15%;text-align:center;">$field[applydate]</td>
+                        </tr>
+_TBODY;
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+
+        return $table;
+        //End
+    }
     
 
 
