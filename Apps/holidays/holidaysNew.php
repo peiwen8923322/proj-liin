@@ -418,8 +418,8 @@ echo <<<_html
                     <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="curhrs" name="curhrs" value="{$tbl['emp']['curhrs']}" title="目前可特休時數" readonly></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-2 fw-bolder"><label for="begindate" class="form-label">請假啟始日(必填)：</label></div>
-                    <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="begindate" name="begindate" value="$htmlTags[html_begindate]" title="請輸入請假啟始日" required></div>
+                    <div class="col-sm-2 fw-bolder"><label for="begindate" class="form-label">請假起始日(必填)：</label></div>
+                    <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="begindate" name="begindate" value="$htmlTags[html_begindate]" title="請輸入請假起始日" required></div>
                     <div class="col-sm-2 fw-bolder"><label for="enddate" class="form-label">請假截止日(必填)：</label></div>
                     <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="enddate" name="enddate" value="$htmlTags[html_enddate]" title="請輸入請假截止日" required></div>
                 </div>
