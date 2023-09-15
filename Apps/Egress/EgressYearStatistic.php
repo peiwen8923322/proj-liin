@@ -1,5 +1,11 @@
 <?php
 
+    /* 
+        作者：徐培文
+        編輯外出資料
+        修改日期：2023/08/28
+    */
+    
     //Require_once
     require_once "../../models//common.php"; //共用功能
     require_once "../../models/cls_pms.php";
