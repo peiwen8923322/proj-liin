@@ -248,6 +248,9 @@ echo <<<_html
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
     <form action="" method="post" id="form1" name="form1">
+    <div class="row text-white" style="background-color: #3E7050;">
+        <h1 class="col-sm-4"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
+    </div>
     <!--  header區塊  -->
     <div class="row justify-content-end text-white" style="background-color: #3E7050;">
         <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
@@ -283,8 +286,8 @@ echo <<<_html
                         <div class="col-sm-4"><input type="text" class="form-control" style="height: 1.6cm;" id="year" name="year" value="$htmlTags[year]" title="請輸入年度" required></div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-2 fw-bolder"><label for="begindate" class="form-label">外出啟始日(必填)：</label></div>
-                        <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="begindate" name="begindate" value="$htmlTags[begindate]" title="請輸入外出啟始日" required></div>
+                        <div class="col-sm-2 fw-bolder"><label for="begindate" class="form-label">外出起始日(必填)：</label></div>
+                        <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="begindate" name="begindate" value="$htmlTags[begindate]" title="請輸入外出起始日" required></div>
                         <div class="col-sm-2 fw-bolder"><label for="enddate" class="form-label">外出截止日(必填)：</label></div>
                         <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="enddate" name="enddate" value="$htmlTags[enddate]" title="請輸入外出截止日" required></div>
                     </div>
