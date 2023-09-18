@@ -44,7 +44,7 @@
         
         // $obj_egress->SQLSelect = "SELECT h.*, e.formcode AS e_formcode, e.cmpapl "; // 加上"e.formcode AS e_formcode, e.cmpapl"
         // $obj_egress->SQLFrom = " FROM holidays h LEFT OUTER JOIN employees e ON (h.empformcode = e.formcode) ";
-        $obj_egress->SQLWhere .= " AND formstate = 15 AND (mngrformcode = '{$tbl['emp']['formcode']}' OR cifformcode = '{$tbl['emp']['formcode']}') "; // 一般單位主管 OR 主任
+        $obj_egress->SQLWhere .= " AND formstate = 15 AND cls = '外出' AND (mngrformcode = '{$tbl['emp']['formcode']}' OR cifformcode = '{$tbl['emp']['formcode']}') "; // 一般單位主管 OR 主任
         $obj_egress->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND year = '{$arrQryFld['year']}' " : ""; // 年度(西元年)
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year'], false); // 年度(西元年)
         if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) && (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0)) { // //外出啟始日 + 外出截止日
