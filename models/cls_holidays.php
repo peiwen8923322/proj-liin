@@ -339,49 +339,93 @@ _sql;
     // $arrFormVal: 傳入新表單欄位值陣列
     // $arrTbl: 傳入參考其他表格的欄位陣列
     function Update($arrFormVal, $arrTbl){
-        //Begin        
-        $this->SQL = <<<_sql
-            UPDATE holidays
-            SET
-                modifier = '$arrFormVal[modifier]'
-                , modifydate = current_timestamp()
-                , empformcode = '{$arrTbl['emp']['formcode']}'
-                , empapl = '{$arrTbl['emp']['empapl']}'
-                , empcode = '{$arrTbl['emp']['empcode']}'
-                , takeofcdate = '{$arrTbl['emp']['takeofcdate']}'
-                , amlhrs = '{$arrTbl['emp']['amlhrs']}'
-                , curhrs = '{$arrTbl['emp']['curhrs']}'
-                , emprolepk = '{$arrTbl['emp']['emprolepk']}'
-                , emproleapl = '{$arrTbl['emp']['emproleapl']}'
-                , year = '$arrFormVal[year]'
-                , hldformcode = '{$arrTbl['hlds']['formcode']}'
-                , hldclsapl = '{$arrTbl['hlds']['listapl']}'
-                , hldrsn = '$arrFormVal[hldrsn]'
-                , begindate = '$arrFormVal[begindate]'
-                , enddate = '$arrFormVal[enddate]'
-                , hldsdays = $arrFormVal[hldsdays]
-                , hldshrs = $arrFormVal[hldshrs]
-                , aftrest = '{$arrTbl['aftrest']['listapl']}'
-                , applydate = current_timestamp()
-                , atmname = '$arrFormVal[atmname]'
-                , atmtype = '$arrFormVal[atmtype]'
-                , atmsize = $arrFormVal[atmsize]
-                , frmformcode = '{$arrTbl['frmvry']['formcode']}'
-                , frmlistapl = '{$arrTbl['frmvry']['listapl']}'
-                , pryformcode = '{$arrTbl['proxy']['formcode']}'
-                , pryapl = '{$arrTbl['proxy']['empapl']}'
-                , prycode = '{$arrTbl['proxy']['empcode']}'
-                , mngrformcode = '{$arrTbl['emp']['mngrformcode']}'
-                , mngrapl = '{$arrTbl['emp']['mngrapl']}'
-                , mngrcode = '{$arrTbl['emp']['mngrcode']}'
-                , hrformcode = '{$arrTbl['emp']['hrformcode']}'
-                , hrapl = '{$arrTbl['emp']['hrapl']}'
-                , hrcode = '{$arrTbl['emp']['hrcode']}'
-                , cifformcode = '{$arrTbl['emp']['cifformcode']}'
-                , cifapl = '{$arrTbl['emp']['cifapl']}'
-                , cifcode = '{$arrTbl['emp']['cifcode']}'
-            WHERE formcode = '$arrFormVal[formcode]'
+        //Begin
+        if (strlen($arrFormVal['atmname']) > 0) { // 上傳附件
+            $this->SQL = <<<_sql
+                UPDATE $this->self_table
+                SET
+                    modifier = '$arrFormVal[modifier]'
+                    , modifydate = current_timestamp()
+                    , empformcode = '{$arrTbl['emp']['formcode']}'
+                    , empapl = '{$arrTbl['emp']['empapl']}'
+                    , empcode = '{$arrTbl['emp']['empcode']}'
+                    , takeofcdate = '{$arrTbl['emp']['takeofcdate']}'
+                    , amlhrs = '{$arrTbl['emp']['amlhrs']}'
+                    , curhrs = '{$arrTbl['emp']['curhrs']}'
+                    , emprolepk = '{$arrTbl['emp']['emprolepk']}'
+                    , emproleapl = '{$arrTbl['emp']['emproleapl']}'
+                    , year = '$arrFormVal[year]'
+                    , hldformcode = '{$arrTbl['hlds']['formcode']}'
+                    , hldclsapl = '{$arrTbl['hlds']['listapl']}'
+                    , hldrsn = '$arrFormVal[hldrsn]'
+                    , begindate = '$arrFormVal[begindate]'
+                    , enddate = '$arrFormVal[enddate]'
+                    , hldsdays = $arrFormVal[hldsdays]
+                    , hldshrs = $arrFormVal[hldshrs]
+                    , aftrest = '{$arrTbl['aftrest']['listapl']}'
+                    , applydate = current_timestamp()
+                    , atmname = '$arrFormVal[atmname]'
+                    , atmtype = '$arrFormVal[atmtype]'
+                    , atmsize = $arrFormVal[atmsize]
+                    , frmformcode = '{$arrTbl['frmvry']['formcode']}'
+                    , frmlistapl = '{$arrTbl['frmvry']['listapl']}'
+                    , pryformcode = '{$arrTbl['proxy']['formcode']}'
+                    , pryapl = '{$arrTbl['proxy']['empapl']}'
+                    , prycode = '{$arrTbl['proxy']['empcode']}'
+                    , mngrformcode = '{$arrTbl['emp']['mngrformcode']}'
+                    , mngrapl = '{$arrTbl['emp']['mngrapl']}'
+                    , mngrcode = '{$arrTbl['emp']['mngrcode']}'
+                    , hrformcode = '{$arrTbl['emp']['hrformcode']}'
+                    , hrapl = '{$arrTbl['emp']['hrapl']}'
+                    , hrcode = '{$arrTbl['emp']['hrcode']}'
+                    , cifformcode = '{$arrTbl['emp']['cifformcode']}'
+                    , cifapl = '{$arrTbl['emp']['cifapl']}'
+                    , cifcode = '{$arrTbl['emp']['cifcode']}'
+                WHERE formcode = '$arrFormVal[formcode]'
 _sql;
+        } else {
+            $this->SQL = <<<_sql
+                UPDATE $this->self_table
+                SET
+                    modifier = '$arrFormVal[modifier]'
+                    , modifydate = current_timestamp()
+                    , empformcode = '{$arrTbl['emp']['formcode']}'
+                    , empapl = '{$arrTbl['emp']['empapl']}'
+                    , empcode = '{$arrTbl['emp']['empcode']}'
+                    , takeofcdate = '{$arrTbl['emp']['takeofcdate']}'
+                    , amlhrs = '{$arrTbl['emp']['amlhrs']}'
+                    , curhrs = '{$arrTbl['emp']['curhrs']}'
+                    , emprolepk = '{$arrTbl['emp']['emprolepk']}'
+                    , emproleapl = '{$arrTbl['emp']['emproleapl']}'
+                    , year = '$arrFormVal[year]'
+                    , hldformcode = '{$arrTbl['hlds']['formcode']}'
+                    , hldclsapl = '{$arrTbl['hlds']['listapl']}'
+                    , hldrsn = '$arrFormVal[hldrsn]'
+                    , begindate = '$arrFormVal[begindate]'
+                    , enddate = '$arrFormVal[enddate]'
+                    , hldsdays = $arrFormVal[hldsdays]
+                    , hldshrs = $arrFormVal[hldshrs]
+                    , aftrest = '{$arrTbl['aftrest']['listapl']}'
+                    , applydate = current_timestamp()
+                    , frmformcode = '{$arrTbl['frmvry']['formcode']}'
+                    , frmlistapl = '{$arrTbl['frmvry']['listapl']}'
+                    , pryformcode = '{$arrTbl['proxy']['formcode']}'
+                    , pryapl = '{$arrTbl['proxy']['empapl']}'
+                    , prycode = '{$arrTbl['proxy']['empcode']}'
+                    , mngrformcode = '{$arrTbl['emp']['mngrformcode']}'
+                    , mngrapl = '{$arrTbl['emp']['mngrapl']}'
+                    , mngrcode = '{$arrTbl['emp']['mngrcode']}'
+                    , hrformcode = '{$arrTbl['emp']['hrformcode']}'
+                    , hrapl = '{$arrTbl['emp']['hrapl']}'
+                    , hrcode = '{$arrTbl['emp']['hrcode']}'
+                    , cifformcode = '{$arrTbl['emp']['cifformcode']}'
+                    , cifapl = '{$arrTbl['emp']['cifapl']}'
+                    , cifcode = '{$arrTbl['emp']['cifcode']}'
+                WHERE formcode = '$arrFormVal[formcode]'
+_sql;
+        }
+        
+        
 
         $this->PDO->exec($this->SQL);
         //echo $this->SQL;
