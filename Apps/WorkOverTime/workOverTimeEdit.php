@@ -1,146 +1,101 @@
 <?php
 
+    /* 
+        作者：徐培文
+        功能：編輯加班資料
+        修改日期：2023/09/18
+    */
+    
     //Require_once
     require_once "../../models/common.php"; //共用功能
     require_once "../../models/cls_pms.php";
-    require_once "../../models/cls_employees.php";
-    require_once "../../models/cls_depts.php";
+    require_once "../../models/cls_egress.php";
     require_once "../../models/cls_field_lists.php";
+    require_once "../../models/cls_employees.php";
 
     //變數初始化
     $obj_form = new cls_form;
-    $obj_pms = new cls_pms; //權限檔
-    if (!$obj_pms->isOwnPms($_SESSION['login_emp']['empapl'], '加班管理', '編輯')) { //檢查使用者是否有使用權限
-        $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有加班資料的編輯權限，如需該功能的使用權限，請與管理者聯絡");
-        $obj_form->js_goURL(INDEXPAGE); //返回首頁
-        exit();
-    }
-    $obj_employees = new cls_employees; //員工檔
-    $obj_depts = new cls_depts; //機構檔
-    $obj_fl = new cls_field_lists; //欄位清單檔
+    // $obj_pms = new cls_pms; //權限檔
+    // if (!$obj_pms->isOwnPmsByEmpformcode($_SESSION['login_emp']['formcode'], '請假管理', '編輯')) { //檢查使用者是否有使用權限
+    //     $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有請假管理的編輯權限，如需該功能的使用權限，請與管理者聯絡");
+    //     $obj_form->js_goURL(MOBILEINDEXPAGE); //返回首頁
+    //     exit();
+    // }
+    
+    $obj_egress = new cls_egress; //外出/加班檔
+    $obj_field_lists = new cls_field_lists; //欄位清單檔
+    $obj_emp = new cls_employees; //員工檔
 
     $arrCurRecord = array(); //儲存編輯記錄
-    $htmlTags = array(); //Render HTML
-    $tbl = array(); //儲存不同的參考檔
+    $htmlTags = array(); //Render HTML(二維關聯陣列)
+    $tbl = array(); //儲存不同的參考檔(二維關聯陣列)
+    $arrHldsStt = array(); // 假別統計(二維關聯陣列)
     $arrNewFormVal = ""; //儲存淨化後的建立內容
     $qryCondition = ""; //參考其他Table的SQL WHERE條件
     $strStsMsg = ""; //儲存狀態欄訊息
 
-
     //Begin
-    if (isset($_POST['submit']) && $_POST['submit'] == "確定") {
-        /*
+    $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); //登入者
+    $nowYear = date("Y", time()); // 目前西元年
+
+    if (isset($_POST['submit'])) { //按下"送出 / 暫存"按鈕的處理動作
         $arrNewFormVal = $obj_form->inputChk($_POST); //淨化查詢條件
         $arrNewFormVal['formcode'] = $_SESSION['selFormCode']; //該筆記錄的表單編號
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl'];//修改者
+        $arrNewFormVal['cls'] = '加班'; // 類別
+        $arrNewFormVal['applydate'] = date("Y-m-d H:i:s", time()); // 外出者簽核時間
 
         //參考其他Table
-        $tbl['depts'] = $obj_depts->rtnQryRecord("SELECT * FROM depts WHERE 1 AND formcode = '$arrNewFormVal[deptspk]'"); //機構
-        $tbl['position'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[pospk]'"); //職稱
-        $tbl['sex'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[sexpk]'");//性別
-        $tbl['edu'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[edupk]'"); //教育程度
-        $tbl['ntn'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[ntnpk]'"); //本國藉
-        $tbl['country'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[ctypk]'"); //國家
-        $tbl['lisrel'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[lisrelpk]'"); //聯絡人關係
-        $tbl['marrige'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[mrgpk]'"); //婚姻狀況
-        $tbl['wrktim'] = $obj_fl->rtnQryRecord("SELECT * FROM field_lists WHERE 1 AND formcode = '$arrNewFormVal[wrktimpk]'"); //上班班別
-        //相關工作
-        $qryCondition = implode(",", $obj_fl->addQuote($arrNewFormVal['othwrk']));
-        $arrNewFormVal['Newothwrk'] = implode(",", $arrNewFormVal['othwrk']);
-        $tbl['othwrk'] = $obj_fl->rtnQryResults("SELECT * FROM field_lists WHERE 1 AND listapl IN ($qryCondition)");
-        //常用語言
-        $qryCondition = implode(",", $obj_fl->addQuote($arrNewFormVal['lang']));
-        $arrNewFormVal['Newlang'] = implode(",", $arrNewFormVal['lang']);
-        $tbl['language'] = $obj_fl->rtnQryResults("SELECT * FROM field_lists WHERE 1 AND listapl IN ($qryCondition)");
-
+        $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; //審核狀態 ("送出 / 暫存")
+        
         //執行SQL
-        $obj_employees->Update($arrNewFormVal, $tbl);
+        $obj_egress->Update($arrNewFormVal, $tbl);
         
         //Render HTML
-        $htmlTags['html_deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'depts', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode'), $obj_depts->getList(), $tbl['depts']['cmpapl']); //機構
-        $htmlTags['html_position'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'posistion', 'attrName'=>'pospk', 'attrTitle'=>'請選擇職稱', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("職稱"), $tbl['position']['listapl']); //職稱
-        $htmlTags['html_posmemo'] = $arrNewFormVal['posmemo']; //職稱說明
-        $htmlTags['html_empapl'] = $arrNewFormVal['empapl']; //員工姓名
-        $htmlTags['html_empcode'] = $arrNewFormVal['empcode']; //員工編號
-        $htmlTags['html_empidno'] = $arrNewFormVal['empidno']; //身分證字號/居留證
-        $htmlTags['html_sex'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'sex', 'attrName'=>'sexpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("性別"), $tbl['sex']['listapl']); //性別
-        $htmlTags['html_edu'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'edu', 'attrName'=>'edupk', 'attrTitle'=>'請選擇教育程度', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("教育程度"), $tbl['edu']['listapl']); //教育程度
-        $htmlTags['html_blood'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'blood', 'attrName'=>'blood', 'attrTitle'=>'請選擇血型', 'optionTitle'=>'listapl', 'optionValue'=>'listapl'), $obj_fl->getList("血型"), $arrNewFormVal['blood']); //血型
-        $htmlTags['html_telephone'] = $arrNewFormVal['telephone']; //電話號碼
-        $htmlTags['html_mobilephone'] = $arrNewFormVal['mobilephone']; //手機號碼
-        $htmlTags['html_birthday'] = $arrNewFormVal['birthday']; //生日
-        $htmlTags['html_email'] = $arrNewFormVal['email']; //電子郵件
-        $htmlTags['html_ntn'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'ntn', 'attrName'=>'ntnpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("本國籍"), $tbl['ntn']['listapl']);//本國籍
-        $htmlTags['html_country'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'cty', 'attrName'=>'ctypk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("國家"), $tbl['country']['listapl']); //國家
-        $htmlTags['html_addresses'] = $arrNewFormVal['addresses']; //地址
-        $htmlTags['html_liaison'] = $arrNewFormVal['liaison']; //緊急聯絡人
-        $htmlTags['html_lisrel'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'lisrel', 'attrName'=>'lisrelpk', 'attrTitle'=>'請選擇聯絡人關係', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("聯絡人"), $tbl['lisrel']['listapl']); //聯絡人關係
-        $htmlTags['html_marrige'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'mrg', 'attrName'=>'mrgpk', 'attrTitle'=>'請選擇婚姻狀況', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("婚姻狀況"), $tbl['marrige']['listapl']); //婚姻狀況
-        $htmlTags['html_listel'] = $arrNewFormVal['listel']; //聯絡人電話號碼
-        $htmlTags['html_lismob'] = $arrNewFormVal['lismob']; //聯絡人手機號碼
-        $htmlTags['html_wrktim'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'wrktim', 'attrName'=>'wrktimpk', 'attrTitle'=>'請選擇上班班別', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("上班班別"), $tbl['wrktim']['listapl']); //上班班別
-        $htmlTags['html_takofcdate'] = $arrNewFormVal['takeofcdate']; //到職日
-        $htmlTags['html_levofcdate'] = $arrNewFormVal['levofcdate']; //離職日
-        $htmlTags['html_othwrk'] = $obj_form->viewHTMLCheckBoxTag(array('attrId'=>'othwrk', 'attrName'=>'othwrk', 'Label'=>'listapl', 'attrValue'=>'listapl'), $obj_fl->getList("相關工作"), array_column($tbl['othwrk'], 'listapl')); //相關工作
-        $htmlTags['html_language'] = $obj_form->viewHTMLCheckBoxTag(array('attrId'=>'lang', 'attrName'=>'lang', 'Label'=>'listapl', 'attrValue'=>'listapl'), $obj_fl->getList("常用語言"), array_column($tbl['language'], 'listapl')); //常用語言
-         */
+        $htmlTags['cmpapl'] = $arrNewFormVal['deptspk']; // 機構
+        $htmlTags['empapl'] = $arrNewFormVal['empapl']; // 外出員工
+        $htmlTags['empcode'] = $arrNewFormVal['empcode']; // 員工編號
+        $htmlTags['year'] = $arrNewFormVal['year']; // 年度
+        $htmlTags['egrersn'] = $arrNewFormVal['egrersn']; // 外出事由
+        $htmlTags['begindate'] = $arrNewFormVal['begindate']; // 外出啟始日
+        $htmlTags['enddate'] = $arrNewFormVal['enddate']; // 外出截止日
     } elseif (isset($_POST['logout'])) { //登出
         //$obj_form->logout();
     } else { //第一次執行表單的處理動作
-        /*
         $arrQryFld = $_SESSION['arrQryFld'];
-        $obj_employees->SQLSelect = "SELECT * ";
-        $obj_employees->SQLFrom = $_SESSION['SQL']['From'];
-        $obj_employees->SQLWhere = " WHERE 1 AND formcode = '$_SESSION[selFormCode]'";
-        $obj_employees->SQL = $obj_employees->SQLSelect.$obj_employees->SQLFrom.$obj_employees->SQLWhere;
-        $arrCurRecord = $obj_employees->rtnQryRecord($obj_employees->SQL); //取得目前的編輯記錄
+        $obj_egress->SQLSelect = "SELECT * ";
+        $obj_egress->SQLFrom = $_SESSION['SQL']['From'];
+        $obj_egress->SQLWhere = " WHERE 1 AND formcode = '$_SESSION[selFormCode]'";
+        $obj_egress->SQL = $obj_egress->SQLSelect.$obj_egress->SQLFrom.$obj_egress->SQLWhere;
+        $arrCurRecord = $obj_egress->rtnQryRecord($obj_egress->SQL); //取得目前的編輯記錄
 
         //Render HTML
-        $htmlTags['html_deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'depts', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode'), $obj_depts->getList(), $arrCurRecord['cmpapl']); //機構
-        $htmlTags['html_position'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'posistion', 'attrName'=>'pospk', 'attrTitle'=>'請選擇職稱', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("職稱"), $arrCurRecord['posapl']); //職稱
-        $htmlTags['html_posmemo'] = $arrCurRecord['posmemo']; //職稱說明
-        $htmlTags['html_empapl'] = $arrCurRecord['empapl']; //員工姓名
-        $htmlTags['html_empcode'] = $arrCurRecord['empcode']; //員工編號
-        $htmlTags['html_empidno'] = $arrCurRecord['empidno']; //身分證字號/居留證
-        $htmlTags['html_sex'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'sex', 'attrName'=>'sexpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("性別"), $arrCurRecord['sexapl']); //性別
-        $htmlTags['html_edu'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'edu', 'attrName'=>'edupk', 'attrTitle'=>'請選擇教育程度', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("教育程度"), $arrCurRecord['eduapl']); //教育程度
-        $htmlTags['html_blood'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'blood', 'attrName'=>'blood', 'attrTitle'=>'請選擇血型', 'optionTitle'=>'listapl', 'optionValue'=>'listapl'), $obj_fl->getList("血型"), $arrCurRecord['blood']); //血型
-        $htmlTags['html_telephone'] = $arrCurRecord['telephone']; //電話號碼
-        $htmlTags['html_mobilephone'] = $arrCurRecord['mobilephone']; //手機號碼
-        $htmlTags['html_birthday'] = $arrCurRecord['birthday']; //生日
-        $htmlTags['html_email'] = $arrCurRecord['email']; //電子郵件
-        $htmlTags['html_ntn'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'ntn', 'attrName'=>'ntnpk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("本國籍"), $arrCurRecord['ntnapl']);//本國籍
-        $htmlTags['html_country'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'cty', 'attrName'=>'ctypk', 'Label'=>'listapl', 'attrValue'=>'formcode'), $obj_fl->getList("國家"), $arrCurRecord['ctyapl']); //國家
-        $htmlTags['html_addresses'] = $arrCurRecord['addresses']; //地址
-        $htmlTags['html_liaison'] = $arrCurRecord['liaison']; //緊急聯絡人
-        $htmlTags['html_lisrel'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'lisrel', 'attrName'=>'lisrelpk', 'attrTitle'=>'請選擇聯絡人關係', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("聯絡人"), $arrCurRecord['lisrelapl']); //聯絡人關係
-        $htmlTags['html_marrige'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'mrg', 'attrName'=>'mrgpk', 'attrTitle'=>'請選擇婚姻狀況', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("婚姻狀況"), $arrCurRecord['mrgapl']); //婚姻狀況
-        $htmlTags['html_listel'] = $arrCurRecord['listel']; //聯絡人電話號碼
-        $htmlTags['html_lismob'] = $arrCurRecord['lismob']; //聯絡人手機號碼
-        $htmlTags['html_wrktim'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'wrktim', 'attrName'=>'wrktimpk', 'attrTitle'=>'請選擇上班班別', 'optionTitle'=>'listapl', 'optionValue'=>'formcode'), $obj_fl->getList("上班班別"), $arrCurRecord['wrktimapl']); //上班班別
-        $htmlTags['html_takofcdate'] = $arrCurRecord['takeofcdate']; //到職日
-        $htmlTags['html_levofcdate'] = $arrCurRecord['levofcdate']; //離職日
-        $htmlTags['html_othwrk'] = $obj_form->viewHTMLCheckBoxTag(array('attrId'=>'othwrk', 'attrName'=>'othwrk', 'Label'=>'listapl', 'attrValue'=>'listapl'), $obj_fl->getList("相關工作"), explode(",", $arrCurRecord['othwrk'])); //相關工作
-        $htmlTags['html_language'] = $obj_form->viewHTMLCheckBoxTag(array('attrId'=>'lang', 'attrName'=>'lang', 'Label'=>'listapl', 'attrValue'=>'listapl'), $obj_fl->getList("常用語言"), explode(",", $arrCurRecord['lang'])); //常用語言
+        $htmlTags['cmpapl'] = $arrCurRecord['cmpapl']; // 機構
+        $htmlTags['empapl'] = $arrCurRecord['empapl']; // 外出員工
+        $htmlTags['empcode'] = $arrCurRecord['empcode']; // 員工編號
+        $htmlTags['year'] = $arrCurRecord['year']; // 年度
+        $htmlTags['egrersn'] = $arrCurRecord['egrersn']; // 外出事由
+        $htmlTags['begindate'] = $arrCurRecord['begindate']; // 外出啟始日
+        $htmlTags['enddate'] = $arrCurRecord['enddate']; // 外出截止日
 
         $strStsMsg = "資料編輯中"; //顯示訊息
-         */
     }
     
     if (isset($_SESSION['error'])) { //檢查是否有錯誤訊息
         $strStsMsg = $_SESSION['error']['errMsg'];
         unset($_SESSION['error']);
-    }elseif (isset($_POST['submit']) && $_POST['submit'] == "確定") { //顯示完成訊息
-        $obj_form->js_alert("資料已編輯成功");
+    }elseif (isset($_POST['submit'])) { //顯示完成訊息
+        $strStsMsg = "資料已編輯成功";
+        $obj_form->js_alert($strStsMsg);
     }
 
     //Close Connection
+    $obj_emp = null;
+    $obj_field_lists = null;
+    $obj_egress = null;
+    // $obj_pms = null;
     $obj_form = null;
-    $obj_employees = null;
-    $obj_depts = null;
-    $obj_fl = null;
     //End
-
 
 echo <<<_html
 <!DOCTYPE html>
@@ -162,154 +117,204 @@ echo <<<_html
         $(document).ready(function(){
             //設定表單 Submit事件
             $("#form1").submit(function(){
-                alert(msg);
+                // 取消呈送
+                if ($("#hldformcode").val() == '2022100101' && $("#hldshrs").val() != Math.floor($("#hldshrs").val())) { // 換休 + 請假時數含小數點
+                    alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
+                    return false;
+                } 
+                if ($("#hldformcode").val() == '2022100096' && $("#hldshrs").val() > 0) { // 生理假 + 含請假時數
+                    alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
+                    return false;
+                }
+                if (($("#hldformcode").val() == '2022100089' || $("#hldformcode").val() == '2022100090' || $("#hldformcode").val() == '2022100091' || $("#hldformcode").val() == '2022100092' || $("#hldformcode").val() == '2022100093' || $("#hldformcode").val() == '2022100094' || $("#hldformcode").val() == '2022100095' || $("#hldformcode").val() == '2022100097' || $("#hldformcode").val() == '2022100098' || $("#hldformcode").val() == '2022100099' || $("#hldformcode").val() == '2023010024' || $("#hldformcode").val() == '2022100100') && $("#hldshrs").val() % 4 != 0) { // 病假+事假+公假+特休假+婚假+喪假+家庭照顧假+陪產假+產檢假+產假+公傷病假+其他
+                    alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
+                    return false;
+                }
             });
 
             //設定form表單的submit type欄位 Click事件
             $(":submit").click(function(){
-                if($(this).val() == "登出"){
-                    $("#form1").attr("action", "../../Public/login.php"); //設定form表單的action屬性
+                if($(this).val() == "送出" || $(this).val() == "暫存"){ // 按下"送出" / "暫存"按鈕
+                    var interval = data; //請假小時
+                    if(interval == 8) { //請假8小時
+                        $("#hldsdays").val(1); //請假天數
+                        $("#hldshrs").val(0); //請假小時 
+                    }else if(interval < 8) { //請假 < 8小時
+                        $("#hldsdays").val(0); //請假天數
+                        $("#hldshrs").val(interval); //請假小時
+                    }else if(interval > 8) { //請假 > 8小時
+                        $("#hldsdays").val(Math.floor(interval/8)); //請假天數
+                        $("#hldshrs").val(interval - Math.floor(interval/8)*8); //請假小時
+                    }
+                }
+            });
+
+            //設定form表單的button type欄位 Click事件
+            $(":button").click(function() {
+                if ($(this).val() == "關閉") {
+                    location.assign("./workOverTimeQuery.php?action=cancel");
+                }else if ($(this).val() == "登出") {
                     msg = "你已經登出系統";
                     btn = "登出";
-                }else if($(this).val() == "確定"){
-                    msg = "資料已編輯成功";
-                    btn = "確定";
-                }else if($(this).val() == "取消"){
-                    msg = "取消編輯資料";
-                    btn = "取消";
+                    location.assign("../../Public/mlogin.php");
+                    alert("你已經登出系統");
                 }
+            });
+
+            //用jQuery AJAX計算請假天數及請假時數
+            $("#begindate").blur(function(){ // 請假啟始日欄位
+                $.post("./jqChgHldsFld.php", {begindate: $("#begindate").val(), enddate: $("#enddate").val()}, function(data,status){
+                    // $("#hlds").val(data);
+
+                    var interval = data; //請假小時
+                    if(interval == 8) { //請假8小時
+                        $("#hldsdays").val(1); //請假天數
+                        $("#hldshrs").val(0); //請假小時 
+                    }else if(interval < 8) { //請假 < 8小時
+                        $("#hldsdays").val(0); //請假天數
+                        $("#hldshrs").val(interval); //請假小時
+                    }else if(interval > 8) { //請假 > 8小時
+                        $("#hldsdays").val(Math.floor(interval/8)); //請假天數
+                        $("#hldshrs").val(interval - Math.floor(interval/8)*8); //請假小時
+                    }
+                    // alert(interval);
+                });
+            });
+
+            //用jQuery AJAX計算請假天數及請假時數
+            $("#enddate").blur(function(){ // 請假截止日欄位
+                $.post("./jqChgHldsFld.php", {begindate: $("#begindate").val(), enddate: $("#enddate").val()}, function(data,status){
+                    // $("#hlds").val(data);
+
+                    var interval = data; //請假小時
+                    if(interval == 8) { //請假8小時
+                        $("#hldsdays").val(1); //請假天數
+                        $("#hldshrs").val(0); //請假小時 
+                    }else if(interval < 8) { //請假 < 8小時
+                        $("#hldsdays").val(0); //請假天數
+                        $("#hldshrs").val(interval); //請假小時
+                    }else if(interval > 8) { //請假 > 8小時
+                        $("#hldsdays").val(Math.floor(interval/8)); //請假天數
+                        $("#hldshrs").val(interval - Math.floor(interval/8)*8); //請假小時
+                    }
+                    // alert(interval);
+                });
+            });
+
+            // 檢查假別時數是否正確
+            $(":radio").click(function(){
+                switch($(this).val()){
+                    case '2022100101': // 換休
+                        if($("#hldshrs").val() != Math.floor($("#hldshrs").val())){
+                            alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
+                        }
+                        break;
+                    case '2022100089': // 病假
+                    case '2022100090': // 事假
+                    case '2022100091': // 公假
+                    case '2022100092': // 特休假
+                    case '2022100093': // 婚假
+                    case '2022100094': // 喪假
+                    case '2022100095': // 家庭照顧假
+                    case '2022100097': // 陪產假
+                    case '2022100098': // 產檢假
+                    case '2022100099': // 產假
+                    case '2023010024': // 公傷病假
+                    case '2022100100': // 其他
+                        if($("#hldshrs").val() % 4 != 0){
+                            alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
+                        }
+                        break;
+                    case '2022100096': // 生理假
+                        if($("#hldshrs").val() > 0){
+                            alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
+                        }
+                        break;
+                    default:
+                }
+
+                $("#hldformcode").val($(this).val());
             })
+
+
+
         });
     </script>
 </head>
 <body>
+    <div class="container-fluid">
+
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
-    <form action="workOverTimeQuery.php" method="post" id="form1" name="form1">
+    <form action="" method="post" id="form1" name="form1">
     <!--  header區塊  -->
-     <header>
-        <div class="d-flex flex-row text-white" style="background-color: #3E7050;">
-            <h1 class="col-4 me-auto"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
-            <h6 class="col-auto text-end">使用者：{$_SESSION['login_emp']['empapl']} / 帳號：{$_SESSION['login_emp']['empcode']} / 登入日期：$_SESSION[login_time] &nbsp;&nbsp;<input type="button" class="btn btn-outline-light" value="登出"></h6>
-        </div>        
-    </header>
+    <div class="row text-white" style="background-color: #3E7050;">
+        <h1 class="col-sm-4"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
+    </div>
+    <div class="row justify-content-end text-white" style="background-color: #3E7050;">
+        <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
+        <h6 class="col-sm-auto">使用者：{$_SESSION['login_emp']['empapl']}</h6>
+        <h6 class="col-sm-auto">帳號：{$_SESSION['login_emp']['empcode']}</h6>
+        <h6 class="col-sm-auto">登入日期：$_SESSION[login_time]</h6>
+    </div>
 _html;
 
-    include_once "../../Require/navigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
+    include_once "../../Require/mnavigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
 
     include_once "workOverTimeNav.php"; //nav區塊 操作選單(路徑大小寫有區分)
 
 echo <<<_html
     <!-- main區塊 -->
     <main>
-        <div class="container-fluid">
+        <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
             <h4 class="text-secondary text-decoration-underline my-3"><b>編輯員工加班資料</b></h4>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-            <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="dept_name" class="form-label">部門：</label></div>
-                <div class="col-2">
-                    <select id="dept_name" name="dept_name" class="form-select" aria-label="請輸入部門" style="height: 1.6cm;" title="請輸入部門">
-                        <option value="管理部">管理部</option>
-                        <option value="行政部">行政部</option>
-                        <option value="居護組">居護組</option>
-                        <option value="個管組">個管組</option>
-                        <option value="督導組">督導組</option>
-                        <option value="照服組" selected>照服組</option>
-                        <option value="立穎長照-管理部">立穎長照-管理部</option>
-                        <option value="立穎居護-管理部">立穎居護-管理部</option>
-                        <option value="壹山日照-管理部">壹山日照-管理部</option>
-                        <option value="壹山日照-照服組" selected>壹山日照-照服組</option>
-                        <option value="八八長照-管理部">壹山日照-管理部</option>
-                        <option value="八八長照-照服組">壹山日照-照服組</option>
-                    </select>
-                </div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="emp" class="form-label">加班員工：</label></div>
-                <div class="col-2">
-                    <select id="emp" name="emp" class="form-select" aria-label="請輸入員工" style="height: 1.6cm;" title="請輸入員工">
-                        <option value="A001">周惠貞</option>
-                        <option value="A002">魏玉琴</option>
-                        <option value="A003">李昱慧</option>
-                        <option value="A006">劉燕樺</option>
-                        <option value="A008">戴文芬</option>
-                        <option value="A009">劉燕琦</option>
-                        <option value="A012">鍾玉華</option>
-                        <option value="A018">馬雲莉</option>
-                        <option value="A020">徐培文</option>
-                        <option value="A021">廖夏君</option>
-                        <option value="A022">黃興文</option>
-                        <option value="D001">劉思妤</option>
-                        <option value="D002">陳金月</option>
-                        <option value="D011">莊芳薇</option>
-                        <option value="D012">楊家碩</option>
-                        <option value="D013">錢經明</option>
-                        <option value="D014">宋雨彤</option>
-                        <option value="E001">羅昱甯</option>
-                        <option value="E005">劉思妤</option>
-                        <option value="E006">林玉惠</option>
-                        <option value="E008">陳庭萱</option>
-                        <option value="E009" selected>林雅婷</option>
-                    </select>
-                </div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="work_class" class="form-label">加班類別：</label></div>
-                <div class="col-2">
-                    <div class="form-check form-check-inline">
-                        <input id="work_class_01" class="form-check-input" type="radio" name="education" value="補休">
-                        <label for="work_class_01" class="form-check-label">補休</label>
+            <div class="row">
+                <div class="col-10">
+                    <div class="row">
+                        <div class="col-sm-2 fw-bolder"><label for="deptspk" class="form-label">機構：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="deptspk" name="deptspk" value="$htmlTags[cmpapl]" title="機構" readonly></div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input id="work_class_02" class="form-check-input" type="radio" name="education" value="加班費" checked>
-                        <label for="work_class_02" class="form-check-label">加班費</label>
+                    <div class="row">
+                        <div class="col-sm-2 fw-bolder"><label for="empapl" class="form-label">加班員工：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="empapl" name="empapl" value="$htmlTags[empapl]" title="加班員工" readonly></div>
+                        <div class="col-sm-2 fw-bolder"><label for="empcode" class="form-label">員工編號：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="empcode" name="empcode" value="$htmlTags[empcode]" title="員工編號" readonly></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 fw-bolder"><label for="year" class="form-label">年度(西元年)：</label></div>
+                        <div class="col-sm-4"><input type="text" class="form-control" style="height: 1.6cm;" id="year" name="year" value="$htmlTags[year]" title="請輸入年度" required></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 fw-bolder"><label for="begindate" class="form-label">加班啟始日(必填)：</label></div>
+                        <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="begindate" name="begindate" value="$htmlTags[begindate]" title="請輸入加班啟始日" required></div>
+                        <div class="col-sm-2 fw-bolder"><label for="enddate" class="form-label">加班截止日(必填)：</label></div>
+                        <div class="col-sm"><input type="datetime-local" class="form-control" style="height: 1.6cm;" id="enddate" name="enddate" value="$htmlTags[enddate]" title="請輸入加班截止日" required></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 fw-bolder"><label for="egrersn" class="form-label">加班事由(必填)：</label></div>
+                        <div class="col-sm"><input type="text" class="form-control" style="height: 1.6cm;" id="egrersn" name="egrersn" value="$htmlTags[egrersn]" title="請輸入加班事由" placeholder="請輸入加班事由" required></div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="row">
+                        <div class="col-sm text-start fw-bolder">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="begin_date" class="form-label">加班啟始日：</label></div>
-                <div class="col-2"><input type="datetime-local" class="form-control" style="height: 1.6cm;" name="begin_date" id="begin_date" title="請輸入加班啟始日"></div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="end_date" class="form-label">加班截止日：</label></div>
-                <div class="col-2"><input type="datetime-local" class="form-control" style="height: 1.6cm;" name="end_date" id="end_date" title="請輸入加班截止日"></div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="work_hours" class="form-label">加班時數：</label></div>
-                <div class="col-2"><input type="number" class="form-control" style="height: 1.6cm;" name="work_hours" id="work_hours"></div>
-            </div>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="reason" class="form-label">加班事由：</label></div>
-                <div class="col-8"><input type="text" class="form-control" style="height: 1.6cm;" name="reason" id="reason" title="請輸入加班事由" placeholder="請輸入加班事由"></div>
-            </div>
-            <div class="row justify-content-center g-1 mt-0" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="examine_state" class="form-label">審核狀態：</label></div>
-                <div class="col-2">
-                    <select id="agent" name="agent" class="form-select" aria-label="請輸入審核狀態" style="height: 1.6cm;" title="請輸入審核狀態">
-                        <option value="15" selected>員工-申請中</option>
-                        <option value="16">員工-已呈核</option>
-                        <option value="14">審核者-已退回</option>
-                    </select>
-                </div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"></div>
-                <div class="col-2"></div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"></div>
-                <div class="col-2"></div>
-            </div>
+
             <div class="row justify-content-center my-3">
-                <input type="submit" value="確定" class="col-1 btn btn-primary">&nbsp;&nbsp;<input type="submit" value="取消" class="col-1 btn btn-outline-primary">
+                <input type="submit" class="col-sm-1 btn btn-primary" name="submit" value="送出">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" name="submit" value="暫存">&nbsp;&nbsp;<input type="button" class="col-sm-1 btn btn-outline-primary" id="cancel" name="cancel" value="關閉">
             </div>
-        </div>
+            <div class="gy-5">&nbsp;</div>
+
     </main>    
     
-    <!-- footer區塊 -->
-    <!--
-    <footer>
-        <div class="container-fluid">
-            <div class="row justify-content-center my-3">
-                <div class="col-1">
-                    <a href="#" title="註冊">註冊</a>
-                </div>
-                <div class="col-1">
-                    <a href="#" title="變更密碼">變更密碼</a>
-                </div> 
-            </div>
-        </div>
-    </footer>
-    -->
     </form>
+    </div>
 </body>
 </html>
 _html;

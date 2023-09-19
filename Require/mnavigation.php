@@ -89,20 +89,18 @@
                 </li>
             </div>
 
-            <!--
             <div class="col-sm-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">加班管理</a>
                     <ul class="dropdown-menu">
-                        <li><a href="../WorkOverTime/WorkOverTimeNew.php" class="dropdown-item" target="_self">建立員工加班資料</a></li>
-                        <li><a href="../WorkOverTime/WorkOverTimeQuery.php" class="dropdown-item" target="_self">維護員工加班資料</a></li>
-                        <li><a href="../WorkOverTime/WorkOverTimeExamine.php" class="dropdown-item" target="_self">審核員工加班資料</a></li>
-                        <li><a href="../WorkOverTime/WorkOverTimeHsty.php" class="dropdown-item" target="_self">查詢員工加班歷史資料</a></li>
-                        <li><a href="../WorkOverTime/WorkOverTimeYearStatistic.php" class="dropdown-item" target="_self">統計員工加班資料</a></li>
+                        <li><a href="../WorkOverTime/workOverTimeNew.php" class="dropdown-item" target="_self">建立加班資料</a></li>
+                        <li><a href="../WorkOverTime/workOverTimeQuery.php" class="dropdown-item" target="_self">維護加班資料</a></li>
+                        <li><a href="../WorkOverTime/workOverTimeExamine.php" class="dropdown-item" target="_self">審核加班資料</a></li>
+                        <!--<li><a href="../WorkOverTime/WorkOverTimeHsty.php" class="dropdown-item" target="_self">查詢加班歷史資料</a></li>-->
+                        <!--<li><a href="../WorkOverTime/WorkOverTimeYearStatistic.php" class="dropdown-item" target="_self">統計加班資料</a></li>-->
                     </ul>
                 </li>
             </div>
-            -->
             
 
             <!-- 
