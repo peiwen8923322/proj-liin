@@ -180,7 +180,7 @@
         
         
         //Render HTML
-        $htmlTags['html_empcode'] = $_SESSION['login_emp']['empapl']; //請假員工
+        $htmlTags['html_empcode'] = $arrCurRecord['empapl']; //請假員工
         $htmlTags['html_year'] = $arrNewFormVal['year']; //年度
         $htmlTags['html_hldformcode'] = $arrNewFormVal['hldformcode']; // 預設假別
         $htmlTags['html_hldscls'] = $obj_form->viewHTMLRadioTag(array('attrId'=>'hldformcode', 'attrName'=>'hldformcode', 'Label'=>'listapl', 'attrValue'=>'formcode', 'default'=>'formcode'), $obj_field_lists->getList('請假'), $arrNewFormVal['hldformcode']); //假別
@@ -196,7 +196,7 @@
         //$obj_form->logout();
     } else { //第一次執行表單的處理動作
         //Render HTML
-        $htmlTags['html_empcode'] = $_SESSION['login_emp']['empapl']; //請假員工
+        $htmlTags['html_empcode'] = $arrCurRecord['empapl']; //請假員工
         // $htmlTags['html_empcode'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'empcode', 'attrName'=>'empcode', 'attrTitle'=>'請選擇請假員工', 'optionTitle'=>'empapl', 'optionValue'=>'empcode'), $obj_emp->getListAtWork(), $_SESSION['login_emp']['empapl']); //請假員工
         $htmlTags['html_year'] = $arrCurRecord['year']; //年度
         $htmlTags['html_hldformcode'] = $arrCurRecord['hldformcode']; // 預設假別
