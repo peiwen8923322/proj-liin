@@ -527,13 +527,27 @@ _TBODY;
         $table = '';
         
         //Begin
-        $thead =<<<_THEAD
-            <thead>
-                <tr>
-                    <th style="width:10%;text-align:center;">審核狀態</th><th style="width:20%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">外出事由</th><th style="width:15%;text-align:center;">外出起始日</th><th style="width:15%;text-align:center;">外出截止日</th><th style="width:15%;text-align:center;">外出者簽核時間</th>
-                </tr>
-            </thead>
+        if ($arrTbl['cls'] == '外出') {
+            $thead =<<<_THEAD
+                <thead>
+                    <tr>
+                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:20%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">外出事由</th><th style="width:15%;text-align:center;">外出起始日</th><th style="width:15%;text-align:center;">外出截止日</th><th style="width:15%;text-align:center;">外出者簽核時間</th>
+                    </tr>
+                </thead>
 _THEAD;
+        } elseif ($arrTbl['cls'] == '加班') {
+            $thead =<<<_THEAD
+                <thead>
+                    <tr>
+                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:20%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">加班事由</th><th style="width:15%;text-align:center;">加班起始日</th><th style="width:15%;text-align:center;">加班截止日</th><th style="width:15%;text-align:center;">加班者簽核時間</th>
+                    </tr>
+                </thead>
+_THEAD;
+        } else {
+            # code...
+        }
+        
+        
 
         if (isset($arrData) && count($arrData) > 0) {
             $tbody = "<tbody>";

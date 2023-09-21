@@ -131,6 +131,7 @@ $obj_egress->SQLFrom = $_SESSION['SQL']['From'];
 $obj_egress->SQLWhere = $_SESSION['SQL']['Where'];
 $obj_egress->SQLOrderBy = $_SESSION['SQL']['OrderBy'];
 $obj_egress->SQL = $obj_egress->SQLSelect.$obj_egress->SQLFrom.$obj_egress->SQLWhere.$obj_egress->SQLOrderBy;
+$tbl['cls'] = '外出';
 $pdf->writeHTML($obj_egress->PrtPDFByHstyQry($obj_egress->rtnQryResults($obj_egress->SQL), $tbl), true, false, true, false, '');
 
 // ---------------------------------------------------------
