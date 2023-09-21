@@ -23,7 +23,7 @@
     //     exit();
     // }
 
-    $obj_egress = new cls_egress; //外出檔
+    $obj_egress = new cls_egress; //外出/加班檔
     $obj_field_lists = new cls_field_lists; //欄位清單檔
     $obj_emp = new cls_employees; //員工檔
     $obj_depts = new cls_depts; //機構檔
@@ -44,7 +44,7 @@
         
         // $obj_egress->SQLSelect = "SELECT h.*, e.formcode AS e_formcode, e.cmpapl "; // 加上"e.formcode AS e_formcode, e.cmpapl"
         // $obj_egress->SQLFrom = " FROM holidays h LEFT OUTER JOIN employees e ON (h.empformcode = e.formcode) ";
-        $obj_egress->SQLWhere .= " AND formstate = 15 ";
+        $obj_egress->SQLWhere .= " AND formstate = 15 AND cls = '外出' ";
         
         $obj_egress->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND year = $arrQryFld[year] " : ""; //年度(西元年)
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year'], null); // 年度(西元年)
