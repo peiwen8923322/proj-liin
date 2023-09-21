@@ -96,8 +96,8 @@
                         <li><a href="../WorkOverTime/workOverTimeNew.php" class="dropdown-item" target="_self">建立加班資料</a></li>
                         <li><a href="../WorkOverTime/workOverTimeQuery.php" class="dropdown-item" target="_self">維護加班資料</a></li>
                         <li><a href="../WorkOverTime/workOverTimeExamine.php" class="dropdown-item" target="_self">審核加班資料</a></li>
-                        <!--<li><a href="../WorkOverTime/WorkOverTimeHsty.php" class="dropdown-item" target="_self">查詢加班歷史資料</a></li>-->
-                        <!--<li><a href="../WorkOverTime/WorkOverTimeYearStatistic.php" class="dropdown-item" target="_self">統計加班資料</a></li>-->
+                        <li><a href="../WorkOverTime/workOverTimeHsty.php" class="dropdown-item" target="_self">查詢加班歷史資料</a></li>
+                        <!--<li><a href="../WorkOverTime/workOverTimeYearStatistic.php" class="dropdown-item" target="_self">統計加班資料</a></li>-->
                     </ul>
                 </li>
             </div>
