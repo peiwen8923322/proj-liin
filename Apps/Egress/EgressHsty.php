@@ -289,7 +289,7 @@ echo <<<_html
                 </div>
                 
                 <table class="table caption-top table-striped table-hover my-5">
-                    <caption><h4><b>查詢員工外出歷史資料清單</b></h4></caption>
+                    <caption><h4><b>員工外出歷史資料清單</b></h4></caption>
                     <thead class="">
                         <tr>
                             <th class="text-center">審核狀態</th><th class="">機構</th><th class="text-center">員工</th><th class="text-center">年度</th><th class="col-sm-3">外出事由</th><th class="text-center">外出起始日</th><th class="text-center">外出截止日</th><th class="text-center">外出者簽核時間</th>

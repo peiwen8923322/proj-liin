@@ -2,7 +2,7 @@
 
     /* 
         作者：徐培文
-        查詢年度外出統計資料
+        統計員工外出資料
         修改日期：2023/08/28
     */
     
@@ -23,19 +23,19 @@
     //     exit();
     // }
 
-    $obj_egress = new cls_egress; //外出檔
-    $obj_field_lists = new cls_field_lists; //欄位清單檔
-    $obj_emp = new cls_employees; //員工檔
-    $obj_depts = new cls_depts; //機構檔
+    $obj_egress = new cls_egress; // 外出檔/加班檔
+    $obj_field_lists = new cls_field_lists; // 欄位清單檔
+    $obj_emp = new cls_employees; // 員工檔
+    $obj_depts = new cls_depts; // 機構檔
     
     $SQL = "";
     $arrData = array();
     $htmlTags = array();
-    $htmlQryResult = ""; //顯示查詢結果HTML Tag
-    $htmlPaging = ""; //顯示查詢分頁HTML Tag
-    $tbl = array(); //儲存不同的參考檔
-    $arrQryFld = ['empapl'=>'', 'recdsperpage'=>'']; //儲存淨化查詢條件
-    $strStsMsg = ""; //儲存狀態欄訊息
+    $htmlQryResult = ""; // 顯示查詢結果HTML Tag
+    $htmlPaging = ""; // 顯示查詢分頁HTML Tag
+    $tbl = array(); // 儲存不同的參考檔
+    $arrQryFld = ['empapl'=>'', 'recdsperpage'=>'']; // 儲存淨化查詢條件
+    $strStsMsg = ""; // 儲存狀態欄訊息
     
     //Begin
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者
@@ -46,7 +46,7 @@
         
         $obj_egress->SQLSelect = "SELECT year, deptspk, cmpapl, empformcode, empapl, COUNT(*) AS 'cnt_recds' ";
         // $obj_egress->SQLFrom = " FROM holidays h LEFT OUTER JOIN employees e ON (h.empformcode = e.formcode) ";
-        $obj_egress->SQLWhere .= " AND formstate = 15  AND frmformcode = '2023010017' "; // 主任已簽核
+        $obj_egress->SQLWhere .= " AND formstate = 15 AND cls = '外出' AND frmformcode = '2023010017' "; // 主任已簽核
         
         $obj_egress->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND year = '$arrQryFld[year]' " : ""; // 年度(西元年)
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year']); // 年度(西元年)
