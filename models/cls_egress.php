@@ -414,13 +414,26 @@ _TBODY;
         $table = '';
         
         //Begin
-        $thead =<<<_THEAD
-            <thead>
-                <tr>
-                    <th style="width:25%;">機構</th><th style="width:25%;text-align:center;">員工</th><th style="width:25%;text-align:center;">年度</th><th style="width:25%;text-align:center;">外出次數</th>
-                </tr>
-            </thead>
+        if ($arrTbl['cls'] == '外出') {
+            $thead =<<<_THEAD
+                <thead>
+                    <tr>
+                        <th style="width:25%;">機構</th><th style="width:25%;text-align:center;">員工</th><th style="width:25%;text-align:center;">年度</th><th style="width:25%;text-align:center;">外出次數</th>
+                    </tr>
+                </thead>
 _THEAD;
+        } elseif ($arrTbl['cls'] == '加班') {
+            $thead =<<<_THEAD
+                <thead>
+                    <tr>
+                        <th style="width:25%;">機構</th><th style="width:25%;text-align:center;">員工</th><th style="width:25%;text-align:center;">年度</th><th style="width:25%;text-align:center;">加班次數</th>
+                    </tr>
+                </thead>
+_THEAD;
+        } else {
+            # code...
+        }
+        
 
         if (isset($arrData) && count($arrData) > 0) {
             $tbody = "<tbody>";

@@ -62,7 +62,7 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->setFont('msungstdlight', '', 20);
 		// Title
-		$this->Cell(0, 0, '員工外出統計清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 0, '員工加班統計清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln();
 
         $this->setFont('msungstdlight', '', 10);
@@ -90,9 +90,9 @@ $pdf = new MYPDF("L", PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 // set document information
 $pdf->setCreator(PDF_CREATOR);
 $pdf->setAuthor('徐培文');
-$pdf->setTitle('員工外出統計清單');
-$pdf->setSubject('員工外出統計清單');
-$pdf->setKeywords('員工, PDF, 外出');
+$pdf->setTitle('員工加班統計清單');
+$pdf->setSubject('員工加班統計清單');
+$pdf->setKeywords('員工, PDF, 加班');
 
 // remove default header/footer
 $pdf->setPrintHeader(true);
@@ -131,13 +131,13 @@ $obj_egress->SQLWhere = $_SESSION['SQL']['Where'];
 $obj_egress->SQLGroupBy = $_SESSION['SQL']['GroupBy'];
 $obj_egress->SQLOrderBy = $_SESSION['SQL']['OrderBy'];
 $obj_egress->SQL = $obj_egress->SQLSelect.$obj_egress->SQLFrom.$obj_egress->SQLWhere.$obj_egress->SQLGroupBy.$obj_egress->SQLOrderBy;
-$tbl['cls'] = '外出';
+$tbl['cls'] = '加班';
 $pdf->writeHTML($obj_egress->PrtPDFSttQry($obj_egress->rtnQryResults($obj_egress->SQL), $tbl), true, false, true, false, '');
 
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output('EgressYearStatisticRpt.pdf', 'I');
+$pdf->Output('workOverTimeYearStatisticRpt.pdf', 'I');
 
 $obj_emp = null;
 $obj_egress = null;
