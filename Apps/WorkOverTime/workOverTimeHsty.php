@@ -180,7 +180,7 @@ echo <<<_html
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>查詢員工加班歷史資料</title>
+    <title>查詢加班歷史資料</title>
     <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
@@ -253,7 +253,7 @@ echo <<<_html
     <!-- main區塊 -->
     <main>
         <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
-            <h4 class="text-secondary text-decoration-underline my-3"><b>查詢員工加班歷史資料</b></h4>
+            <h4 class="text-secondary text-decoration-underline my-3"><b>查詢加班歷史資料</b></h4>
             <div class="row justify-content-center mt-3">
                 <input type="hidden" id="selFormCode" name="selFormCode" value="">
                 <div class="row">
@@ -289,7 +289,7 @@ echo <<<_html
                 </div>
                 
                 <table class="table caption-top table-striped table-hover my-5">
-                    <caption><h4><b>員工加班歷史資料清單</b></h4></caption>
+                    <caption><h4><b>加班歷史資料清單</b></h4></caption>
                     <thead class="">
                         <tr>
                             <th class="text-center">審核狀態</th><th class="">機構</th><th class="text-center">員工</th><th class="text-center">年度</th><th class="col-sm-3">加班事由</th><th class="text-center">加班起始日</th><th class="text-center">加班截止日</th><th class="text-center">加班者簽核時間</th>
