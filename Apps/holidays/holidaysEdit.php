@@ -480,7 +480,7 @@ echo <<<_html
                             <div><span>陪產假：</span><span>$htmlTags[html_hld2022100097]</span></div>
                             <div><span>產檢假：</span><span>$htmlTags[html_hld2022100098]</span></div>
                             <div><span>產假：</span><span>$htmlTags[html_hld2022100099]</span></div>
-                            <div><span>換休：</span><span>$htmlTags[html_hld2022100101]</span></div>
+                            <div><span>換休(補休)：</span><span>$htmlTags[html_hld2022100101]</span></div>
                             <div><span>公偒病假：</span><span>$htmlTags[html_hld2023010024]</span></div>
                             <div><span>其他：</span><span>$htmlTags[html_hld2022100100]</span></div>
                         </div>
