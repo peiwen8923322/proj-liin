@@ -1293,6 +1293,7 @@ _TABLE;
     }
 
     // 請假記錄是否已存在(重覆申請)
+    // $arrFormVal: 新表單值
     function isExistByApply($arrFormVal) : bool {
         // 變數初始化
         $bool_isExist = false;
@@ -1303,7 +1304,20 @@ _TABLE;
         //End
     }
 
-
+    // 加班時數
+    // $arrTbl: 參數陣列
+    function calWorkOverTimeHrs($arrTbl) : float {
+        $int_hours = 0;
+        // Begin
+        $this->SQL = "SELECT COUNT(*) AS cnt_recds FROM egress WHERE 1 AND cls = '加班' AND frmformcode = '2023010017' AND year = $arrTbl[year] AND empformcode = '{$arrTbl['emp']['formcode']}';";
+        if ($this->rtnQryField($this->SQL) > 0) {
+            $this->SQL = "SELECT SUM(ext_hours) AS ext_hours FROM egress WHERE 1 AND cls = '加班' AND frmformcode = '2023010017' AND year = $arrTbl[year] AND empformcode = '{$arrTbl['emp']['formcode']}' GROUP BY year, cmpcode, empformcode ORDER BY year, cmpcode, empformcode;";
+            $int_hours = $this->rtnQryField($this->SQL);
+        }
+        
+        return $int_hours;
+        // End
+    }
 
 
 

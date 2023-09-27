@@ -30,7 +30,7 @@
 
     //Begin
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); //員工檔
-    $nowYear = date("Y", time()); // 目前西元年
+    $tbl['year'] = $nowYear = date("Y", time()); // 目前西元年
     // 假別統計
     // 病假 / 事假 / 公假 / 特休假 / 婚假 / 喪假 / 家庭照顧假 / 生理假 / 陪產假 / 產檢假 / 產假 / 換休 / 公偒病假 / 其他
     $htmlTags['html_hld2022100089'] = $htmlTags['html_hld2022100090'] = $htmlTags['html_hld2022100091'] = $htmlTags['html_hld2022100092'] = $htmlTags['html_hld2022100093'] = $htmlTags['html_hld2022100094'] = $htmlTags['html_hld2022100095'] = $htmlTags['html_hld2022100096'] = $htmlTags['html_hld2022100097'] = $htmlTags['html_hld2022100098'] = $htmlTags['html_hld2022100099'] = $htmlTags['html_hld2022100101'] = $htmlTags['html_hld2023010024'] = $htmlTags['html_hld2022100100'] = '';
@@ -96,6 +96,8 @@
     $obj_holiday->SQL = $obj_holiday->SQLSelect.$obj_holiday->SQLFrom.$obj_holiday->SQLWhere;
     $arrCurRecord = $obj_holiday->rtnQryRecord($obj_holiday->SQL); // 取得目前的編輯記錄
 
+    $htmlTags['workOverTime_hours'] = $obj_holiday->calWorkOverTimeHrs($tbl); //加班時數
+
     if (isset($_POST['submit'])) { //按下"送出 / 暫存"按鈕的處理動作
         $arrNewFormVal = $obj_form->inputChk($_POST); //淨化查詢條件
         $arrNewFormVal['formcode'] = $_SESSION['selFormCode']; //該筆記錄的表單編號
@@ -109,6 +111,11 @@
         $tbl['hlds'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['hldformcode']); //假別
         $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; //審核狀態 ("送出 / 暫存")
         $tbl['proxy'] = $obj_emp->getRecdByFormcode($arrNewFormVal['pryformcode']); // 代理人
+
+        // 加班時數 < 換休(補休)，換休(補休)請假失敗
+        if ($htmlTags['workOverTime_hours'] < ($arrNewFormVal['hldsdays']*8 + $arrNewFormVal['hldshrs'])) {
+            $_SESSION['error']['errMsg'] = "加班時數 < 換休(補休)時數，換休(補休)請假失敗";  // 加班時數 < 換休(補休)，換休(補休)請假失敗
+        }
 
         if (isset($_FILES["file"]["name"]) && strlen($_FILES["file"]["name"]) > 0) { // 上傳附件
         
@@ -263,6 +270,10 @@ echo <<<_html
                 }
                 if (($("#hldformcode").val() == '2022100089' || $("#hldformcode").val() == '2022100090' || $("#hldformcode").val() == '2022100091' || $("#hldformcode").val() == '2022100092' || $("#hldformcode").val() == '2022100093' || $("#hldformcode").val() == '2022100094' || $("#hldformcode").val() == '2022100095' || $("#hldformcode").val() == '2022100097' || $("#hldformcode").val() == '2022100098' || $("#hldformcode").val() == '2022100099' || $("#hldformcode").val() == '2023010024' || $("#hldformcode").val() == '2022100100') && $("#hldshrs").val() % 4 != 0) { // 病假+事假+公假+特休假+婚假+喪假+家庭照顧假+陪產假+產檢假+產假+公傷病假+其他
                     alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
+                    return false;
+                }
+                if ($("#workOverTime_hours").text() < ($("#hldsdays").val*8 + $("#hldshrs").val())) { // 加班時數 < 換休(補休)時數
+                    alert("加班時數 < 換休(補休)時數，換休(補休)請假失敗");
                     return false;
                 }
             });
@@ -480,6 +491,7 @@ echo <<<_html
                             <div><span>陪產假：</span><span>$htmlTags[html_hld2022100097]</span></div>
                             <div><span>產檢假：</span><span>$htmlTags[html_hld2022100098]</span></div>
                             <div><span>產假：</span><span>$htmlTags[html_hld2022100099]</span></div>
+                            <div><span>加班時數：</span><span id="workOverTime_hours">$htmlTags[workOverTime_hours]</span></div>
                             <div><span>換休(補休)：</span><span>$htmlTags[html_hld2022100101]</span></div>
                             <div><span>公偒病假：</span><span>$htmlTags[html_hld2023010024]</span></div>
                             <div><span>其他：</span><span>$htmlTags[html_hld2022100100]</span></div>
