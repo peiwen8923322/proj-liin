@@ -106,8 +106,8 @@
         $tbl['proxy'] = $obj_employees->getRecdByFormcode($arrNewFormVal['pryformcode']); // 代理人
 
         // 加班時數 < 換休(補休)，換休(補休)請假失敗
-        if ($htmlTags['workOverTime_hours'] < ($arrNewFormVal['hldsdays']*8 + $arrNewFormVal['hldshrs'])) {
-            $_SESSION['error']['errMsg'] = "加班時數 < 換休(補休)時數，換休(補休)請假失敗";  // 加班時數 < 換休(補休)，換休(補休)請假失敗
+        if ($arrNewFormVal['hldformcode'] == '2022100101' && $htmlTags['workOverTime_hours'] < ($arrNewFormVal['hldsdays']*8 + $arrNewFormVal['hldshrs'])) {
+            $_SESSION['error']['errMsg'] = "加班時數 < 換休(補休)時數，換休(補休)請假失敗，請選擇其他假別";  // 加班時數 < 換休(補休)，換休(補休)請假失敗
         }
 
         //執行SQL + 上傳附件
@@ -254,8 +254,8 @@ echo <<<_html
                     alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
                     return false;
                 }
-                if ($("#workOverTime_hours").text() < ($("#hldsdays").val*8 + $("#hldshrs").val())) { // 加班時數 < 換休(補休)時數
-                    alert("加班時數 < 換休(補休)時數，換休(補休)請假失敗");
+                if($("#hldformcode").val() == "2022100101" && $("#workOverTime_hours").text() < ($("#hldsdays").val()*8 + $("#hldshrs").val())) { // 加班時數 < 換休(補休)時數
+                    alert("加班時數 < 換休(補休)時數，換休(補休)請假失敗，請選擇其他假別");
                     return false;
                 }
             });
@@ -341,7 +341,7 @@ echo <<<_html
             // 檢查假別時數是否正確
             $(":radio").click(function(){
                 switch($(this).val()){
-                    case '2022100101': // 換休
+                    case '2022100101': // 換休(補休)
                         if($("#hldshrs").val() != Math.floor($("#hldshrs").val())){
                             alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
                         }
@@ -371,6 +371,11 @@ echo <<<_html
                 }
 
                 $("#hldformcode").val($(this).val());
+
+                // if($("#hldformcode").val() == "2022100101" && $("#workOverTime_hours").text() < ($("#hldsdays").val()*8 + $("#hldshrs").val())) {
+                //     alert("加班時數 < 換休(補休)時數，換休(補休)請假失敗");
+                // }
+                // alert("假別(hldformcode)：" + $("#hldformcode").val());
             })
             
 
