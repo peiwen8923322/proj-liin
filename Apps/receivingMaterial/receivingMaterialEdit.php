@@ -162,85 +162,93 @@ echo <<<_html
     </script>
 </head>
 <body>
+    <div class="container-fluid">
+
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
     <form action="" method="post" id="form1" name="form1">
     <!--  header區塊  -->
-     <header>
-        <div class="d-flex flex-row text-white" style="background-color: #3E7050;">
-            <h1 class="col-4 me-auto"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
-            <h6 class="col-auto text-end">使用者：{$_SESSION['login_emp']['empapl']} / 帳號：{$_SESSION['login_emp']['empcode']} / 登入日期：$_SESSION[login_time] &nbsp;&nbsp;<input type="button" class="btn btn-outline-light" value="登出"></h6>    
-        </div>        
+    <header>
+        <div class="row text-white" style="background-color: #3E7050;">
+            <h1 class="col-sm-4"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
+        </div>
+        <div class="row justify-content-end text-white" style="background-color: #3E7050;">
+            <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
+            <h6 class="col-sm-auto">使用者：{$_SESSION['login_emp']['empapl']}</h6>
+            <h6 class="col-sm-auto">帳號：{$_SESSION['login_emp']['empcode']}</h6>
+            <h6 class="col-sm-auto">登入日期：$_SESSION[login_time]</h6>
+        </div>
     </header>
 _html;
 
-    include_once "../../Require/navigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
+    include_once "../../Require/mnavigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
 
     include_once "receivingMaterialNav.php"; //nav區塊 操作選單(路徑大小寫有區分)
 
 echo <<<_html
     <!-- main區塊 -->
     <main>
-        <h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5>
-        <div class="container-fluid">
-            <h4 class="text-secondary text-decoration-underline my-3"><b>編輯領料資料</b></h4>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="jobdate" class="form-label">作業日期：</label></div>
-                <div class="col-2"><input type="date" class="form-control" style="height: 1.6cm;" id="jobdate" name="jobdate" value="$htmlTags[html_jobdate]" title="請輸入作業日期" required></div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="jobort" class="form-label">作業異動者：<br/>(員工姓名)</label></div>
-                <div class="col-2"><input type="text" class="form-control" style="height: 1.6cm;" id="jobort" name="jobort" value="$htmlTags[html_jobort]" title="請輸入作業異動者(員工姓名)" placeholder="請輸入作業異動者(員工姓名)" autofocus required></div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"></div>
-                <div class="col-2"></div>
-            </div>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="splrcode">供應商名稱：</label></div>
-                <div class="col-3">
-                    $htmlTags[html_splrcode]
+        <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
+        <h4 class="text-secondary text-decoration-underline my-3"><b>編輯領料資料</b></h4>
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="row justify-content-center g-1" style="height: 1.6cm;">
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="jobdate" class="form-label">作業日期：</label></div>
+                    <div class="col-2"><input type="date" class="form-control" style="height: 1.6cm;" id="jobdate" name="jobdate" value="$htmlTags[html_jobdate]" title="請輸入作業日期" required></div>
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="jobort" class="form-label">作業異動者：<br/>(員工姓名)</label></div>
+                    <div class="col-2"><input type="text" class="form-control" style="height: 1.6cm;" id="jobort" name="jobort" value="$htmlTags[html_jobort]" title="請輸入作業異動者(員工姓名)" placeholder="請輸入作業異動者(員工姓名)" autofocus required></div>
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"></div>
+                    <div class="col-2"></div>
                 </div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlcode">品項名稱：</label></div>
-                <div class="col-4">
-                    $htmlTags[html_mtrlcode]
+                <div class="row justify-content-center g-1" style="height: 1.6cm;">
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="splrcode">供應商名稱：</label></div>
+                    <div class="col-3">
+                        $htmlTags[html_splrcode]
+                    </div>
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlcode">品項名稱：</label></div>
+                    <div class="col-4">
+                        $htmlTags[html_mtrlcode]
+                    </div>
+                </div>
+                <div class="row justify-content-center g-1" style="height: 1.6cm;">
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlamt" class="form-label">品項數量：</label></div>
+                    <div class="col-3"><input type="text" class="form-control" style="height: 1.6cm;" id="mtrlamt" name="mtrlamt" value="$htmlTags[html_mtrlamt]" title="請輸入品項數量" placeholder="請輸入品項數量" required></div>
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="safeamt" class="form-label">安全存量：</label></div>
+                    <div class="col-4"><input type="text" class="form-control" style="height: 1.6cm;" id="safeamt" name="safeamt" value="$htmlTags[html_safeamt]" title="安全存量" placeholder="安全存量" readonly></div>
+                </div>
+                <div class="row justify-content-center g-1" style="height: 1.6cm;">
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlprc" class="form-label">品項單價：</label></div>
+                    <div class="col-3"><input type="text" class="form-control" style="height: 1.6cm;" id="mtrlprc" name="mtrlprc" value="$htmlTags[html_mtrlprc]" title="請輸入品項單價" placeholder="請輸入品項單價" required></div>
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlagg" class="form-label">品項總金額：</label></div>
+                    <div class="col-4"><input type="text" class="form-control" style="height: 1.6cm;" id="mtrlagg" name="mtrlagg" value="$htmlTags[html_mtrlagg]" title="請輸入品項總金額" placeholder="請輸入品項總金額" required></div>
+                </div>
+                <div class="row justify-content-center g-1" style="height: 1.6cm;">
+                    <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="memo" class="form-label">備註：</label></div>
+                    <div class="col-8"><input type="text" class="form-control" style="height: 1.6cm;" id="memo" name="memo" title="請輸入備註" value="$htmlTags[html_memo]" placeholder="請輸入備註"></div>
+                </div>
+                
+            </div>
+
+            <div class="col-2">
+                <div class="row">
+                    <div class="col text-start fw-bolder">
+                        
+                    </div>
                 </div>
             </div>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlamt" class="form-label">品項數量：</label></div>
-                <div class="col-3"><input type="text" class="form-control" style="height: 1.6cm;" id="mtrlamt" name="mtrlamt" value="$htmlTags[html_mtrlamt]" title="請輸入品項數量" placeholder="請輸入品項數量" required></div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="safeamt" class="form-label">安全存量：</label></div>
-                <div class="col-4"><input type="text" class="form-control" style="height: 1.6cm;" id="safeamt" name="safeamt" value="$htmlTags[html_safeamt]" title="安全存量" placeholder="安全存量" readonly></div>
-            </div>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlprc" class="form-label">品項單價：</label></div>
-                <div class="col-3"><input type="text" class="form-control" style="height: 1.6cm;" id="mtrlprc" name="mtrlprc" value="$htmlTags[html_mtrlprc]" title="請輸入品項單價" placeholder="請輸入品項單價" required></div>
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="mtrlagg" class="form-label">品項總金額：</label></div>
-                <div class="col-4"><input type="text" class="form-control" style="height: 1.6cm;" id="mtrlagg" name="mtrlagg" value="$htmlTags[html_mtrlagg]" title="請輸入品項總金額" placeholder="請輸入品項總金額" required></div>
-            </div>
-            <div class="row justify-content-center g-1" style="height: 1.6cm;">
-                <div class="col-1 text-end fw-bolder" style="background-color: #ECECEC;"><label for="memo" class="form-label">備註：</label></div>
-                <div class="col-8"><input type="text" class="form-control" style="height: 1.6cm;" id="memo" name="memo" title="請輸入備註" value="$htmlTags[html_memo]" placeholder="請輸入備註"></div>
-            </div>
+
             <div class="row justify-content-center my-3">
                 <input type="submit" class="col-1 btn btn-primary" id="submit" name="submit" value="確定">&nbsp;&nbsp;<input type="button" class="col-1 btn btn-outline-primary" id="cancel" name="cancel" value="關閉">
             </div>
+            <div class="gy-5">&nbsp;</div>
+            
         </div>
     </main>    
     
-    <!-- footer區塊 -->
-    <!--
-    <footer>
-        <div class="container-fluid">
-            <div class="row justify-content-center my-3">
-                <div class="col-1">
-                    <a href="#" title="註冊">註冊</a>
-                </div>
-                <div class="col-1">
-                    <a href="#" title="變更密碼">變更密碼</a>
-                </div> 
-            </div>
-        </div>
-    </footer>
-    -->
     </form>
+
+    </div>
 </body>
 </html>
 _html;

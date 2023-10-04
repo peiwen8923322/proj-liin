@@ -176,16 +176,16 @@ _TBODY;
                                 <input type="submit" class="btn btn-outline-primary" id="$btnEditId" name="edit" value="編輯" attrformcode="$field[formcode]">
                                 <input type="submit" class="btn btn-outline-primary" id="$btnDiscardId" name="discard" value="註銷" attrformcode="$field[formcode]">
                             </td>
-                            <td class="col-1">$field[jobdate]</td>
-                            <td class="col-1">$field[jobort]</td>
-                            <td class="col-1">$field[splrcode]</td>
-                            <td class="col-1">$field[splrapl]</td>
-                            <td class="col-1">$field[mtrlcode]</td>
-                            <td class="col-2">$field[mtrlapl]</td>
-                            <td class="col-1 text-center">$field[mtrlamt]</td>
-                            <td class="col-1 text-center">$field[mtrlprc]</td>
-                            <td class="col-1 text-center">$field[mtrlagg]</td>
-                            <td class="col-1 text-center">$field[safeamt]</td>
+                            <td class="">$field[jobdate]</td>
+                            <td class="">$field[jobort]</td>
+                            <td class="">$field[splrcode]</td>
+                            <td class="">$field[splrapl]</td>
+                            <td class="">$field[mtrlcode]</td>
+                            <td class="">$field[mtrlapl]</td>
+                            <td class="text-center">$field[mtrlamt]</td>
+                            <td class="text-center">$field[mtrlprc]</td>
+                            <td class="text-center">$field[mtrlagg]</td>
+                            <td class="text-center">$field[safeamt]</td>
                         </tr>
 _TBODY;
             }
@@ -194,17 +194,17 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                     <tr>
-                        <td class="col-1"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-2 text-center"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-1 text-center"></td>
-                        <td class="col-1 text-center"></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
+                        <td class=""></td>
                     </tr>
                     </tbody>
 _TBODY;

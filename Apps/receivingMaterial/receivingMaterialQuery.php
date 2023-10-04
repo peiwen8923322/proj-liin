@@ -183,83 +183,77 @@ echo <<<_html
     </script>
 </head>
 <body>
+    <div class="container-fluid">
+
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
     <form action="" method="post" id="form1" name="form1">
     <!--  header區塊  -->
     <header>
-        <div class="d-flex flex-row text-white" style="background-color: #3E7050;">
-            <h1 class="col-4 me-auto"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
-            <h6 class="col-auto text-end">使用者：{$_SESSION['login_emp']['empapl']} / 帳號：{$_SESSION['login_emp']['empcode']} / 登入日期：$_SESSION[login_time] &nbsp;&nbsp;<input type="button" class="btn btn-outline-light" value="登出"></h6>
-        </div>        
+        <div class="row text-white" style="background-color: #3E7050;">
+            <h1 class="col-sm-4"><img src="../../Images/Banners/logo.png" width="100" height="120" alt="立穎健康照護" style="vertical-align: middle;">立穎健康照護</h1>
+        </div>
+        <div class="row justify-content-end text-white" style="background-color: #3E7050;">
+            <div class="col-sm-auto"><input type="button" class="btn btn-outline-light" value="登出"></div>
+            <h6 class="col-sm-auto">使用者：{$_SESSION['login_emp']['empapl']}</h6>
+            <h6 class="col-sm-auto">帳號：{$_SESSION['login_emp']['empcode']}</h6>
+            <h6 class="col-sm-auto">登入日期：$_SESSION[login_time]</h6>
+        </div>
     </header>
 _html;
 
-    include_once "../../Require/navigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
+    include_once "../../Require/mnavigation.php"; //Nav區塊 下拉選單(路徑大小寫有區分)
 
     include_once "receivingMaterialNav.php"; //nav區塊 操作選單(路徑大小寫有區分)
 
 echo <<<_html
     <!-- main區塊 -->
     <main>
-        <h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5>
-        <div class="container-fluid">
-            <h4 class="text-secondary text-decoration-underline my-3"><b>查詢領料資料</b></h4>
-            <div class="row justify-content-center mt-3">
-                <input type="hidden" id="selFormCode" name="selFormCode" value="">
-                <div class="row">
-                    <div class="col-3">
-                        <label for="applicant" class="form-label">領料人：</label>
-                        <input type="text" class="form-control" id="jobort" name="jobort" value="{$arrQryFld['jobort']}" title="請輸入領料人" placeholder="請輸入領料人">
-                    </div>
-                    <div class="col-3">
-                        <label for="supplier_telephone" class="form-label">品項名稱：</label>
-                        <input type="text" class="form-control" id="mtrlapl" name="mtrlapl" value="{$arrQryFld['mtrlapl']}" title="請輸入品項名稱" placeholder="請輸入品項名稱" autofocus>
-                    </div>
-                    <div class="col-3">
-                        <label for="applicant" class="form-label">排序方式：</label>
-                        $htmlTags[html_sort]
-                    </div>
+        <div class="row"><h5 class="alert alert-success text-primary fw-bold">狀態列：$strStsMsg</h5></div>
+        
+        <h4 class="text-secondary text-decoration-underline my-3"><b>查詢領料資料</b></h4>
+        <div class="row justify-content-center mt-3">
+            <input type="hidden" id="selFormCode" name="selFormCode" value="">
+            <div class="row">
+                <div class="col-sm-2">
+                    <label for="applicant" class="form-label">領料人：</label>
+                    <input type="text" class="form-control" id="jobort" name="jobort" value="{$arrQryFld['jobort']}" title="請輸入領料人" placeholder="請輸入領料人">
                 </div>
-                <div class="row  justify-content-center mt-2">
-                    <input type="submit" class="col-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-1 btn btn-outline-primary">
+                <div class="col-sm-2">
+                    <label for="supplier_telephone" class="form-label">品項名稱：</label>
+                    <input type="text" class="form-control" id="mtrlapl" name="mtrlapl" value="{$arrQryFld['mtrlapl']}" title="請輸入品項名稱" placeholder="請輸入品項名稱" autofocus>
                 </div>
-                
-                <table class="table caption-top table-striped table-hover my-5">
-                    <caption><h4><b>領料清單</b></h4></caption>
-                    <thead class="">
-                        <tr>
-                            <th class="col-1 text-center">功能</th><th class="col-1">作業日期</th><th class="col-1">作業異動者</th><th class="col-1">供應商代碼</th><th class="col-1">供應商名稱</th><th class="col-1">品項代碼</th><th class="col-2">品項名稱</th><th class="col-1 text-center">品項數量</th><th class="col-1 text-center">品項單價</th><th class="col-1 text-center">品項總金額</th><th class="col-1 text-center">安全存量</th>
-                        </tr>
-                    </thead>
-
-                    {$htmlQryResult}
-                </table>
-                
-                {$htmlPaging}
-                <div class="g-5"></div>
+                <div class="col-sm-2">
+                    <label for="applicant" class="form-label">排序方式：</label>
+                    $htmlTags[html_sort]
+                </div>
+            </div>
+            <div class="row  justify-content-center mt-2">
+                <input type="submit" class="col-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-1 btn btn-outline-primary">
             </div>
             
+            <table class="table caption-top table-striped table-hover my-5">
+                <caption><h4><b>領料清單</b></h4></caption>
+                <thead class="">
+                    <tr>
+                        <th class="col-sm-1 text-center">功能</th><th class="col-sm-1">作業日期</th><th class="col-sm-1">作業異動者</th><th class="col-sm-1">供應商代碼</th><th class="col-sm-1">供應商名稱</th><th class="col-sm-1">品項代碼</th><th class="col-sm-2">品項名稱</th><th class="col-sm-1 text-center">品項數量</th><th class="col-sm-1 text-center">品項單價</th><th class="col-sm-1 text-center">品項總金額</th><th class="col-sm-1 text-center">安全存量</th>
+                    </tr>
+                </thead>
+
+                {$htmlQryResult}
+            </table>
+            
+            {$htmlPaging}
+            <div class="g-5"></div>
         </div>
+            
+        
     </main>
 
-    <!-- footer區塊 -->
-    <!--
-    <footer>
-        <div class="container-fluid">
-            <div class="row justify-content-center my-3">
-                <div class="col-1">
-                    <a href="#" title="註冊">註冊</a>
-                </div>
-                <div class="col-1">
-                    <a href="#" title="變更密碼">變更密碼</a>
-                </div> 
-            </div>
-        </div>
-    </footer>
-    -->
     </form>
+
+    </div>
 </body>
 </html>
 _html;
