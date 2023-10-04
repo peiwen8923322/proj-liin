@@ -174,7 +174,7 @@ echo <<<_html
                 if ($(this).val() == "登出") { //按下"登出"按鈕
                     msg = "你已經登出系統";
                     btn = "登出";
-                    location.assign("../../Public/login.php");
+                    location.assign("../../Public/mlogin.php");
                     alert(msg);
                 }
             });
