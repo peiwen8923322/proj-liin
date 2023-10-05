@@ -28,7 +28,7 @@
     $htmlQryResult = ""; //顯示查詢結果HTML Tag
     $htmlPaging = ""; //顯示查詢分頁HTML Tag
     $tbl = array(); //儲存不同的參考檔
-    $arrQryFld = ['year'=>"", 'begindate'=>'', 'enddate'=>"", 'empapl'=>"", 'empcode'=>'', 'recdsperpage'=>'']; //儲存淨化查詢條件
+    $arrQryFld = ['year'=>"", 'empapl'=>"", 'begindate'=>'', 'enddate'=>"", 'empcode'=>'', 'recdsperpage'=>'']; //儲存淨化查詢條件
     $strStsMsg = ""; //儲存狀態欄訊息
     
     //Begin
@@ -44,9 +44,20 @@
         
         $obj_holiday->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND h.year = '{$arrQryFld['year']}' " : ""; // 年度(西元年)
         $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year']); // 年度(西元年)
+
         $obj_holiday->SQLWhere .= isset($arrQryFld['deptspk']) && mb_strlen($arrQryFld['deptspk']) > 0 ? " AND e.deptspk LIKE '%{$arrQryFld['deptspk']}%' " : ""; // 機構
         $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_depts->getList(), $arrQryFld['deptspk'], true); // 機構
+
         $obj_holiday->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND h.empapl LIKE '%{$arrQryFld['empapl']}%' " : ""; // 員工姓名
+
+        if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) && (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0)) { // 請假起始日 + 請假截止日
+            $obj_holiday->SQLWhere .= " AND h.begindate >= '$arrQryFld[begindate]' AND h.enddate <= '$arrQryFld[enddate]' ";
+        } elseif (isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) { // 請假起始日
+            $obj_holiday->SQLWhere .= " AND h.begindate >= '$arrQryFld[begindate]' ";
+        } elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 請假截止日
+            $obj_holiday->SQLWhere .= " AND h.enddate <= '$arrQryFld[enddate]' ";
+        }
+
         $obj_holiday->SQLGroupBy .= " h.empformcode, h.hldformcode ";
         $obj_holiday->SQLOrderBy .= " h.year, e.cmpcode, h.formcode, h.hldformcode ";
         // $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
@@ -253,8 +264,16 @@ echo <<<_html
                         <label for="empcode" class="form-label">機構：</label>$htmlTags[deptspk]
                     </div>
                     <div class="col-sm-2">
-                        <label for="empapl" class="form-label">員工姓名：</label>
+                        <label for="empapl" class="form-label">請假員工姓名：</label>
                         <input type="text" class="form-control" id="empapl" name="empapl" value="{$arrQryFld['empapl']}" placeholder="請輸入員工姓名" title="請輸入員工姓名">
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="begindate" class="form-label">請假起始日：</label>
+                        <input type="date" class="form-control" id="begindate" name="begindate" value="{$arrQryFld['begindate']}" placeholder="請輸入請假起始日" title="請輸入請假起始日">
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="enddate" class="form-label">請假截止日：</label>
+                        <input type="date" class="form-control" id="enddate" name="enddate" value="{$arrQryFld['enddate']}" placeholder="請輸入請假截止日" title="請輸入請假截止日">
                     </div>
                 </div>
                 
