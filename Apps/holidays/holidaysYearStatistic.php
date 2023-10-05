@@ -38,7 +38,7 @@
     if(isset($_POST['query']) || isset($_POST['prt'])){ //按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); //淨化查詢條件
         
-        $obj_holiday->SQLSelect = "SELECT h.year, e.deptspk, e.cmpcode, e.cmpapl, h.empformcode, h.empcode, h.empapl, h.hldformcode, h.hldclsapl, COUNT(*) AS cnt_hlds, FORMAT(SUM(h.hldsdays), 2) AS sum_hldsdays, FORMAT(SUM(h.hldshrs), 2) AS sum_hldshrs, FORMAT(SUM(h.hldsdays), 2) * 8 + FORMAT(SUM(h.hldshrs), 2) AS sum_total_hrs ";
+        $obj_holiday->SQLSelect = "SELECT h.year, e.deptspk, e.cmpcode, e.cmpapl, h.empformcode, h.empcode, h.empapl, h.hldformcode, h.hldclsapl, COUNT(*) AS cnt_hlds, FORMAT(SUM(h.hldsdays), 2) AS sum_hldsdays, FORMAT(SUM(h.hldshrs), 2) AS sum_hldshrs, FORMAT(SUM(h.hldsdays), 2) * 8 + FORMAT(SUM(h.hldshrs), 2) AS sum_total_hrs, h.ttlhrs ";
         $obj_holiday->SQLFrom = " FROM holidays h LEFT OUTER JOIN employees e ON (h.empformcode = e.formcode) ";
         $obj_holiday->SQLWhere .= " AND h.formstate = 15  AND h.frmformcode = '2023010017' "; // 主任已簽核
         
@@ -277,15 +277,25 @@ echo <<<_html
                     </div>
                 </div>
                 
-                <div class="row justify-content-center mt-2">
-                    <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">&nbsp;&nbsp;<input type="submit" class="col-sm-1 btn btn-outline-primary" id="query" name="prt" value="列印">
+                <div class="row justify-content-center mt-2">                    
+                    <div class="col-sm-4 btn-group">
+                        <input type="submit" class="col-sm-1 btn btn-primary" id="query" name="query" value="查詢">&nbsp;&nbsp;<input type="reset" value="清除" class="col-sm-1 btn btn-outline-primary">&nbsp;&nbsp;<!--<input type="submit" class="col-sm-1 btn btn-outline-primary" id="query" name="prt" value="列印">-->
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            列印
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="hldsYearStatisticRpt.php" target="_blank">員工請假統計清單</a></li>
+                            <li><a class="dropdown-item" href="hldsYearStatisticRpt02.php" target="_blank">員工請假統計清單02</a></li>
+                            <!--<li><a class="dropdown-item" href="#">Something else here</a></li>-->
+                        </ul>
+                    </div>
                 </div>
                 
                 <table class="table caption-top table-striped table-hover my-5">
                     <caption><h4><b>員工請假統計清單(主任已簽核)</b></h4></caption>
                     <thead class="">
                         <tr>
-                            <th class="text-center">年度<br/>員工<br/>員工編號</th><th class="text-center">病假(天數/時數/總時數)<br/>事假(天數/時數/總時數)<br/>特休假(天數/時數/總時數)</th><th class="text-center">公假(天數/時數/總時數)<br/>婚假(天數/時數/總時數)<br/>喪假(天數/時數/總時數)</th><th class="">家庭照顧假(天數/時數/總時數)<br/>生理假(天數/時數/總時數)<br/>陪產假(天數/時數/總時數)</th><th class="">產檢假(天數/時數/總時數)<br/>產假(天數/時數/總時數)<br/>其他(天數/時數/總時數)</th><th class="">換休(天數/時數/總時數)<br/>公傷病假(天數/時數/總時數)</th>
+                            <th class="text-center">年度<br/>員工<br/>員工編號</th><th class="text-center">病假(天數/時數/總時數)<br/>事假(天數/時數/總時數)<br/>特休假(天數/時數/總時數)</th><th class="text-center">公假(天數/時數/總時數)<br/>婚假(天數/時數/總時數)<br/>喪假(天數/時數/總時數)</th><th class="">家庭照顧假(天數/時數/總時數)<br/>生理假(天數/時數/總時數)<br/>陪產假(天數/時數/總時數)</th><th class="">產檢假(天數/時數/總時數)<br/>產假(天數/時數/總時數)<br/>其他(天數/時數/總時數)</th><th class="">換休(天數/時數/總時數)<br/>公傷病假(天數/時數/總時數)<br/>請假時數合計</th>
                         </tr>
                     </thead>
                     

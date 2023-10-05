@@ -787,7 +787,7 @@ _sql;
                         <td class="text-center">$field[day2022100091]/$field[hrs2022100091]/$field[ttlhrs2022100091]<br/>$field[day2022100093]/$field[hrs2022100093]/$field[ttlhrs2022100093]<br/>$field[day2022100094]/$field[hrs2022100094]/$field[ttlhrs2022100094]</td>
                         <td class="text-center">$field[day2022100095]/$field[hrs2022100095]/$field[ttlhrs2022100095]<br/>$field[day2022100096]/$field[hrs2022100096]/$field[ttlhrs2022100096]<br/>$field[day2022100097]/$field[hrs2022100097]/$field[ttlhrs2022100097]</td>
                         <td class="text-center">$field[day2022100098]/$field[hrs2022100098]/$field[ttlhrs2022100098]<br/>$field[day2022100099]/$field[hrs2022100099]/$field[ttlhrs2022100099]<br/>$field[day2022100100]/$field[hrs2022100100]/$field[ttlhrs2022100100]</td>
-                        <td class="text-center"><br/>$field[day2022100101]/$field[hrs2022100101]/$field[ttlhrs2022100101]<br/>$field[day2023010024]/$field[hrs2023010024]/$field[ttlhrs2023010024]</td>
+                        <td class="text-center">$field[day2022100101]/$field[hrs2022100101]/$field[ttlhrs2022100101]<br/>$field[day2023010024]/$field[hrs2023010024]/$field[ttlhrs2023010024]<br/>$field[total_hrs]</td>
                     </tr>
 _TBODY;
             }
@@ -828,7 +828,7 @@ _TBODY;
         $thead =<<<_THEAD
             <thead>
                 <tr>
-                    <th style="width:10%;text-align:center;">年度<br/>員工<br/>員工編號</th><th style="width:18%;text-align:center;">病假(天數/時數/總時數)<br/>事假(天數/時數/總時數)<br/>特休假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">公假(天數/時數/總時數)<br/>婚假(天數/時數/總時數)<br/>喪假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">家庭照顧假(天數/時數/總時數)<br/>生理假(天數/時數/總時數)<br>陪產假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">產檢假(天數/時數/總時數)<br/>產假(天數/時數/總時數)<br/>其他(天數/時數/總時數)</th><th style="width:18%;text-align:center;">換休(天數/時數/總時數)<br/>公傷病假(天數/時數/總時數)</th>
+                    <th style="width:10%;text-align:center;">年度<br/>員工<br/>員工編號</th><th style="width:18%;text-align:center;">病假(天數/時數/總時數)<br/>事假(天數/時數/總時數)<br/>特休假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">公假(天數/時數/總時數)<br/>婚假(天數/時數/總時數)<br/>喪假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">家庭照顧假(天數/時數/總時數)<br/>生理假(天數/時數/總時數)<br>陪產假(天數/時數/總時數)</th><th style="width:18%;text-align:center;">產檢假(天數/時數/總時數)<br/>產假(天數/時數/總時數)<br/>其他(天數/時數/總時數)</th><th style="width:18%;text-align:center;">換休(天數/時數/總時數)<br/>公傷病假(天數/時數/總時數)<br/>請假時數合計</th>
                 </tr>
             </thead>
 _THEAD;
@@ -845,7 +845,7 @@ _THEAD;
                         <td style="width:18%;text-align:center;">$field[day2022100091]/$field[hrs2022100091]/$field[ttlhrs2022100091]<br/>$field[day2022100093]/$field[hrs2022100093]/$field[ttlhrs2022100093]<br/>$field[day2022100094]/$field[hrs2022100094]/$field[ttlhrs2022100094]</td>
                         <td style="width:18%;text-align:center;">$field[day2022100095]/$field[hrs2022100095]/$field[ttlhrs2022100095]<br/>$field[day2022100096]/$field[hrs2022100096]/$field[ttlhrs2022100096]<br/>$field[day2022100097]/$field[hrs2022100097]/$field[ttlhrs2022100097]</td>
                         <td style="width:18%;text-align:center;">$field[day2022100098]/$field[hrs2022100098]/$field[ttlhrs2022100098]<br/>$field[day2022100099]/$field[hrs2022100099]/$field[ttlhrs2022100099]<br/>$field[day2022100100]/$field[hrs2022100100]/$field[ttlhrs2022100100]</td>
-                        <td style="width:18%;text-align:center;"><br/>$field[day2022100101]/$field[hrs2022100101]/$field[ttlhrs2022100101]<br/>$field[day2023010024]/$field[hrs2023010024]/$field[ttlhrs2023010024]</td>
+                        <td style="width:18%;text-align:center;"><br/>$field[day2022100101]/$field[hrs2022100101]/$field[ttlhrs2022100101]<br/>$field[day2023010024]/$field[hrs2023010024]/$field[ttlhrs2023010024]<br/>$field[total_hrs]</td>
                     </tr>
 _TBODY;
             }
@@ -861,6 +861,93 @@ _TBODY;
                     <td></td>
                     <td></td>
                 </tr>
+                </tbody>
+_TBODY;
+        }
+
+        $table =<<<_TABLE
+            <table class="table table-light">
+                $thead
+                $tbody
+            </table>
+_TABLE;
+
+        return $table;
+        //End
+    }
+
+
+    // 列印員工請假年度統計報表02(PDF)
+    // $arrData: Array物件
+    // $arrTbl: 其他參考檔(二維關聯陣列)
+    // return: 傳回查詢結果HTML Tag
+    function PrtPDFSttQry02($arrData, $arrTbl) : string{
+        //變數初始化
+        $count = 0; //該頁筆數
+        $thead = '';
+        $tbody = '';
+        $table = '';
+        
+        //Begin
+        $thead =<<<_THEAD
+            <thead>
+                <tr>
+                    <th style="width:5%;text-align:center;">員工</th><th style="width:6%;text-align:center;">員工編號</th><th style="width:5%;text-align:center;">病假</th><th style="width:5%;text-align:center;">事假</th><th style="width:5%;text-align:center;">特休假</th><th style="width:5%;text-align:center;">公假</th><th style="width:5%;text-align:center;">婚假</th><th style="width:5%;text-align:center;">喪假</th><th style="width:8%;text-align:center;">家庭照顧假</th><th style="width:5%;text-align:center;">生理假</th><th style="width:5%;text-align:center;">陪產假</th><th style="width:5%;text-align:center;">產檢假</th><th style="width:5%;text-align:center;">產假</th><th style="width:5%;text-align:center;">其他</th><th style="width:9%;text-align:center;">換休(補休)</th><th style="width:5%;text-align:center;">公傷病假</th><th style="width:9%;text-align:center;">請假時數合計</th>
+                </tr>
+            </thead>
+_THEAD;
+
+        if (isset($arrData) && count($arrData) > 0) {
+            $tbody = "<tbody>";
+            foreach ($arrData as $field) {
+                $count++;
+                
+                $tbody .= <<<_TBODY
+                    <tr>
+                        <td style="width:5%;text-align:center;">$field[empapl]</td>
+                        <td style="width:6%;text-align:center;">$field[empcode]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100089]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100090]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100092]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100091]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100093]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100094]</td>
+                        <td style="width:8%;text-align:center;">$field[ttlhrs2022100095]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100096]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100097]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100098]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100099]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2022100100]</td>
+                        <td style="width:9%;text-align:center;">$field[ttlhrs2022100101]</td>
+                        <td style="width:5%;text-align:center;">$field[ttlhrs2023010024]</td>
+                        <td style="width:9%;text-align:center;">$field[total_hrs]</td>
+                    </tr>
+                    <hr />
+_TBODY;
+            }
+            $tbody .= "</tbody>";
+        } else {
+            $tbody = <<<_TBODY
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </tbody>
 _TBODY;
         }
@@ -963,9 +1050,12 @@ _TABLE;
                             # code...
                             break;
                     }
+
+                    $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['total_hrs'] += $value['sum_total_hrs']; // 總時數
+
                 } else { // 加入新記錄(新員工) + 暫存目前記錄
                     $arrStt["$value[year]$value[deptspk]$value[empformcode]"] = array(
-                        'year'=>$value['year'], 'deptspk'=>$value['deptspk'], 'cmpcode'=>$value['cmpcode'], 'cmpapl'=>$value['cmpapl'], 'empformcode'=>$value['empformcode'], 'empcode'=>$value['empcode'], 'empapl'=>$value['empapl']
+                        'year'=>$value['year'], 'deptspk'=>$value['deptspk'], 'cmpcode'=>$value['cmpcode'], 'cmpapl'=>$value['cmpapl'], 'empformcode'=>$value['empformcode'], 'empcode'=>$value['empcode'], 'empapl'=>$value['empapl'], 'total_hrs'=>0
                         , 'code2022100089'=>'2022100089', 'apl2022100089'=>'病假', 'day2022100089'=>'', 'hrs2022100089'=>'', 'ttlhrs2022100089'=>''
                         , 'code2022100090'=>'2022100090', 'apl2022100090'=>'事假', 'day2022100090'=>'', 'hrs2022100090'=>'', 'ttlhrs2022100090'=>''
                         , 'code2022100091'=>'2022100091', 'apl2022100091'=>'公假', 'day2022100091'=>'', 'hrs2022100091'=>'', 'ttlhrs2022100091'=>''
@@ -1057,6 +1147,8 @@ _TABLE;
                             # code...
                             break;
                     }
+                    
+                    $arrStt["$value[year]$value[deptspk]$value[empformcode]"]['total_hrs'] += $value['sum_total_hrs']; // 總時數
                 }
 
             }

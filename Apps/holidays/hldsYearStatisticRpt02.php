@@ -62,7 +62,7 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->setFont('msungstdlight', '', 20);
 		// Title
-		$this->Cell(0, 0, '員工請假統計清單(天數/時數/總時數)', 0, true, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 0, '員工請假統計清單(各假別總時數)', 0, true, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln();
 
         $this->setFont('msungstdlight', '', 10);
@@ -128,7 +128,7 @@ $pdf->AddPage();
 $arrData = $_SESSION['SQL']['arrData'];
 $obj_holiday->intStartPos = 1;
 $obj_holiday->intEndPos = count($arrData);
-$pdf->writeHTML($obj_holiday->PrtPDFSttQry($arrData, $tbl), true, false, true, false, '');
+$pdf->writeHTML($obj_holiday->PrtPDFSttQry02($arrData, $tbl), true, false, true, false, '');
 
 // ---------------------------------------------------------
 
