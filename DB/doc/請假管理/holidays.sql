@@ -22,6 +22,7 @@ CREATE TABLE holidays(
     , enddate DATETIME NOT NULL COMMENT '請假結束日'
     , hldsdays DOUBLE NOT NULL DEFAULT 0 COMMENT '請假天數'
     , hldshrs DOUBLE NOT NULL DEFAULT 0 COMMENT '請假時數'
+    , ttlhrs DOUBLE NOT NULL DEFAULT 0 COMMENT '當天總時數'
     , applydate DATETIME NOT NULL DEFAULT current_timestamp() COMMENT '請假者簽核時間'
     , atmname VARCHAR(600) NULL COMMENT '附件檔案名稱'
     , atmtype VARCHAR(300) NULL COMMENT '附件檔案型態'

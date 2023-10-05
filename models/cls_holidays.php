@@ -194,6 +194,7 @@ _TABLE;
                     , enddate
                     , hldsdays
                     , hldshrs
+                    , ttlhrs
                     , aftrest
                     , atmname
                     , atmtype
@@ -232,6 +233,7 @@ _TABLE;
                     , '$arrFormVal[enddate]'
                     , $arrFormVal[hldsdays]
                     , $arrFormVal[hldshrs]
+                    , $arrFormVal[ttlhrs]
                     , '{$arrTbl['aftrest']['listapl']}'
                     , '$arrFormVal[atmname]'
                     , '$arrFormVal[atmtype]'
@@ -274,6 +276,7 @@ _sql;
                     , enddate
                     , hldsdays
                     , hldshrs
+                    , ttlhrs
                     , aftrest
                     , frmformcode
                     , frmlistapl
@@ -309,6 +312,7 @@ _sql;
                     , '$arrFormVal[enddate]'
                     , $arrFormVal[hldsdays]
                     , $arrFormVal[hldshrs]
+                    , $arrFormVal[ttlhrs]
                     , '{$arrTbl['aftrest']['listapl']}'
                     , '{$arrTbl['frmvry']['formcode']}'
                     , '{$arrTbl['frmvry']['listapl']}'
@@ -362,6 +366,7 @@ _sql;
                     , enddate = '$arrFormVal[enddate]'
                     , hldsdays = $arrFormVal[hldsdays]
                     , hldshrs = $arrFormVal[hldshrs]
+                    , ttlhrs = $arrFormVal[ttlhrs]
                     , aftrest = '{$arrTbl['aftrest']['listapl']}'
                     , applydate = current_timestamp()
                     , atmname = '$arrFormVal[atmname]'
@@ -405,6 +410,7 @@ _sql;
                     , enddate = '$arrFormVal[enddate]'
                     , hldsdays = $arrFormVal[hldsdays]
                     , hldshrs = $arrFormVal[hldshrs]
+                    , ttlhrs = $arrFormVal[ttlhrs]
                     , aftrest = '{$arrTbl['aftrest']['listapl']}'
                     , applydate = current_timestamp()
                     , frmformcode = '{$arrTbl['frmvry']['formcode']}'
@@ -425,8 +431,6 @@ _sql;
 _sql;
         }
         
-        
-
         $this->PDO->exec($this->SQL);
         //echo $this->SQL;
         //End
@@ -1281,7 +1285,7 @@ _TABLE;
         $arrStatistic = array();
         
         // Begin
-        $this->SQL = "SELECT hldformcode, hldclsapl, COUNT(*) as cnt_hlds, FORMAT(SUM(hldsdays), 2) as sum_hldsdays, FORMAT(SUM(hldshrs), 2) as sum_hldshrs FROM $this->self_table WHERE 1 AND formstate = 15 AND empformcode = '{$arrTbl['emp']['formcode']}' AND year = '$year' AND frmformcode = '2023010017' GROUP BY hldformcode";
+        $this->SQL = "SELECT hldformcode, hldclsapl, COUNT(*) AS cnt_hlds, FORMAT(SUM(hldsdays), 2) AS sum_hldsdays, FORMAT(SUM(hldshrs), 2) AS sum_hldshrs, SUM(ttlhrs) AS sum_ttlhrs FROM $this->self_table WHERE 1 AND formstate = 15 AND frmformcode = '2023010017' AND year = $year AND empformcode = '{$arrTbl['emp']['formcode']}' GROUP BY hldformcode";
         $arrStatistic = $this->rtnQryResults($this->SQL);
 
         if (is_array($arrStatistic) && count($arrStatistic) > 0) {
@@ -1304,7 +1308,7 @@ _TABLE;
         //End
     }
 
-    // 加班時數
+    // 加班總時數
     // $arrTbl: 參數陣列
     function calWorkOverTimeHrs($arrTbl) : float {
         $int_hours = 0;

@@ -27,6 +27,7 @@
     $qryCondition = ""; //參考其他Table的SQL WHERE條件
     $strNewSeq = null; //記錄建立成功後, 儲存新記錄序號
     $strStsMsg = ""; //儲存狀態欄訊息
+    $dbl_hld2022100101_ttlhrs = 0; // 換休(補休)總時數
 
     //Begin
     $tbl['emp'] = $obj_employees->getRecdByFormcode($_SESSION['login_emp']['formcode']); //員工檔
@@ -71,8 +72,9 @@
                 case '2022100099': // 產假
                     $htmlTags['html_hld2022100099'] = "$value[sum_hldsdays] 天 $value[sum_hldshrs] 小時";
                     break;
-                case '2022100101': // 換休
+                case '2022100101': // 換休(補休)
                     $htmlTags['html_hld2022100101'] = "$value[sum_hldsdays] 天 $value[sum_hldshrs] 小時";
+                    $dbl_hld2022100101_ttlhrs = $value['sum_ttlhrs']; // 換休(補休)總時數
                     break;
                 case '2023010024': // 公偒病假
                     $htmlTags['html_hld2023010024'] = "$value[sum_hldsdays] 天 $value[sum_hldshrs] 小時";
@@ -87,7 +89,8 @@
         }
     }
 
-    $htmlTags['workOverTime_hours'] = $obj_holiday->calWorkOverTimeHrs($tbl); //加班時數
+    $htmlTags['workOverTime_hours'] = $obj_holiday->calWorkOverTimeHrs($tbl); // 加班總時數
+    $htmlTags['workOverTime_rsvhours'] = ((float)$htmlTags['workOverTime_hours']) - $dbl_hld2022100101_ttlhrs; // 加班剩餘時數
 
     if (isset($_POST['submit'])) { //按下"送出 / 暫存"按鈕的處理動作
         $arrNewFormVal = $obj_form->inputChk($_POST); //淨化查詢條件
@@ -98,16 +101,17 @@
         $arrNewFormVal['atmname'] = ''; // 附件檔案名稱
         $arrNewFormVal['atmtype'] = ''; // 附件檔案型態
         $arrNewFormVal['atmsize'] = 0; // 附件檔案大小
-        
+        $arrNewFormVal['ttlhrs'] = $arrNewFormVal['hldsdays'] * 8 + $arrNewFormVal['hldshrs']; // 當天總時數
+
         //參考其他Table
         $tbl['aftrest'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['aftrest']); // 中午是否休息
         $tbl['hlds'] = $obj_field_lists->getRcrdByFormcode($arrNewFormVal['hldformcode']); // 假別
         $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; // 審核狀態 ("送出 / 暫存")
         $tbl['proxy'] = $obj_employees->getRecdByFormcode($arrNewFormVal['pryformcode']); // 代理人
 
-        // 加班時數 < 換休(補休)，換休(補休)請假失敗
-        if ($arrNewFormVal['hldformcode'] == '2022100101' && $htmlTags['workOverTime_hours'] < ($arrNewFormVal['hldsdays']*8 + $arrNewFormVal['hldshrs'])) {
-            $_SESSION['error']['errMsg'] = "加班時數 < 換休(補休)時數，換休(補休)請假失敗，請選擇其他假別";  // 加班時數 < 換休(補休)，換休(補休)請假失敗
+        // 加班剩餘時數 < 當天換休(補休)時數，換休(補休)請假失敗
+        if ($arrNewFormVal['hldformcode'] == '2022100101' && $htmlTags['workOverTime_hours'] < ($dbl_hld2022100101_ttlhrs + $arrNewFormVal['hldsdays']*8 + $arrNewFormVal['hldshrs'])) {
+            $_SESSION['error']['errMsg'] = "加班剩餘時數 < 當天換休(補休)時數，換休(補休)請假失敗，請選擇其他假別";  // 加班剩餘時數 < 當天換休(補休)時數，換休(補休)請假失敗
         }
 
         //執行SQL + 上傳附件
@@ -254,8 +258,8 @@ echo <<<_html
                     alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
                     return false;
                 }
-                if($("#hldformcode").val() == "2022100101" && $("#workOverTime_hours").text() < ($("#hldsdays").val()*8 + $("#hldshrs").val())) { // 加班時數 < 換休(補休)時數
-                    alert("加班時數 < 換休(補休)時數，換休(補休)請假失敗，請選擇其他假別");
+                if($("#hldformcode").val() == "2022100101" && $("#workOverTime_rsvhours").text() < ($("#hldsdays").val()*8 + $("#hldshrs").val())) { // 加班剩餘時數 < 當天換休(補休)時數，換休(補休)請假失敗
+                    alert("加班剩餘時數 < 當天換休(補休)時數，換休(補休)請假失敗，請選擇其他假別");
                     return false;
                 }
             });
@@ -371,7 +375,7 @@ echo <<<_html
                 }
 
                 $("#hldformcode").val($(this).val());
-
+                
                 // if($("#hldformcode").val() == "2022100101" && $("#workOverTime_hours").text() < ($("#hldsdays").val()*8 + $("#hldshrs").val())) {
                 //     alert("加班時數 < 換休(補休)時數，換休(補休)請假失敗");
                 // }
@@ -488,7 +492,8 @@ echo <<<_html
                         <div><span>陪產假：</span><span>$htmlTags[html_hld2022100097]</span></div>
                         <div><span>產檢假：</span><span>$htmlTags[html_hld2022100098]</span></div>
                         <div><span>產假：</span><span>$htmlTags[html_hld2022100099]</span></div>
-                        <div><span>加班時數：</span><span id="workOverTime_hours">$htmlTags[workOverTime_hours]</span></div>
+                        <div><span>加班總時數：</span><span id="workOverTime_hours">$htmlTags[workOverTime_hours]</span></div>
+                        <div><span>加班剩餘時數：</span><span id="workOverTime_rsvhours">$htmlTags[workOverTime_rsvhours]</span></div>
                         <div><span>換休(補休)：</span><span>$htmlTags[html_hld2022100101]</span></div>
                         <div><span>公偒病假：</span><span>$htmlTags[html_hld2023010024]</span></div>
                         <div><span>其他：</span><span>$htmlTags[html_hld2022100100]</span></div>
