@@ -65,6 +65,7 @@ class cls_egress extends cls_models
                             <td class="">$field[egrersn]</td>
                             <td class="text-center">$field[begindate]</td>
                             <td class="text-center">$field[enddate]</td>
+                            <td class="text-center">$field[ext_hours]</td>
                             <td class="text-center">$field[applydate]</td>
                         </tr>
 _TBODY;
@@ -74,6 +75,7 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -112,6 +114,7 @@ _TBODY;
                 , cls
                 , begindate
                 , enddate
+                , ext_hours
                 , egrersn
                 , applydate
                 , frmformcode
@@ -136,6 +139,7 @@ _TBODY;
                 , '$arrFormVal[cls]'
                 , '$arrFormVal[begindate]'
                 , '$arrFormVal[enddate]'
+                , $arrFormVal[ext_hours]
                 , '$arrFormVal[egrersn]'
                 , '$arrFormVal[applydate]'
                 , '{$arrTbl['frmvry']['formcode']}'
@@ -176,6 +180,7 @@ _sql;
                 , cls = '$arrFormVal[cls]'
                 , begindate = '$arrFormVal[begindate]'
                 , enddate = '$arrFormVal[enddate]'
+                , ext_hours = $arrFormVal[ext_hours]
                 , egrersn = '$arrFormVal[egrersn]'
                 , applydate = current_timestamp()
                 , frmformcode = '{$arrTbl['frmvry']['formcode']}'

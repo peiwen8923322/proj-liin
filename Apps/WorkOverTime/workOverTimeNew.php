@@ -43,6 +43,7 @@
         $arrNewFormVal['modifier'] = $_SESSION['login_emp']['empapl']; // 修改者
         $arrNewFormVal['cls'] = '加班'; // 類別
         $arrNewFormVal['applydate'] = date("Y-m-d H:i:s", time()); // 外出者簽核時間
+        $arrNewFormVal['ext_hours'] = (strtotime($arrNewFormVal['enddate']) - strtotime($arrNewFormVal['begindate'])) % 86400 / 3600; // 外出/加班時數
         
         // //參考其他Table
         $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; // 審核狀態 ("送出 / 暫存")
