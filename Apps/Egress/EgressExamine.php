@@ -313,7 +313,7 @@ echo <<<_html
                 <caption><h4><b>員工外出清單</b></h4></caption>
                 <thead class="">
                     <tr>
-                        <th class="col-sm-1 text-center">功能</th><th class="">審核狀態</th><th class="">機構</th><th class="text-center">員工</th><th class="text-center">年度</th><th class="col-sm-3">外出事由</th><th class="text-center">外出啟始日</th><th class="text-center">外出截止日</th><th class="text-center">外出者簽核時間</th>
+                        <th class="col-sm-1 text-center">功能</th><th class="">審核狀態</th><th class="">機構</th><th class="text-center">員工</th><th class="text-center">年度</th><th class="col-sm-3">外出事由</th><th class="text-center">外出啟始日</th><th class="text-center">外出截止日</th><th class="text-center">外出時數</th><th class="text-center">外出者簽核時間</th>
                     </tr>
                 </thead>
 

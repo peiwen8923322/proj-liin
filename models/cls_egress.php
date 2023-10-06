@@ -241,7 +241,7 @@ _sql;
         //End
     }
 
-    // 外出審核查詢結果 View + 分頁
+    // 外出/加班審核查詢結果 View + 分頁
     // $arrData: 已過濾後的資料來源(二維關聯陣列)
     // $arrEmp: 其他參考檔(二維關聯陣列)
     // 傳回 HTML Tag
@@ -277,6 +277,7 @@ _sql;
                             <td class="">{$arrData[$i]['egrersn']}</td>
                             <td class="text-center">{$arrData[$i]['begindate']}</td>
                             <td class="text-center">{$arrData[$i]['enddate']}</td>
+                            <td class="text-center">{$arrData[$i]['ext_hours']}</td>
                             <td class="text-center">{$arrData[$i]['applydate']}</td>
                         </tr>
 _TBODY;
@@ -299,6 +300,7 @@ _TBODY;
                             <td class="">{$arrData[$i]['egrersn']}</td>
                             <td class="text-center">{$arrData[$i]['begindate']}</td>
                             <td class="text-center">{$arrData[$i]['enddate']}</td>
+                            <td class="text-center">{$arrData[$i]['ext_hours']}</td>
                             <td class="text-center">{$arrData[$i]['applydate']}</td>
                         </tr>
 _TBODY;
@@ -310,6 +312,7 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                         <tr>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -506,6 +509,7 @@ _TABLE;
                             <td class="">$field[egrersn]</td>
                             <td class="text-center">$field[begindate]</td>
                             <td class="text-center">$field[enddate]</td>
+                            <td class="text-center">$field[ext_hours]</td>
                             <td class="text-center">$field[applydate]</td>
                         </tr>
 _TBODY;
@@ -514,16 +518,17 @@ _TBODY;
         } else {
             $tbody = <<<_TBODY
                     <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
 _TBODY;
         }
@@ -549,7 +554,7 @@ _TBODY;
             $thead =<<<_THEAD
                 <thead>
                     <tr>
-                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:20%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">外出事由</th><th style="width:15%;text-align:center;">外出起始日</th><th style="width:15%;text-align:center;">外出截止日</th><th style="width:15%;text-align:center;">外出者簽核時間</th>
+                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:12%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">外出事由</th><th style="width:15%;text-align:center;">外出起始日</th><th style="width:15%;text-align:center;">外出截止日</th><th style="width:6%;text-align:center;">外出時數</th><th style="width:15%;text-align:center;">外出者簽核時間</th>
                     </tr>
                 </thead>
 _THEAD;
@@ -557,7 +562,7 @@ _THEAD;
             $thead =<<<_THEAD
                 <thead>
                     <tr>
-                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:20%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">加班事由</th><th style="width:15%;text-align:center;">加班起始日</th><th style="width:15%;text-align:center;">加班截止日</th><th style="width:15%;text-align:center;">加班者簽核時間</th>
+                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:12%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">加班事由</th><th style="width:15%;text-align:center;">加班起始日</th><th style="width:15%;text-align:center;">加班截止日</th><th style="width:6%;text-align:center;">加班時數</th><th style="width:15%;text-align:center;">加班者簽核時間</th>
                     </tr>
                 </thead>
 _THEAD;
@@ -575,12 +580,13 @@ _THEAD;
                 $tbody .= <<<_TBODY
                         <tr>
                             <td style="width:10%;text-align:center;">$field[frmlistapl]</td>
-                            <td style="width:20%;">$field[cmpapl]</td>
+                            <td style="width:12%;">$field[cmpapl]</td>
                             <td style="width:6%;text-align:center;">$field[empapl]</td>
                             <td style="width:6%;text-align:center;">$field[year]</td>
                             <td style="width:15%;">$field[egrersn]</td>
                             <td style="width:15%;text-align:center;">$field[begindate]</td>
                             <td style="width:15%;text-align:center;">$field[enddate]</td>
+                            <td style="width:6%;text-align:center;">$field[ext_hours]</td>
                             <td style="width:15%;text-align:center;">$field[applydate]</td>
                         </tr>
 _TBODY;
@@ -590,6 +596,7 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                         <tr>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
