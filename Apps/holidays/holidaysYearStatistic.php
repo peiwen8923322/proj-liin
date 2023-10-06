@@ -51,7 +51,7 @@
         $obj_holiday->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND h.empapl LIKE '%{$arrQryFld['empapl']}%' " : ""; // 員工姓名
 
         if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) && (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0)) { // 請假起始日 + 請假截止日
-            $obj_holiday->SQLWhere .= " AND h.begindate >= '$arrQryFld[begindate]' AND h.enddate <= '$arrQryFld[enddate]' ";
+            $obj_holiday->SQLWhere .= " AND ((h.begindate >= '$arrQryFld[begindate]' AND h.enddate <= '$arrQryFld[enddate]') OR (h.begindate <= '$arrQryFld[enddate]'  AND h.enddate >= '$arrQryFld[enddate]') OR (h.enddate >= '$arrQryFld[begindate]' AND begindate <= '$arrQryFld[begindate]')) ";
         } elseif (isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) { // 請假起始日
             $obj_holiday->SQLWhere .= " AND h.begindate >= '$arrQryFld[begindate]' ";
         } elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 請假截止日
@@ -65,7 +65,6 @@
         // $obj_holiday->SQLlimit = " LIMIT $obj_holiday->intStartPos,  $obj_holiday->int_records_per_page";
         $obj_holiday->SQL = $obj_holiday->SQLSelect.$obj_holiday->SQLFrom.$obj_holiday->SQLWhere.$obj_holiday->SQLGroupBy.$obj_holiday->SQLOrderBy;
         $arrData = $obj_holiday->getListByEmpformcodeAndYear($obj_holiday->SQL); // 取得請假統計並重組查詢結果
-
 
         //傳回查詢結果
         // $obj_holiday->int_records_per_page = $arrQryFld['recdsperpage']; //設定每頁筆數
