@@ -150,3 +150,4 @@ if (isset($_SESSION['SQL']['arrData'])) {
 	$obj_form->js_closeWindow();
 }
 
+

@@ -306,5 +306,22 @@ _html;
             exit;
             //End
         }
+
+        // 以JavaScript顯示狀態訊息
+        // $msg: 傳入狀態訊息
+        function js_closeWindow(){
+            //Begin
+            echo "<script>close();</script>";
+            //End
+        }
+
+
+
+
+
+
     }
+
+
+
 ?>

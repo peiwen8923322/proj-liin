@@ -90,8 +90,8 @@ $pdf = new MYPDF("L", PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 // set document information
 $pdf->setCreator(PDF_CREATOR);
 $pdf->setAuthor('徐培文');
-$pdf->setTitle('員工請假統計清單');
-$pdf->setSubject('員工請假統計清單');
+$pdf->setTitle('員工請假統計清單(各假別總時數)');
+$pdf->setSubject('員工請假統計清單(各假別總時數)');
 $pdf->setKeywords('員工, PDF, 請假');
 
 // remove default header/footer
@@ -126,19 +126,27 @@ $pdf->setFont('msungstdlight', '', 9);
 $pdf->AddPage();
 
 $arrData = $_SESSION['SQL']['arrData'];
-$obj_holiday->intStartPos = 1;
-$obj_holiday->intEndPos = count($arrData);
-$pdf->writeHTML($obj_holiday->PrtPDFSttQry02($arrData, $tbl), true, false, true, false, '');
+if (isset($_SESSION['SQL']['arrData'])) {
+	$arrData = $_SESSION['SQL']['arrData'];
+	$obj_holiday->intStartPos = 1;
+	$obj_holiday->intEndPos = count($arrData);
+	$pdf->writeHTML($obj_holiday->PrtPDFSttQry02($arrData, $tbl), true, false, true, false, '');
 
-// ---------------------------------------------------------
+	// ---------------------------------------------------------
 
-//Close and output PDF document
-$pdf->Output('hldsYearStatisticRpt.pdf', 'I');
+	//Close and output PDF document
+	$pdf->Output('hldsYearStatisticRpt.pdf', 'I');
 
-$obj_emp = null;
-$obj_holiday = null;
-$obj_pms = null;
-$obj_form = null;
-//============================================================+
-// END OF FILE
-//============================================================+
+	$obj_emp = null;
+	$obj_holiday = null;
+	$obj_pms = null;
+	$obj_form = null;
+	//============================================================+
+	// END OF FILE
+	//============================================================+
+} else {
+	$obj_form->js_alert('資料尚未查詢，請先查詢後再列印PDF檔案');
+	$obj_form->js_closeWindow();
+}
+
+
