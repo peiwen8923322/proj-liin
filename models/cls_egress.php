@@ -387,6 +387,7 @@ _sql;
                         <td class="text-center">$field[empapl]</td>
                         <td class="text-center">$field[year]</td>
                         <td class="text-center">$field[cnt_recds]</td>
+                        <td class="text-center">$field[sum_ext_hrs]</td>
                     </tr>
 _TBODY;
             }
@@ -394,12 +395,13 @@ _TBODY;
         } else {
             $tbody = <<<_TBODY
                 <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </tbody>
 _TBODY;
         }

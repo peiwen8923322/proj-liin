@@ -34,7 +34,7 @@
     $htmlQryResult = ""; // 顯示查詢結果HTML Tag
     $htmlPaging = ""; // 顯示查詢分頁HTML Tag
     $tbl = array(); // 儲存不同的參考檔
-    $arrQryFld = ['empapl'=>'', 'recdsperpage'=>'']; //儲存淨化查詢條件
+    $arrQryFld = ['empapl'=>'', 'begindate'=>'', 'enddate'=>'', 'recdsperpage'=>'']; //儲存淨化查詢條件
     $strStsMsg = ""; // 儲存狀態欄訊息
     
     //Begin
@@ -44,7 +44,7 @@
     if(isset($_POST['query']) || isset($_POST['prt'])){ //按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); //淨化查詢條件
         
-        $obj_egress->SQLSelect = "SELECT year, deptspk, cmpapl, empformcode, empapl, COUNT(*) AS 'cnt_recds' ";
+        $obj_egress->SQLSelect = "SELECT year, deptspk, cmpapl, empformcode, empapl, COUNT(*) AS 'cnt_recds', SUM(ext_hours) AS sum_ext_hrs ";
         // $obj_egress->SQLFrom = " FROM holidays h LEFT OUTER JOIN employees e ON (h.empformcode = e.formcode) ";
         $obj_egress->SQLWhere .= " AND formstate = 15 AND cls = '加班' AND frmformcode = '2023010017' "; // 主任已簽核
         
@@ -53,6 +53,15 @@
         $obj_egress->SQLWhere .= isset($arrQryFld['deptspk']) && mb_strlen($arrQryFld['deptspk']) > 0 ? " AND deptspk = '$arrQryFld[deptspk]' " : ""; // 機構
         $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_depts->getList(), $arrQryFld['deptspk'], true); // 機構
         $obj_egress->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND empapl LIKE '%$arrQryFld[empapl]%' " : ""; // 員工姓名
+
+        if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) && (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0)) { // 加班起始日 + 加班截止日
+            $obj_egress->SQLWhere .= " AND ((begindate >= '$arrQryFld[begindate]' AND enddate <= '$arrQryFld[enddate]') OR (begindate <= '$arrQryFld[enddate]'  AND enddate >= '$arrQryFld[enddate]') OR (enddate >= '$arrQryFld[begindate]' AND begindate <= '$arrQryFld[begindate]')) ";
+        } elseif (isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) { // 加班起始日
+            $obj_holiday->SQLWhere .= " AND begindate >= '$arrQryFld[begindate]' ";
+        } elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 加班截止日
+            $obj_holiday->SQLWhere .= " AND enddate <= '$arrQryFld[enddate]' ";
+        }
+
         $obj_egress->SQLGroupBy .= " year, deptspk, empformcode ";
         $obj_egress->SQLOrderBy .= " year DESC, deptspk, empformcode ";
         $htmlTags['html_recdsperpage'] = $obj_form->viewHTMLPagingTag(array('attrId'=>'recdsperpage', 'attrName'=>'recdsperpage', 'attrTitle'=>'請輸入每頁顯示筆數', 'optionTitle'=>'srtTitle', 'optionValue'=>'srtValue'), null, $arrQryFld['recdsperpage']); //每頁顯示筆數
@@ -62,6 +71,7 @@
         $obj_egress->SQLlimit = " LIMIT $obj_egress->intStartPos,  $obj_egress->int_records_per_page";
         $obj_egress->SQL = $obj_egress->SQLSelect.$obj_egress->SQLFrom.$obj_egress->SQLWhere.$obj_egress->SQLGroupBy.$obj_egress->SQLOrderBy.$obj_egress->SQLlimit;
         $htmlQryResult = $obj_egress->viewSttQry($obj_egress->rtnQryResults($obj_egress->SQL), $tbl);
+        // echo "SQL: $obj_egress->SQL";
 
         // 統計分頁訊息
         $htmlPaging = $obj_form->viewPaging($obj_egress->int_total_records, $obj_egress->int_total_pages, $obj_egress->int_current_page); // 顯示查詢分頁HTML Tag
@@ -264,6 +274,14 @@ echo <<<_html
                         <input type="text" class="form-control" id="empapl" name="empapl" value="$arrQryFld[empapl]" placeholder="請輸入員工姓名" title="請輸入員工姓名">
                     </div>
                     <div class="col-sm-2">
+                        <label for="begindate" class="form-label">加班起始日：</label>
+                        <input type="date" class="form-control" id="begindate" name="begindate" value="{$arrQryFld['begindate']}" placeholder="請輸入加班起始日" title="請輸入加班起始日">
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="enddate" class="form-label">加班截止日：</label>
+                        <input type="date" class="form-control" id="enddate" name="enddate" value="{$arrQryFld['enddate']}" placeholder="請輸入加班截止日" title="請輸入加班截止日">
+                    </div>
+                    <div class="col-sm-2">
                         <label for="supplier_telephone" class="form-label">每頁顯示筆數：</label>$htmlTags[html_recdsperpage]
                     </div>
                 </div>
@@ -276,7 +294,7 @@ echo <<<_html
                     <caption><h4><b>統計加班資料清單(主任已簽核)</b></h4></caption>
                     <thead class="">
                         <tr>
-                            <th class="">機構</th><th class="text-center">員工</th><th class="text-center">年度</th><th class="text-center">加班次數</th>
+                            <th class="">機構</th><th class="text-center">員工</th><th class="text-center">年度</th><th class="text-center">加班次數</th><th class="text-center">加班時數</th>
                         </tr>
                     </thead>
                     
