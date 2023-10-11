@@ -268,8 +268,8 @@ echo <<<_html
                         <input type="text" class="form-control" id="empapl" name="empapl" value="{$arrQryFld['empapl']}" placeholder="請輸入員工" title="請輸入員工">
                     </div>
                     <div class="col-sm-2">
-                        <label for="begindate" class="form-label">外出啟始日：</label>
-                        <input type="date" class="form-control" id="begindate" name="begindate" value="{$arrQryFld['begindate']}" placeholder="請輸入外出啟始日" title="請輸入外出啟始日">
+                        <label for="begindate" class="form-label">外出起始日：</label>
+                        <input type="date" class="form-control" id="begindate" name="begindate" value="{$arrQryFld['begindate']}" placeholder="請輸入外出起始日" title="請輸入外出起始日">
                     </div>
                     <div class="col-sm-2">
                         <label for="enddate" class="form-label">外出截止日：</label>
