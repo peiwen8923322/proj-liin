@@ -51,7 +51,7 @@
         $obj_holiday->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND h.empapl LIKE '%{$arrQryFld['empapl']}%' " : ""; // 員工姓名
 
         if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) && (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0)) { // 請假起始日 + 請假截止日
-            $obj_holiday->SQLWhere .= " AND ((h.begindate >= '$arrQryFld[begindate]' AND h.enddate <= '$arrQryFld[enddate]') OR (h.begindate <= '$arrQryFld[enddate]'  AND h.enddate >= '$arrQryFld[enddate]') OR (h.enddate >= '$arrQryFld[begindate]' AND begindate <= '$arrQryFld[begindate]')) ";
+            $obj_holiday->SQLWhere .= " AND ((h.begindate >= '$arrQryFld[begindate]' AND h.enddate <= '$arrQryFld[enddate]') OR (h.begindate <= '$arrQryFld[enddate]'  AND h.enddate >= '$arrQryFld[enddate]') OR (h.enddate >= '$arrQryFld[begindate]' AND h.begindate <= '$arrQryFld[begindate]')) ";
         } elseif (isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) { // 請假起始日
             $obj_holiday->SQLWhere .= " AND h.begindate >= '$arrQryFld[begindate]' ";
         } elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 請假截止日
