@@ -121,6 +121,10 @@ echo <<<_html
                     alert("請假時數說明：換休時數(單位：小時) / 生理假時數(單位：天) / 其他假別(單位：4小時)，請重新填寫請假啟始日和請假截止日");
                     return false;
                 }
+                
+                if(!confirm('是否確定送出??')) {
+                    return false;
+                }
             });
 
             //設定form表單的submit type欄位 Click事件
