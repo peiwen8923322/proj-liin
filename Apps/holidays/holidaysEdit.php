@@ -280,6 +280,10 @@ echo <<<_html
                     alert("加班剩餘時數 < 換休(補休)時數，當天換休(補休)請假失敗，請選擇其他假別");
                     return false;
                 }
+
+                if(!confirm('是否確定送出??')) {
+                    return false;
+                }
             });
 
             //設定form表單的submit type欄位 Click事件
