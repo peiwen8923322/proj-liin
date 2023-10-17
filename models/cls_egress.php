@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Auth\Events\Login;
+use phpDocumentor\Reflection\Types\Void_;
 use PhpParser\Node\Stmt\Foreach_;
 
 /*
@@ -211,6 +212,20 @@ _sql;
         //End
     }
 
+    // 外出/加班記錄是否已存在(重覆申請)
+    // $arrFormVal: 新表單值
+    function isExistByApply($arrFormVal, $arrTbl) : bool {
+        // 變數初始化
+        $bool_isExist = false;
+
+        //Begin
+        $bool_isExist = $this->rtnQryField("SELECT COUNT(*) AS 'cnt_recds' FROM $this->self_table WHERE 1 AND formstate = 15 AND cls = '$arrFormVal[cls]' AND year = $arrFormVal[year] AND empformcode = '{$arrTbl['emp']['formcode']}' AND CAST(begindate AS DATETIME) BETWEEN CAST('$arrFormVal[begindate]' AS DATETIME) AND CAST('$arrFormVal[enddate]' AS DATETIME)") > 0 ? true : false ;
+        return $bool_isExist;
+        //End
+    }
+
+
+
     // 外出審核--------------------------------------------------------------------------------------------------------------
 
     // 過濾外出審核查詢
@@ -365,9 +380,41 @@ _sql;
         //End
     }
 
-    // 外出統計--------------------------------------------------------------------------------------------------------------
+    // 外出/加班統計--------------------------------------------------------------------------------------------------------------
 
-    // 外出年度統計查詢 View
+    // 加班 + 補休(換休)年度統計查詢 View
+    // $arrData: Array物件
+    // $arrTbl: 其他參考檔(二維關聯陣列)
+        // $arrTbl[SQLWhere]: SQL查詢條件
+    // return: 傳回查詢結果 array()
+    function SttWrkOverTimePlusRest($arrData, $arrTbl) {
+        //變數初始化
+        $count = 0; //該頁筆數
+        $arrNewData = array();
+        $int_hours = 0;
+        $SQL = '';
+        
+        //Begin
+        if (isset($arrData) && count($arrData) > 0) {
+            foreach ($arrData as $field) {
+                $count++;
+                
+                $SQL = "SELECT COUNT(*) AS cnt_recds FROM holidays WHERE 1 AND formstate = 15 AND hldformcode = '2022100101' AND frmformcode = '2023010017' AND empformcode = '$field[empformcode]' $arrTbl[SQLWhere];"; // 換休(補休) 2022100101 + 主任核准 + (年度(西元年) + 補休(換休)起始日 + 補休(換休)截止日)
+                echo "SQL: $SQL<br/>";
+                // if ($this->rtnQryField($SQL) > 0) {
+                //     $SQL = "SELECT SUM(ttlhrs) AS sum_ttlhrs FROM holidays WHERE 1 AND formstate = 15 AND hldformcode = '2022100101' AND frmformcode = '2023010017' AND empformcode = '$field[empformcode]' $arrTbl[SQLWhere];"; // 換休(補休) 2022100101 + 主任核准 + (年度(西元年) + 補休(換休)起始日 + 補休(換休)截止日)
+                //     $field['resthrs'] = $int_hours = $this->rtnQryField($SQL);
+                    
+                // }
+            }
+        } 
+
+        // return $arrData;
+        //End
+    }
+
+
+    // 外出/加班年度統計查詢 View
     // $arrData: Array物件
     // $arrTbl: 其他參考檔(二維關聯陣列)
     // return: 傳回查詢結果HTML Tag
@@ -486,7 +533,7 @@ _TABLE;
 
     
 
-    // 外出歷史查詢--------------------------------------------------------------------------------------------------------------
+    // 外出/加班歷史查詢--------------------------------------------------------------------------------------------------------------
 
     // 員工外出歷史查詢結果 View
     // $arrData: Array物件
@@ -624,7 +671,22 @@ _TABLE;
     }
     
 
-
+    // 加班總時數
+    // $arrTbl: 參數陣列
+    // $arrTbl[year]: 年度
+    // $arrTbl['emp']['formcode']: 員工唯一識別碼
+    function calWorkOverTimeHrs($arrTbl) : float {
+        $int_hours = 0;
+        // Begin
+        $this->SQL = "SELECT COUNT(*) AS cnt_recds FROM egress WHERE 1 AND cls = '加班' AND frmformcode = '2023010017' AND year = $arrTbl[year] AND empformcode = '{$arrTbl['emp']['formcode']}';";
+        if ($this->rtnQryField($this->SQL) > 0) {
+            $this->SQL = "SELECT SUM(ext_hours) AS ext_hours FROM egress WHERE 1 AND cls = '加班' AND frmformcode = '2023010017' AND year = $arrTbl[year] AND empformcode = '{$arrTbl['emp']['formcode']}' GROUP BY year, cmpcode, empformcode ORDER BY year, cmpcode, empformcode;";
+            $int_hours = $this->rtnQryField($this->SQL);
+        }
+        
+        return $int_hours;
+        // End
+    }
 
 
 

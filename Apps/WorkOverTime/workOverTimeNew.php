@@ -49,7 +49,12 @@
         $tbl['frmvry'] = ($_POST['submit'] == '送出') ? $obj_field_lists->getRcrdByFormcode('2023010004') : $obj_field_lists->getRcrdByFormcode('2023010003') ; // 審核狀態 ("送出 / 暫存")
         
         // //執行SQL
-        $strNewSeq = $obj_egress->Insert($arrNewFormVal, $tbl);
+        if (!($obj_egress->isExistByApply($arrNewFormVal, $tbl))) {
+            $strNewSeq = $obj_egress->Insert($arrNewFormVal, $tbl);
+        } else {
+            $_SESSION['error']['errMsg'] = "加班記錄已經存在，請查詢加班記錄內容是否正確";  // 記錄已經存在
+        }
+        
 
         // //Render HTML
         $htmlTags['cmpapl'] = $arrNewFormVal['deptspk']; // 機構
@@ -72,6 +77,7 @@
 
     if (isset($_SESSION['error'])) { //檢查是否有錯誤訊息
         $strStsMsg = $_SESSION['error']['errMsg'];
+        $obj_form->js_alert($strStsMsg);
         unset($_SESSION['error']);
     }elseif (isset($strNewSeq)) { //顯示完成訊息
         $strStsMsg = "資料建立完成 [$strNewSeq]";
