@@ -115,7 +115,7 @@
         }
 
         //執行SQL + 上傳附件
-        if (!($obj_holiday->isExistByApply($arrNewFormVal))) {
+        if (!($obj_holiday->isExistByApply($arrNewFormVal, $tbl))) {
             if (isset($_FILES["file"]["name"]) && strlen($_FILES["file"]["name"]) > 0) { // 上傳附件
         
                 if ($_FILES["file"]["error"] > 0) { // 上傳附件發生錯誤，請聯絡系統管理者

@@ -1390,18 +1390,20 @@ _TABLE;
 
     // 請假記錄是否已存在(重覆申請)
     // $arrFormVal: 新表單值
-    function isExistByApply($arrFormVal) : bool {
+    function isExistByApply($arrFormVal, $arrTbl) : bool {
         // 變數初始化
         $bool_isExist = false;
 
         //Begin
-        $bool_isExist = $this->rtnQryField("SELECT COUNT(*) AS 'cnt_recds' FROM holidays WHERE 1 AND formstate = 15 AND year = 2023 AND empformcode = '$arrFormVal[empformcode]' AND CAST(begindate AS DATETIME) BETWEEN CAST('$arrFormVal[begindate]' AS DATETIME) AND CAST('$arrFormVal[enddate]' AS DATETIME)") > 0 ? true : false ;
+        $bool_isExist = $this->rtnQryField("SELECT COUNT(*) AS 'cnt_recds' FROM $this->self_table WHERE 1 AND formstate = 15 AND year = $arrTbl[year] AND empformcode = '$arrFormVal[empformcode]' AND CAST(begindate AS DATETIME) BETWEEN CAST('$arrFormVal[begindate]' AS DATETIME) AND CAST('$arrFormVal[enddate]' AS DATETIME)") > 0 ? true : false ;
         return $bool_isExist;
         //End
     }
 
     // 加班總時數
     // $arrTbl: 參數陣列
+    // $arrTbl[year]: 年度
+    // $arrTbl['emp']['formcode']: 員工唯一識別碼
     function calWorkOverTimeHrs($arrTbl) : float {
         $int_hours = 0;
         // Begin
@@ -1416,6 +1418,26 @@ _TABLE;
     }
 
 
+    // 加班統計資料 + 換休(補休)總時數
+    // $arrData: 資料來源
+    // $arrTbl: 參數陣列
+        // $arrTbl['emp']['formcode']: 員工唯一識別碼
+        // $arrTbl[year]: 年度
+        // $arrTbl['SQL']['begindate']: 換休(補休)起始日
+        // $arrTbl['SQL']['enddate']: 換休(補休)截止日
+    function WorkOverTimePlusRest($arrData, $arrTbl) : array {
+        $arrNewData = array();
+
+        // Begin
+        // $this->SQL = "SELECT COUNT(*) AS cnt_recds FROM $this->self_table WHERE 1 AND cls = '加班' AND frmformcode = '2023010017' AND year = $arrTbl[year] AND empformcode = '{$arrTbl['emp']['formcode']}';";
+        // if ($this->rtnQryField($this->SQL) > 0) {
+        //     $this->SQL = "SELECT SUM(ext_hours) AS ext_hours FROM egress WHERE 1 AND cls = '加班' AND frmformcode = '2023010017' AND year = $arrTbl[year] AND empformcode = '{$arrTbl['emp']['formcode']}' GROUP BY year, cmpcode, empformcode ORDER BY year, cmpcode, empformcode;";
+        //     $int_hours = $this->rtnQryField($this->SQL);
+        // }
+        
+        return $arrNewData;
+        // End
+    }
 
 
 
