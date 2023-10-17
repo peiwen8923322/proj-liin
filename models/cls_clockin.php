@@ -93,7 +93,7 @@ _TBODY;
         $thead =<<<_THEAD
             <thead>
                 <tr>
-                    <th style="width:20%;">機構</th><th style="width:10%;text-align:center;">員工</th><th style="width:10%;text-align:center;">年度</th><th style="width:20%;text-align:center;">刷卡時間</th><th style="width:10%;text-align:center;">刷卡狀態</th><th style="width:20%;">刷卡說明</th>
+                    <th style="width:10%;text-align:center;">員工</th><th style="width:10%;text-align:center;">年度</th><th style="width:20%;text-align:center;">刷卡時間</th><th style="width:10%;text-align:center;">刷卡狀態</th><th style="width:20%;">刷卡說明</th>
                 </tr>
             </thead>
 _THEAD;
@@ -105,7 +105,6 @@ _THEAD;
 
                 $tbody .= <<<_TBODY
                     <tr>
-                        <td style="width:20%;">$field[cmpapl]</td>
                         <td style="width:10%;text-align:center;">$field[empapl]</td>
                         <td style="width:10%;text-align:center;">$field[year]</td>
                         <td style="width:20%;text-align:center;">$field[clkintime]</td>
@@ -119,7 +118,6 @@ _TBODY;
             $tbody = <<<_TBODY
                     <tbody>
                         <tr>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
