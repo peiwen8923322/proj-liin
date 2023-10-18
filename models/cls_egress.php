@@ -400,7 +400,7 @@ _sql;
                 $count++;
                 
                 $SQL = "SELECT COUNT(*) AS cnt_recds FROM holidays WHERE 1 AND formstate = 15 AND hldformcode = '2022100101' AND frmformcode = '2023010017' AND empformcode = '$field[empformcode]' $arrTbl[SQLWhere];"; // 換休(補休) 2022100101 + 主任核准 + (年度(西元年) + 補休(換休)起始日 + 補休(換休)截止日)
-                echo "SQL: $SQL<br/>";
+                // echo "SQL: $SQL<br/>";
                 // if ($this->rtnQryField($SQL) > 0) {
                 //     $SQL = "SELECT SUM(ttlhrs) AS sum_ttlhrs FROM holidays WHERE 1 AND formstate = 15 AND hldformcode = '2022100101' AND frmformcode = '2023010017' AND empformcode = '$field[empformcode]' $arrTbl[SQLWhere];"; // 換休(補休) 2022100101 + 主任核准 + (年度(西元年) + 補休(換休)起始日 + 補休(換休)截止日)
                 //     $field['resthrs'] = $int_hours = $this->rtnQryField($SQL);

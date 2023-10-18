@@ -36,10 +36,12 @@
     $tbl = array(); // 儲存不同的參考檔
     $arrQryFld = ['empapl'=>'', 'begindate'=>'', 'enddate'=>'', 'recdsperpage'=>'']; //儲存淨化查詢條件
     $strStsMsg = ""; // 儲存狀態欄訊息
+    $arrData = array();
     
     //Begin
     $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者
     $nowYear = date("Y", time()); // 目前年度
+    $tbl['SQLWhere'] = ''; // 設定補休(換休)查詢條件
 
     if(isset($_POST['query']) || isset($_POST['prt'])){ //按下"查詢"按鈕的處理動作 OR 按下"列印"按鈕的處理動作
         $arrQryFld = $obj_form->inputChk($_POST); //淨化查詢條件
@@ -48,18 +50,26 @@
         // $obj_egress->SQLFrom = " FROM holidays h LEFT OUTER JOIN employees e ON (h.empformcode = e.formcode) ";
         $obj_egress->SQLWhere .= " AND formstate = 15 AND cls = '加班' AND frmformcode = '2023010017' "; // 主任已簽核
         
-        $obj_egress->SQLWhere .= isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0 ? " AND year = '$arrQryFld[year]' " : ""; // 年度(西元年)
-        $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year']); // 年度(西元年)
+        if (isset($arrQryFld['year']) && mb_strlen($arrQryFld['year']) > 0) {  // 年度(西元年)
+            $obj_egress->SQLWhere .= " AND year = '$arrQryFld[year]' "; // 年度(西元年)
+            $htmlTags['html_year'] = $obj_form->viewHTMLSTSglVal(array('attrId'=>'year', 'attrName'=>'year', 'attrTitle'=>'請選擇年度'), array(date("Y", time())-4, date("Y", time())-3, date("Y", time())-2, date("Y", time())-1, date("Y", time()), date("Y", time())+1), $arrQryFld['year']); // 年度(西元年)
+            $tbl['SQLWhere'] .= " AND year = '$arrQryFld[year]' "; // 年度(西元年)
+        }
+        
         $obj_egress->SQLWhere .= isset($arrQryFld['deptspk']) && mb_strlen($arrQryFld['deptspk']) > 0 ? " AND deptspk = '$arrQryFld[deptspk]' " : ""; // 機構
         $htmlTags['deptspk'] = $obj_form->viewHTMLSelectTag(array('attrId'=>'deptspk', 'attrName'=>'deptspk', 'attrTitle'=>'請選擇機構', 'optionTitle'=>'cmpapl', 'optionValue'=>'formcode', 'default'=>'formcode'), $obj_depts->getList(), $arrQryFld['deptspk'], true); // 機構
+        
         $obj_egress->SQLWhere .= isset($arrQryFld['empapl']) && mb_strlen($arrQryFld['empapl']) > 0 ? " AND empapl LIKE '%$arrQryFld[empapl]%' " : ""; // 員工姓名
 
         if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) && (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0)) { // 加班起始日 + 加班截止日
             $obj_egress->SQLWhere .= " AND ((begindate >= '$arrQryFld[begindate]' AND enddate <= '$arrQryFld[enddate]') OR (begindate <= '$arrQryFld[enddate]'  AND enddate >= '$arrQryFld[enddate]') OR (enddate >= '$arrQryFld[begindate]' AND begindate <= '$arrQryFld[begindate]')) ";
+            $tbl['SQLWhere'] .= " AND ((begindate >= '$arrQryFld[begindate]' AND enddate <= '$arrQryFld[enddate]') OR (begindate <= '$arrQryFld[enddate]'  AND enddate >= '$arrQryFld[enddate]') OR (enddate >= '$arrQryFld[begindate]' AND begindate <= '$arrQryFld[begindate]')) ";
         } elseif (isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) { // 加班起始日
             $obj_holiday->SQLWhere .= " AND begindate >= '$arrQryFld[begindate]' ";
+            $tbl['SQLWhere'] .= " AND begindate >= '$arrQryFld[begindate]' ";
         } elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 加班截止日
             $obj_holiday->SQLWhere .= " AND enddate <= '$arrQryFld[enddate]' ";
+            $tbl['SQLWhere'] .= " AND enddate <= '$arrQryFld[enddate]' ";
         }
 
         $obj_egress->SQLGroupBy .= " year, deptspk, empformcode ";
@@ -70,7 +80,10 @@
         $obj_egress->int_records_per_page = $arrQryFld['recdsperpage']; // 設定每頁筆數
         $obj_egress->SQLlimit = " LIMIT $obj_egress->intStartPos,  $obj_egress->int_records_per_page";
         $obj_egress->SQL = $obj_egress->SQLSelect.$obj_egress->SQLFrom.$obj_egress->SQLWhere.$obj_egress->SQLGroupBy.$obj_egress->SQLOrderBy.$obj_egress->SQLlimit;
-        $htmlQryResult = $obj_egress->viewSttQry($obj_egress->rtnQryResults($obj_egress->SQL), $tbl);
+        $arrData = $obj_egress->rtnQryResults($obj_egress->SQL);
+        $obj_egress->SttWrkOverTimePlusRest($arrData, $tbl);
+        // var_dump($arrData);
+        // $htmlQryResult = $obj_egress->viewSttQry($obj_egress->rtnQryResults($obj_egress->SQL), $tbl);
         // echo "SQL: $obj_egress->SQL";
 
         // 統計分頁訊息
