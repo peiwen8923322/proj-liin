@@ -33,6 +33,7 @@ require_once "../../models/common.php"; //共用功能
 require_once "../../models/cls_pms.php";
 require_once "../../models/cls_egress.php";
 require_once "../../models/cls_employees.php";
+require_once "../../models/cls_depts.php";
 
 $obj_form = new cls_form;
 $obj_pms = new cls_pms; //權限檔
@@ -43,14 +44,18 @@ $obj_pms = new cls_pms; //權限檔
 // }
 $obj_egress = new cls_egress; // 外出檔
 $obj_emp = new cls_employees; // 員工檔
+$obj_depts = new cls_depts; //機構檔
 $tbl = array();
-$tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者
+$arrQryFld = $_SESSION['arrQryFld']; // 查詢條件
+// $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者
 
 // Include the main TCPDF library (search for installation path).
 require_once('../../models/TCPDF/examples/tcpdf_include.php');
 
 class MYPDF extends TCPDF {
     public $arrEmp;
+	public $arrDept;
+	public $arrPriod;
 
 	//Page header
 	public function Header() {
@@ -65,7 +70,7 @@ class MYPDF extends TCPDF {
 		$this->Cell(0, 0, '外出歷史資料清單', 0, true, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln();
         $this->setFont('msungstdlight', '', 10);
-        $this->Cell(0, 10, "機構：{$this->arrEmp['cmpapl']} / 員工：{$this->arrEmp['empapl']}", 0, false, 'L', 0, '', 0, false, 'M', 'M');
+        $this->Cell(0, 10, "機構：{$this->arrDept['cmpapl']} / 起迄時間：{$this->arrPriod['begindate']} ~ {$this->arrPriod['enddate']}", 0, false, 'L', 0, '', 0, false, 'M', 'M');
         $this->Cell(0, 10, "列印人：{$this->arrEmp['empapl']} / 列印日期：".date("Y-m-d H:i", time()), 0, true, 'R', 0, '', 0, false, 'M', 'M');
 	}
 
@@ -95,7 +100,23 @@ $pdf->setKeywords('員工, PDF, 外出');
 
 // remove default header/footer
 $pdf->setPrintHeader(true);
-$pdf->arrEmp = $tbl['emp'];
+$pdf->arrDept = $obj_depts->getRecdByFormcode($arrQryFld['deptspk']);
+$pdf->arrEmp = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']);
+
+if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) && (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0)) { // 刷卡時間啟始日 + 刷卡時間截止日
+	$pdf->arrPriod['begindate'] = $arrQryFld['begindate'];
+	$pdf->arrPriod['enddate'] = $arrQryFld['enddate'];
+} elseif (isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) { // 刷卡時間啟始日
+	$pdf->arrPriod['begindate'] = $arrQryFld['begindate'];
+	$pdf->arrPriod['enddate'] = '';
+} elseif (isset($arrQryFld['enddate']) && mb_strlen($arrQryFld['enddate']) > 0) { // 刷卡時間截止日
+	$pdf->arrPriod['begindate'] = '';
+	$pdf->arrPriod['enddate'] = $arrQryFld['enddate'];
+} else {
+	$pdf->arrPriod['begindate'] = "$arrQryFld[year]/01/01";
+	$pdf->arrPriod['enddate'] = "$arrQryFld[year]/12/31";
+}
+// $pdf->arrEmp = $tbl['emp'];
 $pdf->setPrintFooter(true);
 
 // set default monospaced font

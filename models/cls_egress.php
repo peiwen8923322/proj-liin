@@ -603,7 +603,7 @@ _TBODY;
             $thead =<<<_THEAD
                 <thead>
                     <tr>
-                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:12%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">外出事由</th><th style="width:15%;text-align:center;">外出起始日</th><th style="width:15%;text-align:center;">外出截止日</th><th style="width:6%;text-align:center;">外出時數</th><th style="width:15%;text-align:center;">外出者簽核時間</th>
+                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:12%;">員工編號</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">外出事由</th><th style="width:15%;text-align:center;">外出起始日</th><th style="width:15%;text-align:center;">外出截止日</th><th style="width:6%;text-align:center;">外出時數</th><th style="width:15%;text-align:center;">外出者簽核時間</th>
                     </tr>
                 </thead>
 _THEAD;
@@ -611,7 +611,7 @@ _THEAD;
             $thead =<<<_THEAD
                 <thead>
                     <tr>
-                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:12%;">機構</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">加班事由</th><th style="width:15%;text-align:center;">加班起始日</th><th style="width:15%;text-align:center;">加班截止日</th><th style="width:6%;text-align:center;">加班時數</th><th style="width:15%;text-align:center;">加班者簽核時間</th>
+                        <th style="width:10%;text-align:center;">審核狀態</th><th style="width:12%;">員工編號</th><th style="width:6%;text-align:center;">員工</th><th style="width:6%;text-align:center;">年度</th><th style="width:15%;">加班事由</th><th style="width:15%;text-align:center;">加班起始日</th><th style="width:15%;text-align:center;">加班截止日</th><th style="width:6%;text-align:center;">加班時數</th><th style="width:15%;text-align:center;">加班者簽核時間</th>
                     </tr>
                 </thead>
 _THEAD;
@@ -629,7 +629,7 @@ _THEAD;
                 $tbody .= <<<_TBODY
                         <tr>
                             <td style="width:10%;text-align:center;">$field[frmlistapl]</td>
-                            <td style="width:12%;">$field[cmpapl]</td>
+                            <td style="width:12%;">$field[empcode]</td>
                             <td style="width:6%;text-align:center;">$field[empapl]</td>
                             <td style="width:6%;text-align:center;">$field[year]</td>
                             <td style="width:15%;">$field[egrersn]</td>
