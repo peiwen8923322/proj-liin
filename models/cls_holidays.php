@@ -1238,7 +1238,7 @@ _TBODY;
         $thead =<<<_THEAD
             <thead>
                 <tr>
-                    <th style="width:10%;">機構</th><th style="width:8%;text-align:center;">員工</th><th style="width:10%;">過去未休假的累積天數<br/>目前可特休天數</th><th style="width:10%;">表單審核狀態</th><th style="width:6%;">年度</th><th style="width:10%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;text-align:center;">請假起始日<br/>請假截止日</th><th style="width:8%;text-align:center;">請假天數<br/>請假時數</th><th style="width:12%;text-align:center;">假單送出時間</th>
+                    <th style="width:10%;">員工編號</th><th style="width:8%;text-align:center;">員工</th><th style="width:10%;">過去未休假的累積天數<br/>目前可特休天數</th><th style="width:10%;">表單審核狀態</th><th style="width:6%;">年度</th><th style="width:10%;">假別</th><th style="width:15%;">請假事由</th><th style="width:12%;text-align:center;">請假起始日<br/>請假截止日</th><th style="width:8%;text-align:center;">請假天數<br/>請假時數</th><th style="width:12%;text-align:center;">假單送出時間</th>
                 </tr>
             </thead>
 _THEAD;
@@ -1250,7 +1250,7 @@ _THEAD;
                 
                 $tbody .= <<<_TBODY
                         <tr>
-                            <td style="width:10%;">$field[cmpapl]</td>
+                            <td style="width:10%;">$field[empcode]</td>
                             <td style="width:8%;text-align:center;">$field[empapl]</td>
                             <td style="width:10%;text-align:center;">$field[amlhrs]<br/>$field[curhrs]</td>
                             <td style="width:10%;">$field[frmlistapl]</td>
