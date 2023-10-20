@@ -38,7 +38,7 @@
         $clkintime = strtotime($arrNewFormVal['clkintime']); // 時間轉換 UNIX時間
         $arrNewFormVal['year'] = date("Y", $clkintime); // 年度
         
-        if ($arrNewFormVal['clkinsttpk'] == '2023010025' && substr($arrNewFormVal['clkintime'],11) > '09:00:00') { // 刷卡說明(遲到)
+        if ($arrNewFormVal['clkinsttpk'] == '2023010025' && substr($arrNewFormVal['clkintime'],11) > '9:00:00') { // 刷卡說明(遲到)
             $arrNewFormVal['extodnymemo'] .= '(遲到)';
         } else if ($arrNewFormVal['clkinsttpk'] == '2023010026' && substr($arrNewFormVal['clkintime'],11) < '17:00:00') { // 刷卡說明(早退)
             $arrNewFormVal['extodnymemo'] .= '(早退)';
