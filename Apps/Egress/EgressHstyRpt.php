@@ -30,24 +30,16 @@
 
 
 require_once "../../models/common.php"; //共用功能
-require_once "../../models/cls_pms.php";
 require_once "../../models/cls_egress.php";
 require_once "../../models/cls_employees.php";
 require_once "../../models/cls_depts.php";
 
 $obj_form = new cls_form;
-$obj_pms = new cls_pms; //權限檔
-// if (!$obj_pms->isOwnPmsByEmpformcode($_SESSION['login_emp']['formcode'], '請假管理', '查詢')) { //檢查使用者是否有使用權限
-//     $obj_form->js_alert("使用者：[{$_SESSION['login_emp']['empapl']}]沒有請假管理的查詢權限，如需該功能的使用權限，請與管理者聯絡");
-//     $obj_form->js_goURL(MOBILEINDEXPAGE); //返回首頁
-//     exit();
-// }
 $obj_egress = new cls_egress; // 外出檔
 $obj_emp = new cls_employees; // 員工檔
 $obj_depts = new cls_depts; //機構檔
 $tbl = array();
-$arrQryFld = $_SESSION['arrQryFld']; // 查詢條件
-// $tbl['emp'] = $obj_emp->getRecdByFormcode($_SESSION['login_emp']['formcode']); // 登入者
+$arrQryFld = $_SESSION['arrQryFld'];
 
 // Include the main TCPDF library (search for installation path).
 require_once('../../models/TCPDF/examples/tcpdf_include.php');
@@ -116,7 +108,6 @@ if ((isset($arrQryFld['begindate']) && mb_strlen($arrQryFld['begindate']) > 0) &
 	$pdf->arrPriod['begindate'] = "$arrQryFld[year]/01/01";
 	$pdf->arrPriod['enddate'] = "$arrQryFld[year]/12/31";
 }
-// $pdf->arrEmp = $tbl['emp'];
 $pdf->setPrintFooter(true);
 
 // set default monospaced font
@@ -160,9 +151,9 @@ $pdf->writeHTML($obj_egress->PrtPDFByHstyQry($obj_egress->rtnQryResults($obj_egr
 //Close and output PDF document
 $pdf->Output('ClockInHstyRpt.pdf', 'I');
 
+$obj_depts = null;
 $obj_emp = null;
 $obj_egress = null;
-$obj_pms = null;
 $obj_form = null;
 //============================================================+
 // END OF FILE
